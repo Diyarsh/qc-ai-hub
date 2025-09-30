@@ -14,11 +14,17 @@ import { Sun, Moon } from "lucide-react";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 export default function Lab() {
-  const { t } = useLanguage();
-  const { theme, setTheme } = useTheme();
-  const { isDeveloperMode } = useDeveloperMode();
+  const {
+    t
+  } = useLanguage();
+  const {
+    theme,
+    setTheme
+  } = useTheme();
+  const {
+    isDeveloperMode
+  } = useDeveloperMode();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("agents");
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -48,93 +54,172 @@ export default function Lab() {
       [category]: !prev[category]
     }));
   };
-
-  const nodeCategories = [
-    {
-      key: 'triggers',
-      title: 'ТРИГГЕРЫ',
-      nodes: [
-        { icon: Zap, name: 'Webhook', description: 'HTTP триггер' },
-        { icon: CalendarDays, name: 'Расписание', description: 'Cron триггер' },
-        { icon: Slack, name: 'Slack Events', description: 'События Slack' },
-        { icon: Upload, name: 'File Upload', description: 'Загрузка файла' },
-        { icon: Bot, name: 'Dashboard Button', description: 'Кнопка дашборда' }
-      ]
-    },
-    {
-      key: 'llm',
-      title: 'LLM / CHAT',
-      nodes: [
-        { icon: MessageSquare, name: 'Chat GPT', description: 'OpenAI модель' },
-        { icon: MessageSquare, name: 'Claude', description: 'Anthropic модель' },
-        { icon: Brain, name: 'Gemini', description: 'Google модель' },
-        { icon: Code, name: 'System Prompt', description: 'Системный промпт' },
-        { icon: TestTube, name: 'Few-shot', description: 'Примеры' }
-      ]
-    },
-    {
-      key: 'knowledge',
-      title: 'ЗНАНИЯ',
-      nodes: [
-        { icon: Search, name: 'RAG Search', description: 'Поиск по базе' },
-        { icon: Database, name: 'Vector DB', description: 'Векторная БД' },
-        { icon: FileText, name: 'Document', description: 'Документы' },
-        { icon: Globe, name: 'Web Scraper', description: 'Веб парсер' },
-        { icon: Sparkles, name: 'Embeddings', description: 'Векторизация' }
-      ]
-    },
-    {
-      key: 'tools',
-      title: 'ИНСТРУМЕНТЫ',
-      nodes: [
-        { icon: Network, name: 'HTTP Request', description: 'API запрос' },
-        { icon: Database, name: 'SQL Query', description: 'SQL запрос' },
-        { icon: Code, name: 'Python Script', description: 'Python код' },
-        { icon: Mail, name: 'Email', description: 'Отправка почты' },
-        { icon: Github, name: 'Git Actions', description: 'Git операции' }
-      ]
-    },
-    {
-      key: 'memory',
-      title: 'ПАМЯТЬ',
-      nodes: [
-        { icon: Brain, name: 'Short Memory', description: 'Краткосрочная' },
-        { icon: Database, name: 'Long Memory', description: 'Долгосрочная' },
-        { icon: Users, name: 'Session Store', description: 'Сессия' }
-      ]
-    },
-    {
-      key: 'guardrails',
-      title: 'БЕЗОПАСНОСТЬ',
-      nodes: [
-        { icon: Shield, name: 'PII Masking', description: 'Маскировка данных' },
-        { icon: AlertTriangle, name: 'Content Filter', description: 'Фильтр контента' },
-        { icon: Lock, name: 'Rate Limits', description: 'Лимиты запросов' }
-      ]
-    },
-    {
-      key: 'eval',
-      title: 'МОНИТОРИНГ',
-      nodes: [
-        { icon: Activity, name: 'Logging', description: 'Логирование' },
-        { icon: BarChart3, name: 'Metrics', description: 'Метрики' },
-        { icon: Star, name: 'Feedback', description: 'Обратная связь' }
-      ]
-    },
-    {
-      key: 'actions',
-      title: 'ДЕЙСТВИЯ',
-      nodes: [
-        { icon: Globe, name: 'REST API', description: 'REST эндпоинт' },
-        { icon: MessageSquare, name: 'Chat Widget', description: 'Виджет чата' },
-        { icon: Slack, name: 'Slack Bot', description: 'Slack бот' },
-        { icon: Share2, name: 'Webhook Out', description: 'Исходящий вебхук' }
-      ]
-    }
-  ];
-
-  return (
-    <div className="flex flex-col h-full">
+  const nodeCategories = [{
+    key: 'triggers',
+    title: 'ТРИГГЕРЫ',
+    nodes: [{
+      icon: Zap,
+      name: 'Webhook',
+      description: 'HTTP триггер'
+    }, {
+      icon: CalendarDays,
+      name: 'Расписание',
+      description: 'Cron триггер'
+    }, {
+      icon: Slack,
+      name: 'Slack Events',
+      description: 'События Slack'
+    }, {
+      icon: Upload,
+      name: 'File Upload',
+      description: 'Загрузка файла'
+    }, {
+      icon: Bot,
+      name: 'Dashboard Button',
+      description: 'Кнопка дашборда'
+    }]
+  }, {
+    key: 'llm',
+    title: 'LLM / CHAT',
+    nodes: [{
+      icon: MessageSquare,
+      name: 'Chat GPT',
+      description: 'OpenAI модель'
+    }, {
+      icon: MessageSquare,
+      name: 'Claude',
+      description: 'Anthropic модель'
+    }, {
+      icon: Brain,
+      name: 'Gemini',
+      description: 'Google модель'
+    }, {
+      icon: Code,
+      name: 'System Prompt',
+      description: 'Системный промпт'
+    }, {
+      icon: TestTube,
+      name: 'Few-shot',
+      description: 'Примеры'
+    }]
+  }, {
+    key: 'knowledge',
+    title: 'ЗНАНИЯ',
+    nodes: [{
+      icon: Search,
+      name: 'RAG Search',
+      description: 'Поиск по базе'
+    }, {
+      icon: Database,
+      name: 'Vector DB',
+      description: 'Векторная БД'
+    }, {
+      icon: FileText,
+      name: 'Document',
+      description: 'Документы'
+    }, {
+      icon: Globe,
+      name: 'Web Scraper',
+      description: 'Веб парсер'
+    }, {
+      icon: Sparkles,
+      name: 'Embeddings',
+      description: 'Векторизация'
+    }]
+  }, {
+    key: 'tools',
+    title: 'ИНСТРУМЕНТЫ',
+    nodes: [{
+      icon: Network,
+      name: 'HTTP Request',
+      description: 'API запрос'
+    }, {
+      icon: Database,
+      name: 'SQL Query',
+      description: 'SQL запрос'
+    }, {
+      icon: Code,
+      name: 'Python Script',
+      description: 'Python код'
+    }, {
+      icon: Mail,
+      name: 'Email',
+      description: 'Отправка почты'
+    }, {
+      icon: Github,
+      name: 'Git Actions',
+      description: 'Git операции'
+    }]
+  }, {
+    key: 'memory',
+    title: 'ПАМЯТЬ',
+    nodes: [{
+      icon: Brain,
+      name: 'Short Memory',
+      description: 'Краткосрочная'
+    }, {
+      icon: Database,
+      name: 'Long Memory',
+      description: 'Долгосрочная'
+    }, {
+      icon: Users,
+      name: 'Session Store',
+      description: 'Сессия'
+    }]
+  }, {
+    key: 'guardrails',
+    title: 'БЕЗОПАСНОСТЬ',
+    nodes: [{
+      icon: Shield,
+      name: 'PII Masking',
+      description: 'Маскировка данных'
+    }, {
+      icon: AlertTriangle,
+      name: 'Content Filter',
+      description: 'Фильтр контента'
+    }, {
+      icon: Lock,
+      name: 'Rate Limits',
+      description: 'Лимиты запросов'
+    }]
+  }, {
+    key: 'eval',
+    title: 'МОНИТОРИНГ',
+    nodes: [{
+      icon: Activity,
+      name: 'Logging',
+      description: 'Логирование'
+    }, {
+      icon: BarChart3,
+      name: 'Metrics',
+      description: 'Метрики'
+    }, {
+      icon: Star,
+      name: 'Feedback',
+      description: 'Обратная связь'
+    }]
+  }, {
+    key: 'actions',
+    title: 'ДЕЙСТВИЯ',
+    nodes: [{
+      icon: Globe,
+      name: 'REST API',
+      description: 'REST эндпоинт'
+    }, {
+      icon: MessageSquare,
+      name: 'Chat Widget',
+      description: 'Виджет чата'
+    }, {
+      icon: Slack,
+      name: 'Slack Bot',
+      description: 'Slack бот'
+    }, {
+      icon: Share2,
+      name: 'Webhook Out',
+      description: 'Исходящий вебхук'
+    }]
+  }];
+  return <div className="flex flex-col h-full">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-border bg-background px-6 py-4">
         <div className="flex items-center gap-4">
@@ -143,16 +228,8 @@ export default function Lab() {
         </div>
         <div className="flex items-center gap-2">
           <LanguageSelector />
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
+          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
         </div>
       </header>
@@ -168,7 +245,7 @@ export default function Lab() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="agents">Агенты</TabsTrigger>
-              <TabsTrigger value="data">Данные</TabsTrigger>
+              <TabsTrigger value="data">ML-Studio</TabsTrigger>
               <TabsTrigger value="catalog">Каталог</TabsTrigger>
               <TabsTrigger value="monitoring">Мониторинг</TabsTrigger>
               <TabsTrigger value="documentation">Документация</TabsTrigger>
@@ -195,30 +272,16 @@ export default function Lab() {
                     
                     <ScrollArea className="flex-1 p-4">
                       <div className="space-y-3">
-                        {nodeCategories.map((category) => (
-                          <div key={category.key}>
-                            <button
-                              onClick={() => toggleCategory(category.key)}
-                              className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-muted/50 transition-colors"
-                            >
-                              {expandedCategories[category.key] ? (
-                                <ChevronDown className="h-3 w-3" />
-                              ) : (
-                                <ChevronRight className="h-3 w-3" />
-                              )}
+                        {nodeCategories.map(category => <div key={category.key}>
+                            <button onClick={() => toggleCategory(category.key)} className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-muted/50 transition-colors">
+                              {expandedCategories[category.key] ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                               <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                                 {category.title}
                               </span>
                             </button>
                             
-                            {expandedCategories[category.key] && (
-                              <div className="ml-5 space-y-1">
-                                {category.nodes.map((node, index) => (
-                                  <div
-                                    key={index}
-                                    className="flex items-center gap-3 p-2 rounded hover:bg-muted/70 cursor-grab active:cursor-grabbing transition-colors group"
-                                    draggable
-                                  >
+                            {expandedCategories[category.key] && <div className="ml-5 space-y-1">
+                                {category.nodes.map((node, index) => <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-muted/70 cursor-grab active:cursor-grabbing transition-colors group" draggable>
                                     <node.icon className="h-4 w-4 text-primary flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
                                       <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
@@ -228,12 +291,9 @@ export default function Lab() {
                                         {node.description}
                                       </div>
                                     </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                                  </div>)}
+                              </div>}
+                          </div>)}
                       </div>
                     </ScrollArea>
                   </div>
@@ -271,16 +331,13 @@ export default function Lab() {
                     
                     <div className="flex-1 relative bg-gradient-to-br from-background to-muted/20">
                       {/* Grid pattern */}
-                      <div 
-                        className="absolute inset-0 opacity-30"
-                        style={{
-                          backgroundImage: `
+                      <div className="absolute inset-0 opacity-30" style={{
+                      backgroundImage: `
                             linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
                             linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
                           `,
-                          backgroundSize: '20px 20px'
-                        }}
-                      />
+                      backgroundSize: '20px 20px'
+                    }} />
                       
                       {/* Empty state */}
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -321,8 +378,7 @@ export default function Lab() {
                     </div>
                     
                     <div className="flex-1 p-4">
-                      {selectedNode ? (
-                        <div className="space-y-4">
+                      {selectedNode ? <div className="space-y-4">
                           <div>
                             <label className="text-sm font-medium">Название узла</label>
                             <Input value={selectedNode} className="mt-1" />
@@ -338,20 +394,16 @@ export default function Lab() {
                               <Input placeholder="Значение" />
                             </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="text-center text-muted-foreground">
+                        </div> : <div className="text-center text-muted-foreground">
                           <MapPin className="h-8 w-8 mx-auto mb-3 opacity-50" />
                           <p className="text-sm">Выберите узел на холсте для настройки его параметров</p>
-                        </div>
-                      )}
+                        </div>}
                     </div>
                   </div>
                 </div>
 
                 {/* Debug Console (collapsible) */}
-                {showDebugConsole && (
-                  <div className="h-48 bg-card border rounded-lg overflow-hidden flex flex-col">
+                {showDebugConsole && <div className="h-48 bg-card border rounded-lg overflow-hidden flex flex-col">
                     <div className="p-3 border-b bg-muted/30">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -367,27 +419,15 @@ export default function Lab() {
                       </div>
                       
                       <div className="flex items-center gap-2 mt-2">
-                        <Button 
-                          variant={debugTab === "logs" ? "secondary" : "ghost"} 
-                          size="sm"
-                          onClick={() => setDebugTab("logs")}
-                        >
+                        <Button variant={debugTab === "logs" ? "secondary" : "ghost"} size="sm" onClick={() => setDebugTab("logs")}>
                           <FileText className="h-3 w-3 mr-1" />
                           Логи
                         </Button>
-                        <Button 
-                          variant={debugTab === "context" ? "secondary" : "ghost"} 
-                          size="sm"
-                          onClick={() => setDebugTab("context")}
-                        >
+                        <Button variant={debugTab === "context" ? "secondary" : "ghost"} size="sm" onClick={() => setDebugTab("context")}>
                           <Database className="h-3 w-3 mr-1" />
                           Контекст
                         </Button>
-                        <Button 
-                          variant={debugTab === "errors" ? "secondary" : "ghost"} 
-                          size="sm"
-                          onClick={() => setDebugTab("errors")}
-                        >
+                        <Button variant={debugTab === "errors" ? "secondary" : "ghost"} size="sm" onClick={() => setDebugTab("errors")}>
                           <Bug className="h-3 w-3 mr-1" />
                           Ошибки
                         </Button>
@@ -395,8 +435,7 @@ export default function Lab() {
                     </div>
                     
                     <ScrollArea className="flex-1 p-3">
-                      {debugTab === "logs" && (
-                        <div className="space-y-2 font-mono text-sm">
+                      {debugTab === "logs" && <div className="space-y-2 font-mono text-sm">
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <span className="text-xs">12:34:56</span>
                             <CheckCircle2 className="h-3 w-3 text-green-500" />
@@ -407,21 +446,15 @@ export default function Lab() {
                             <AlertCircle className="h-3 w-3 text-yellow-500" />
                             <span>Ожидание входных данных...</span>
                           </div>
-                        </div>
-                      )}
-                      {debugTab === "context" && (
-                        <div className="text-sm text-muted-foreground">
+                        </div>}
+                      {debugTab === "context" && <div className="text-sm text-muted-foreground">
                           <p>Контекст выполнения будет отображаться здесь</p>
-                        </div>
-                      )}
-                      {debugTab === "errors" && (
-                        <div className="text-sm text-muted-foreground">
+                        </div>}
+                      {debugTab === "errors" && <div className="text-sm text-muted-foreground">
                           <p>Ошибки будут отображаться здесь</p>
-                        </div>
-                      )}
+                        </div>}
                     </ScrollArea>
-                  </div>
-                )}
+                  </div>}
               </div>
             </TabsContent>
 
@@ -469,13 +502,39 @@ export default function Lab() {
                     </div>
 
                     <div className="space-y-4">
-                      {[
-                        { name: "Продажи 2024", type: "CSV", rows: "50,000", owner: "Аналитик", updated: "15/01/2024", status: "Активен", color: "blue" },
-                        { name: "Клиентская база", type: "PostgreSQL", rows: "120,000", owner: "ML Team", updated: "14/01/2024", status: "Активен", color: "green" },
-                        { name: "Веб-логи", type: "JSON", rows: "1,500,000", owner: "DevOps", updated: "13/01/2024", status: "Обработка", color: "orange" },
-                        { name: "Отзывы клиентов", type: "Text", rows: "25,000", owner: "Маркетинг", updated: "12/01/2024", status: "Активен", color: "purple" }
-                      ].map((dataset, index) => (
-                        <Card key={index} className="hover:shadow-md transition-shadow">
+                      {[{
+                      name: "Продажи 2024",
+                      type: "CSV",
+                      rows: "50,000",
+                      owner: "Аналитик",
+                      updated: "15/01/2024",
+                      status: "Активен",
+                      color: "blue"
+                    }, {
+                      name: "Клиентская база",
+                      type: "PostgreSQL",
+                      rows: "120,000",
+                      owner: "ML Team",
+                      updated: "14/01/2024",
+                      status: "Активен",
+                      color: "green"
+                    }, {
+                      name: "Веб-логи",
+                      type: "JSON",
+                      rows: "1,500,000",
+                      owner: "DevOps",
+                      updated: "13/01/2024",
+                      status: "Обработка",
+                      color: "orange"
+                    }, {
+                      name: "Отзывы клиентов",
+                      type: "Text",
+                      rows: "25,000",
+                      owner: "Маркетинг",
+                      updated: "12/01/2024",
+                      status: "Активен",
+                      color: "purple"
+                    }].map((dataset, index) => <Card key={index} className="hover:shadow-md transition-shadow">
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
@@ -511,8 +570,7 @@ export default function Lab() {
                               </div>
                             </div>
                           </CardContent>
-                        </Card>
-                      ))}
+                        </Card>)}
                     </div>
                   </TabsContent>
 
@@ -540,12 +598,19 @@ export default function Lab() {
                           </CardHeader>
                           <CardContent>
                             <div className="space-y-3">
-                              {[
-                                { icon: Filter, name: "Фильтр", desc: "Строки где age > 25" },
-                                { icon: Layers, name: "Группировка", desc: "По городам" },
-                                { icon: BarChart3, name: "Агрегация", desc: "Среднее значение дохода" }
-                              ].map((step, index) => (
-                                <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                              {[{
+                              icon: Filter,
+                              name: "Фильтр",
+                              desc: "Строки где age > 25"
+                            }, {
+                              icon: Layers,
+                              name: "Группировка",
+                              desc: "По городам"
+                            }, {
+                              icon: BarChart3,
+                              name: "Агрегация",
+                              desc: "Среднее значение дохода"
+                            }].map((step, index) => <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
                                   <step.icon className="h-4 w-4 text-primary" />
                                   <div className="flex-1">
                                     <div className="font-medium text-sm">{step.name}</div>
@@ -554,8 +619,7 @@ export default function Lab() {
                                   <Button variant="ghost" size="sm">
                                     <Settings className="h-3 w-3" />
                                   </Button>
-                                </div>
-                              ))}
+                                </div>)}
                               <Button variant="outline" className="w-full">
                                 <Plus className="h-4 w-4 mr-2" />
                                 Добавить шаг
@@ -709,13 +773,27 @@ export default function Lab() {
                       <div>
                         <h5 className="font-medium mb-3">Готовые шаблоны AutoML</h5>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          {[
-                            { name: "Прогноз продаж", desc: "Временные ряды", icon: TrendingUp, color: "blue" },
-                            { name: "Скоринг клиентов", desc: "Классификация", icon: Users, color: "green" },
-                            { name: "Детекция аномалий", desc: "Аномалии", icon: AlertTriangle, color: "orange" },
-                            { name: "Прогноз оттока", desc: "Churn prediction", icon: Users, color: "red" }
-                          ].map((template, index) => (
-                            <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
+                          {[{
+                          name: "Прогноз продаж",
+                          desc: "Временные ряды",
+                          icon: TrendingUp,
+                          color: "blue"
+                        }, {
+                          name: "Скоринг клиентов",
+                          desc: "Классификация",
+                          icon: Users,
+                          color: "green"
+                        }, {
+                          name: "Детекция аномалий",
+                          desc: "Аномалии",
+                          icon: AlertTriangle,
+                          color: "orange"
+                        }, {
+                          name: "Прогноз оттока",
+                          desc: "Churn prediction",
+                          icon: Users,
+                          color: "red"
+                        }].map((template, index) => <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
                               <CardContent className="p-4">
                                 <div className="flex items-center gap-3 mb-2">
                                   <div className={`w-8 h-8 rounded bg-${template.color}-100 dark:bg-${template.color}-900/20 flex items-center justify-center`}>
@@ -730,8 +808,7 @@ export default function Lab() {
                                   Использовать
                                 </Button>
                               </CardContent>
-                            </Card>
-                          ))}
+                            </Card>)}
                         </div>
                       </div>
                     </div>
@@ -751,12 +828,28 @@ export default function Lab() {
                       </div>
 
                       <div className="space-y-4">
-                        {[
-                          { name: "Sales Forecast v1.2", type: "Регрессия", accuracy: "92.5%", status: "Продакшн", updated: "14/01/2024", color: "green" },
-                          { name: "Customer Churn v2.1", type: "Классификация", accuracy: "87.2%", status: "Тестирование", updated: "13/01/2024", color: "blue" },
-                          { name: "Anomaly Detection v1.0", type: "Аномалии", accuracy: "94.1%", status: "Разработка", updated: "12/01/2024", color: "orange" }
-                        ].map((model, index) => (
-                          <Card key={index} className="hover:shadow-md transition-shadow">
+                        {[{
+                        name: "Sales Forecast v1.2",
+                        type: "Регрессия",
+                        accuracy: "92.5%",
+                        status: "Продакшн",
+                        updated: "14/01/2024",
+                        color: "green"
+                      }, {
+                        name: "Customer Churn v2.1",
+                        type: "Классификация",
+                        accuracy: "87.2%",
+                        status: "Тестирование",
+                        updated: "13/01/2024",
+                        color: "blue"
+                      }, {
+                        name: "Anomaly Detection v1.0",
+                        type: "Аномалии",
+                        accuracy: "94.1%",
+                        status: "Разработка",
+                        updated: "12/01/2024",
+                        color: "orange"
+                      }].map((model, index) => <Card key={index} className="hover:shadow-md transition-shadow">
                             <CardContent className="p-4">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -791,8 +884,7 @@ export default function Lab() {
                                 </div>
                               </div>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </TabsContent>
@@ -1080,6 +1172,5 @@ export default function Lab() {
           </Tabs>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
