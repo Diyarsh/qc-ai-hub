@@ -61,7 +61,7 @@ export default function History() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('history.search')}
-              className="pl-10 max-w-md"
+              className="pl-10 w-full max-w-2xl"
             />
           </div>
 
