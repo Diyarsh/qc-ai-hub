@@ -77,7 +77,7 @@ export default function Dashboard() {
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
-            <Card className="bg-card border-border">
+            <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
               <CardHeader className="text-center py-2 px-3">
                 <FileText className="h-5 w-5 text-primary mx-auto mb-1" />
                 <CardTitle className="text-sm font-medium">{t('dashboard.documents.title')}</CardTitle>
@@ -87,7 +87,7 @@ export default function Dashboard() {
               </CardHeader>
             </Card>
 
-            <Card className="bg-card border-border">
+            <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
               <CardHeader className="text-center py-2 px-3">
                 <Bot className="h-5 w-5 text-primary mx-auto mb-1" />
                 <CardTitle className="text-sm font-medium">{t('dashboard.bots.title')}</CardTitle>
@@ -97,7 +97,7 @@ export default function Dashboard() {
               </CardHeader>
             </Card>
 
-            <Card className="bg-card border-border">
+            <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
               <CardHeader className="text-center py-2 px-3">
                 <Settings className="h-5 w-5 text-primary mx-auto mb-1" />
                 <CardTitle className="text-sm font-medium">{t('dashboard.developers.title')}</CardTitle>
