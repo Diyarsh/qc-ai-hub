@@ -10,6 +10,7 @@ import {
   ChevronRight,
   User
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 import {
   Sidebar,
@@ -26,11 +27,11 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "Чат", url: "/dashboard", icon: MessageCircle },
-  { title: "AI-Студия", url: "/ai-studio", icon: Sparkles },
-  { title: "Мои проекты", url: "/projects", icon: FolderOpen },
-  { title: "История", url: "/history", icon: History },
-  { title: "Лаборатория", url: "/lab", icon: FlaskConical },
+  { title: "sidebar.chat", url: "/dashboard", icon: MessageCircle },
+  { title: "sidebar.ai-studio", url: "/ai-studio", icon: Sparkles },
+  { title: "sidebar.projects", url: "/projects", icon: FolderOpen },
+  { title: "sidebar.history", url: "/history", icon: History },
+  { title: "sidebar.lab", url: "/lab", icon: FlaskConical },
 ];
 
 export function AppSidebar() {
@@ -38,6 +39,7 @@ export function AppSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
+  const { t } = useLanguage();
 
   const isActive = (path: string) => currentPath === path;
 
@@ -75,7 +77,7 @@ export function AppSidebar() {
                       }
                     >
                       <item.icon className="h-5 w-5 shrink-0" />
-                      {!collapsed && <span className="font-medium">{item.title}</span>}
+                      {!collapsed && <span className="font-medium">{t(item.title)}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -102,7 +104,7 @@ export function AppSidebar() {
                     <Code className="h-5 w-5 shrink-0" />
                     {!collapsed && (
                       <div className="flex items-center justify-between w-full">
-                        <span className="font-medium">Режим разработчика</span>
+                        <span className="font-medium">{t('sidebar.developer')}</span>
                         <ChevronRight className="h-4 w-4" />
                       </div>
                     )}
