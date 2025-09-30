@@ -92,7 +92,7 @@ export default {
       },
       backgroundImage: {
         'gradient-hero': 'var(--gradient-hero)',
-        'gradient-blue': 'var(--gradient-blue)',
+        'gradient-cyan': 'var(--gradient-cyan)',
         'gradient-glow': 'var(--gradient-glow)',
       },
       boxShadow: {
