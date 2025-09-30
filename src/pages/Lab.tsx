@@ -1030,7 +1030,7 @@ export default function Lab() {
                   <TabsList>
                     <TabsTrigger value="agents">Агенты</TabsTrigger>
                     <TabsTrigger value="models">Модели</TabsTrigger>
-                    <TabsTrigger value="costs">Стоимость</TabsTrigger>
+                    
                   </TabsList>
 
                   <TabsContent value="agents" className="mt-6">
