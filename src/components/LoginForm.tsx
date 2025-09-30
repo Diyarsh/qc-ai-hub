@@ -6,16 +6,23 @@ import { X } from "lucide-react";
 
 interface LoginFormProps {
   onClose: () => void;
+  onLogin: () => void;
 }
 
-export const LoginForm = ({ onClose }: LoginFormProps) => {
+export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", { email, password });
+    
+    // Check for admin credentials
+    if (email === "admin" && password === "admin") {
+      onLogin();
+      onClose();
+    } else {
+      alert("Неверные учетные данные. Используйте admin/admin");
+    }
   };
 
   return (

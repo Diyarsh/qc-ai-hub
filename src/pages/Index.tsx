@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { AdvantagesSection } from "@/components/AdvantagesSection";
@@ -8,6 +9,12 @@ import { LoginForm } from "@/components/LoginForm";
 
 const Index = () => {
   const [showLogin, setShowLogin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Redirect to dashboard if logged in
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -18,7 +25,10 @@ const Index = () => {
       <PlatformSection />
       
       {showLogin && (
-        <LoginForm onClose={() => setShowLogin(false)} />
+        <LoginForm 
+          onClose={() => setShowLogin(false)} 
+          onLogin={() => setIsLoggedIn(true)}
+        />
       )}
     </div>
   );
