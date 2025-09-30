@@ -26,7 +26,7 @@ export default function Lab() {
     isDeveloperMode
   } = useDeveloperMode();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("agents");
+  const [activeTab, setActiveTab] = useState("data");
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     triggers: true,
@@ -243,10 +243,9 @@ export default function Lab() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="data">Данные</TabsTrigger>
               <TabsTrigger value="agents">Агенты</TabsTrigger>
-              <TabsTrigger value="data">ML-Studio</TabsTrigger>
-              <TabsTrigger value="catalog">Каталог</TabsTrigger>
               <TabsTrigger value="monitoring">Мониторинг</TabsTrigger>
               <TabsTrigger value="documentation">Документация</TabsTrigger>
             </TabsList>
@@ -871,131 +870,6 @@ export default function Lab() {
               </div>
             </TabsContent>
 
-            <TabsContent value="catalog" className="mt-6">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold">Каталог</h3>
-                    <p className="text-muted-foreground">Готовые флоу и модели для быстрого старта</p>
-                  </div>
-                </div>
-
-                <Tabs defaultValue="all" className="w-full">
-                  <div className="flex items-center justify-between">
-                    <TabsList>
-                      <TabsTrigger value="all">Все</TabsTrigger>
-                      <TabsTrigger value="flows">Флоу</TabsTrigger>
-                      <TabsTrigger value="models">Модели</TabsTrigger>
-                    </TabsList>
-                    <div className="relative">
-                      <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                      <Input placeholder="Поиск в каталоге..." className="pl-9 w-64" />
-                    </div>
-                  </div>
-
-                  <TabsContent value="all" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                       <Card>
-                         <CardHeader>
-                           <div className="flex items-center justify-between">
-                             <FileText className="h-8 w-8 text-primary" />
-                             <Badge>Флоу</Badge>
-                           </div>
-                          <CardTitle className="text-lg">FAQ-бот по документам</CardTitle>
-                          <CardDescription>
-                            Автоматический бот для ответов на вопросы по корпоративным документам с использованием RAG
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Вход:</span>
-                              <span className="text-muted-foreground">Текст вопроса</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Выход:</span>
-                              <span className="text-muted-foreground">Ответ с источниками</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>⭐ 4.8</span>
-                              <span className="text-muted-foreground">1250</span>
-                            </div>
-                            <Button size="sm">Установить</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                       <Card>
-                         <CardHeader>
-                           <div className="flex items-center justify-between">
-                             <Database className="h-8 w-8 text-primary" />
-                             <Badge>Флоу</Badge>
-                           </div>
-                          <CardTitle className="text-lg">Data-assistant для SQL</CardTitle>
-                          <CardDescription>
-                            Помощник для создания SQL запросов и анализа данных на естественном языке
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Вход:</span>
-                              <span className="text-muted-foreground">Вопрос на естественном языке</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Выход:</span>
-                              <span className="text-muted-foreground">SQL запрос + результат</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>⭐ 4.6</span>
-                              <span className="text-muted-foreground">890</span>
-                            </div>
-                            <Button size="sm">Установить</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                       <Card>
-                         <CardHeader>
-                           <div className="flex items-center justify-between">
-                             <BarChart3 className="h-8 w-8 text-primary" />
-                             <Badge variant="secondary">Модель</Badge>
-                           </div>
-                          <CardTitle className="text-lg">Прогноз спроса</CardTitle>
-                          <CardDescription>
-                            Модель для прогнозирования спроса на товары на основе исторических данных
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Вход:</span>
-                              <span className="text-muted-foreground">Исторические данные продаж</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Выход:</span>
-                              <span className="text-muted-foreground">Прогноз спроса</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>⭐ 4.7</span>
-                              <span className="text-muted-foreground">650</span>
-                            </div>
-                            <Button size="sm">Установить</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-            </TabsContent>
-
             <TabsContent value="monitoring" className="mt-6">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
@@ -1006,10 +880,10 @@ export default function Lab() {
                 </div>
 
                 <Tabs defaultValue="agents" className="w-full">
-                  <TabsList>
+                  <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="agents">Агенты</TabsTrigger>
                     <TabsTrigger value="models">Модели</TabsTrigger>
-                    
+                    <TabsTrigger value="cost">Стоимость</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="agents" className="mt-6">
@@ -1108,6 +982,98 @@ export default function Lab() {
                           </div>
                         </CardContent>
                       </Card>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="models" className="mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-2">
+                            <BarChart3 className="h-5 w-5 text-primary" />
+                            <span className="font-medium">Активные модели</span>
+                          </div>
+                          <div className="text-2xl font-bold mt-2">2</div>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5 text-primary" />
+                            <span className="font-medium">Средний AUC</span>
+                          </div>
+                          <div className="text-2xl font-bold mt-2">0.95</div>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-2">
+                            <Activity className="h-5 w-5 text-primary" />
+                            <span className="font-medium">Всего предсказаний</span>
+                          </div>
+                          <div className="text-2xl font-bold mt-2">24K</div>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-2">
+                            <Gauge className="h-5 w-5 text-primary" />
+                            <span className="font-medium">Дрейф признаков</span>
+                          </div>
+                          <div className="text-2xl font-bold mt-2">1</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">Детали по моделям</h4>
+                      
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="px-3 py-1 rounded bg-primary/10 text-primary text-xs font-medium">
+                                v2.1
+                              </div>
+                              <div>
+                                <h5 className="font-medium">Demand Forecast</h5>
+                                <div className="text-sm text-muted-foreground">
+                                  AUC: 0.94 • F1: 0.89 • Предсказаний: 15,000 • Обновлено: 15/01/2024
+                                </div>
+                              </div>
+                            </div>
+                            <Badge className="bg-primary/10 text-primary">Дрейф: Низкий</Badge>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="px-3 py-1 rounded bg-primary/10 text-primary text-xs font-medium">
+                                v1.8
+                              </div>
+                              <div>
+                                <h5 className="font-medium">Fraud Detection</h5>
+                                <div className="text-sm text-muted-foreground">
+                                  AUC: 0.97 • F1: 0.92 • Предсказаний: 8,500 • Обновлено: 14/01/2024
+                                </div>
+                              </div>
+                            </div>
+                            <Badge className="bg-yellow-500/10 text-yellow-600">Дрейф: Средний</Badge>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="cost" className="mt-6">
+                    <div className="text-center text-muted-foreground py-8">
+                      <p>Раздел в разработке</p>
                     </div>
                   </TabsContent>
                 </Tabs>
