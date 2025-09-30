@@ -27,14 +27,22 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
-              <Route path="/ai-studio" element={<Layout><AIStudio /></Layout>} />
-              <Route path="/history" element={<Layout><History /></Layout>} />
-              <Route path="/projects" element={<Layout><Projects /></Layout>} />
-              <Route path="/lab" element={<Layout><Lab /></Layout>} />
-              <Route path="/developer" element={<Layout><Developer /></Layout>} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
+              <Route
+                path="/*"
+                element={
+                  <Layout>
+                    <Routes>
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/ai-studio" element={<AIStudio />} />
+                      <Route path="/history" element={<History />} />
+                      <Route path="/projects" element={<Projects />} />
+                      <Route path="/lab" element={<Lab />} />
+                      <Route path="/developer" element={<Developer />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Layout>
+                }
+              />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
