@@ -48,12 +48,12 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
-                Email
+                Логин
               </label>
               <Input
                 id="email"
-                type="email"
-                placeholder="example@qazcloud.com"
+                type="text"
+                placeholder="admin"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
