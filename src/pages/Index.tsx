@@ -2,9 +2,6 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
-import { AdvantagesSection } from "@/components/AdvantagesSection";
-import { ServicesSection } from "@/components/ServicesSection";
-import { PlatformSection } from "@/components/PlatformSection";
 import { LoginForm } from "@/components/LoginForm";
 
 const Index = () => {
@@ -20,9 +17,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navigation onLoginClick={() => setShowLogin(true)} />
       <HeroSection onLoginClick={() => setShowLogin(true)} />
-      <AdvantagesSection />
-      <ServicesSection />
-      <PlatformSection />
       
       {showLogin && (
         <LoginForm 
