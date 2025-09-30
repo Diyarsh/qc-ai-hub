@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Send, Paperclip, FileText, Bot, Settings } from "lucide-react";
+import { Send, Paperclip, FileText, Bot, Sun, Moon, Settings } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export default function Dashboard() {
+  const { theme, setTheme } = useTheme();
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -15,8 +17,16 @@ export default function Dashboard() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">RU</span>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-4 w-4" />
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </header>
