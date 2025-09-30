@@ -321,7 +321,7 @@ export default function Lab() {
                           <Button variant="outline" size="sm" title="Отладка" onClick={() => setShowDebugConsole(!showDebugConsole)}>
                             <Terminal className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" className="bg-green-600">
+                          <Button size="sm" className="bg-primary">
                             <Play className="h-4 w-4 mr-2" />
                             Запустить
                           </Button>
@@ -538,9 +538,9 @@ export default function Lab() {
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
-                                <div className={`h-10 w-10 rounded-lg bg-${dataset.color}-100 dark:bg-${dataset.color}-900/20 flex items-center justify-center`}>
-                                  <Database className={`h-5 w-5 text-${dataset.color}-600 dark:text-${dataset.color}-400`} />
-                                </div>
+                               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                 <Database className="h-5 w-5 text-primary" />
+                               </div>
                                 <div>
                                   <h4 className="font-medium">{dataset.name}</h4>
                                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -686,65 +686,65 @@ export default function Lab() {
                       <div>
                         <h4 className="text-lg font-semibold mb-4">Типы моделей AutoML</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          <Card className="cursor-pointer">
-                            <CardHeader>
-                              <CardTitle className="flex items-center gap-2">
-                                <BarChart3 className="h-5 w-5 text-blue-600" />
-                                Классификация
-                              </CardTitle>
-                              <CardDescription>Создание моделей для категоризации данных</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                              <Button className="w-full bg-primary">
-                                Создать модель
-                              </Button>
-                            </CardContent>
-                          </Card>
+                           <Card>
+                             <CardHeader>
+                               <CardTitle className="flex items-center gap-2">
+                                 <BarChart3 className="h-5 w-5 text-primary" />
+                                 Классификация
+                               </CardTitle>
+                               <CardDescription>Создание моделей для категоризации данных</CardDescription>
+                             </CardHeader>
+                             <CardContent>
+                               <Button className="w-full bg-primary">
+                                 Создать модель
+                               </Button>
+                             </CardContent>
+                           </Card>
 
-                          <Card className="cursor-pointer">
-                            <CardHeader>
-                              <CardTitle className="flex items-center gap-2">
-                                <TrendingUp className="h-5 w-5 text-blue-600" />
-                                Регрессия
-                              </CardTitle>
-                              <CardDescription>Прогнозирование числовых значений</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                              <Button className="w-full bg-primary">
-                                Создать модель
-                              </Button>
-                            </CardContent>
-                          </Card>
+                           <Card>
+                             <CardHeader>
+                               <CardTitle className="flex items-center gap-2">
+                                 <TrendingUp className="h-5 w-5 text-primary" />
+                                 Регрессия
+                               </CardTitle>
+                               <CardDescription>Прогнозирование числовых значений</CardDescription>
+                             </CardHeader>
+                             <CardContent>
+                               <Button className="w-full bg-primary">
+                                 Создать модель
+                               </Button>
+                             </CardContent>
+                           </Card>
 
-                          <Card className="cursor-pointer">
-                            <CardHeader>
-                              <CardTitle className="flex items-center gap-2">
-                                <Clock className="h-5 w-5 text-blue-600" />
-                                Временные ряды
-                              </CardTitle>
-                              <CardDescription>Анализ и прогнозирование трендов</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                              <Button className="w-full bg-primary">
-                                Создать модель
-                              </Button>
-                            </CardContent>
-                          </Card>
+                           <Card>
+                             <CardHeader>
+                               <CardTitle className="flex items-center gap-2">
+                                 <Clock className="h-5 w-5 text-primary" />
+                                 Временные ряды
+                               </CardTitle>
+                               <CardDescription>Анализ и прогнозирование трендов</CardDescription>
+                             </CardHeader>
+                             <CardContent>
+                               <Button className="w-full bg-primary">
+                                 Создать модель
+                               </Button>
+                             </CardContent>
+                           </Card>
 
-                          <Card className="cursor-pointer">
-                            <CardHeader>
-                              <CardTitle className="flex items-center gap-2">
-                                <Network className="h-5 w-5 text-blue-600" />
-                                Кластеризация
-                              </CardTitle>
-                              <CardDescription>Группировка данных по схожести</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                              <Button className="w-full bg-primary">
-                                Создать модель
-                              </Button>
-                            </CardContent>
-                          </Card>
+                           <Card>
+                             <CardHeader>
+                               <CardTitle className="flex items-center gap-2">
+                                 <Network className="h-5 w-5 text-primary" />
+                                 Кластеризация
+                               </CardTitle>
+                               <CardDescription>Группировка данных по схожести</CardDescription>
+                             </CardHeader>
+                             <CardContent>
+                               <Button className="w-full bg-primary">
+                                 Создать модель
+                               </Button>
+                             </CardContent>
+                           </Card>
 
                           
                         </div>
@@ -832,9 +832,9 @@ export default function Lab() {
                             <CardContent className="p-4">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                  <div className={`h-10 w-10 rounded-lg bg-${model.color}-100 dark:bg-${model.color}-900/20 flex items-center justify-center`}>
-                                    <Brain className={`h-5 w-5 text-${model.color}-600 dark:text-${model.color}-400`} />
-                                  </div>
+                               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                 <Brain className="h-5 w-5 text-primary" />
+                               </div>
                                   <div>
                                     <h4 className="font-medium">{model.name}</h4>
                                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -895,12 +895,12 @@ export default function Lab() {
 
                   <TabsContent value="all" className="mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <Card className="">
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <FileText className="h-8 w-8 text-blue-500" />
-                            <Badge>Флоу</Badge>
-                          </div>
+                       <Card>
+                         <CardHeader>
+                           <div className="flex items-center justify-between">
+                             <FileText className="h-8 w-8 text-primary" />
+                             <Badge>Флоу</Badge>
+                           </div>
                           <CardTitle className="text-lg">FAQ-бот по документам</CardTitle>
                           <CardDescription>
                             Автоматический бот для ответов на вопросы по корпоративным документам с использованием RAG
@@ -927,12 +927,12 @@ export default function Lab() {
                         </CardContent>
                       </Card>
 
-                      <Card className="">
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <Database className="h-8 w-8 text-green-500" />
-                            <Badge>Флоу</Badge>
-                          </div>
+                       <Card>
+                         <CardHeader>
+                           <div className="flex items-center justify-between">
+                             <Database className="h-8 w-8 text-primary" />
+                             <Badge>Флоу</Badge>
+                           </div>
                           <CardTitle className="text-lg">Data-assistant для SQL</CardTitle>
                           <CardDescription>
                             Помощник для создания SQL запросов и анализа данных на естественном языке
@@ -959,12 +959,12 @@ export default function Lab() {
                         </CardContent>
                       </Card>
 
-                      <Card className="">
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <BarChart3 className="h-8 w-8 text-purple-500" />
-                            <Badge variant="secondary">Модель</Badge>
-                          </div>
+                       <Card>
+                         <CardHeader>
+                           <div className="flex items-center justify-between">
+                             <BarChart3 className="h-8 w-8 text-primary" />
+                             <Badge variant="secondary">Модель</Badge>
+                           </div>
                           <CardTitle className="text-lg">Прогноз спроса</CardTitle>
                           <CardDescription>
                             Модель для прогнозирования спроса на товары на основе исторических данных
@@ -1016,20 +1016,20 @@ export default function Lab() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                       <Card>
                         <CardContent className="p-4">
-                          <div className="flex items-center gap-2">
-                            <Activity className="h-5 w-5 text-green-500" />
-                            <span className="font-medium">Активные агенты</span>
-                          </div>
+                           <div className="flex items-center gap-2">
+                             <Activity className="h-5 w-5 text-primary" />
+                             <span className="font-medium">Активные агенты</span>
+                           </div>
                           <div className="text-2xl font-bold mt-2">2</div>
                         </CardContent>
                       </Card>
 
                       <Card>
                         <CardContent className="p-4">
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-5 w-5 text-blue-500" />
-                            <span className="font-medium">Среднее время ответа</span>
-                          </div>
+                           <div className="flex items-center gap-2">
+                             <Clock className="h-5 w-5 text-primary" />
+                             <span className="font-medium">Среднее время ответа</span>
+                           </div>
                           <div className="text-2xl font-bold mt-2">667ms</div>
                         </CardContent>
                       </Card>
@@ -1046,10 +1046,10 @@ export default function Lab() {
 
                       <Card>
                         <CardContent className="p-4">
-                          <div className="flex items-center gap-2">
-                            <Zap className="h-5 w-5 text-purple-500" />
-                            <span className="font-medium">Всего токенов</span>
-                          </div>
+                           <div className="flex items-center gap-2">
+                             <Zap className="h-5 w-5 text-primary" />
+                             <span className="font-medium">Всего токенов</span>
+                           </div>
                           <div className="text-2xl font-bold mt-2">77K</div>
                         </CardContent>
                       </Card>
@@ -1062,7 +1062,7 @@ export default function Lab() {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                             <div className="w-2 h-2 bg-primary rounded-full"></div>
                               <div>
                                 <h5 className="font-medium">FAQ Bot</h5>
                                 <div className="text-sm text-muted-foreground">
@@ -1079,7 +1079,7 @@ export default function Lab() {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                             <div className="w-2 h-2 bg-primary rounded-full"></div>
                               <div>
                                 <h5 className="font-medium">SQL Assistant</h5>
                                 <div className="text-sm text-muted-foreground">
@@ -1122,29 +1122,29 @@ export default function Lab() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card className="cursor-pointer">
-                    <CardContent className="p-6">
-                      <FileText className="h-8 w-8 text-blue-500 mb-4" />
-                      <h4 className="font-medium mb-2">Начало работы</h4>
-                      <p className="text-sm text-muted-foreground">Основы создания и настройки AI агентов</p>
-                    </CardContent>
-                  </Card>
+                   <Card>
+                     <CardContent className="p-6">
+                       <FileText className="h-8 w-8 text-primary mb-4" />
+                       <h4 className="font-medium mb-2">Начало работы</h4>
+                       <p className="text-sm text-muted-foreground">Основы создания и настройки AI агентов</p>
+                     </CardContent>
+                   </Card>
 
-                  <Card className="cursor-pointer">
-                    <CardContent className="p-6">
-                      <Settings className="h-8 w-8 text-green-500 mb-4" />
-                      <h4 className="font-medium mb-2">API Reference</h4>
-                      <p className="text-sm text-muted-foreground">Полная документация по API</p>
-                    </CardContent>
-                  </Card>
+                   <Card>
+                     <CardContent className="p-6">
+                       <Settings className="h-8 w-8 text-primary mb-4" />
+                       <h4 className="font-medium mb-2">API Reference</h4>
+                       <p className="text-sm text-muted-foreground">Полная документация по API</p>
+                     </CardContent>
+                   </Card>
 
-                  <Card className="cursor-pointer">
-                    <CardContent className="p-6">
-                      <BarChart3 className="h-8 w-8 text-purple-500 mb-4" />
-                      <h4 className="font-medium mb-2">Примеры использования</h4>
-                      <p className="text-sm text-muted-foreground">Практические кейсы и решения</p>
-                    </CardContent>
-                  </Card>
+                   <Card>
+                     <CardContent className="p-6">
+                       <BarChart3 className="h-8 w-8 text-primary mb-4" />
+                       <h4 className="font-medium mb-2">Примеры использования</h4>
+                       <p className="text-sm text-muted-foreground">Практические кейсы и решения</p>
+                     </CardContent>
+                   </Card>
                 </div>
               </div>
             </TabsContent>
