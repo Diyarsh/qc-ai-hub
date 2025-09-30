@@ -244,7 +244,7 @@ export default function Lab() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="agents">ML-Studio</TabsTrigger>
+              <TabsTrigger value="agents">Агенты</TabsTrigger>
               <TabsTrigger value="data">ML-Studio</TabsTrigger>
               <TabsTrigger value="catalog">Каталог</TabsTrigger>
               <TabsTrigger value="monitoring">Мониторинг</TabsTrigger>
