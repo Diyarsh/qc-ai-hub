@@ -4,7 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { FlaskConical, Plus, Search, Filter, Settings, Play, BarChart3, FileText, Database, Clock, AlertTriangle, Zap, Activity, Download, Eye, MoreHorizontal } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { FlaskConical, Plus, Search, Filter, Settings, Play, BarChart3, FileText, Database, Clock, AlertTriangle, Zap, Activity, Download, Eye, MoreHorizontal, Brain, MessageSquare, Upload, Mail, Shield, ChevronDown, ChevronRight, Workflow, Code, Bot, TestTube, Users, Gauge, BookOpen, Star, TrendingUp, AlertCircle, CheckCircle2, XCircle, CalendarDays, Globe, Slack, Github, RotateCcw, Maximize2, ZoomIn, ZoomOut, Terminal, Bug, MapPin, Layers, Share2, Palette, Network, Sparkles, Lock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTheme } from "next-themes";
@@ -19,12 +21,116 @@ export default function Lab() {
   const { isDeveloperMode } = useDeveloperMode();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("agents");
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    triggers: true,
+    llm: true,
+    knowledge: false,
+    tools: false,
+    memory: false,
+    guardrails: false,
+    eval: false,
+    actions: false
+  });
+  const [showDebugConsole, setShowDebugConsole] = useState(false);
+  const [debugTab, setDebugTab] = useState("logs");
 
   useEffect(() => {
     if (!isDeveloperMode) {
       navigate('/dashboard');
     }
   }, [isDeveloperMode, navigate]);
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+
+  const nodeCategories = [
+    {
+      key: 'triggers',
+      title: 'ТРИГГЕРЫ',
+      nodes: [
+        { icon: Zap, name: 'Webhook', description: 'HTTP триггер' },
+        { icon: CalendarDays, name: 'Расписание', description: 'Cron триггер' },
+        { icon: Slack, name: 'Slack Events', description: 'События Slack' },
+        { icon: Upload, name: 'File Upload', description: 'Загрузка файла' },
+        { icon: Bot, name: 'Dashboard Button', description: 'Кнопка дашборда' }
+      ]
+    },
+    {
+      key: 'llm',
+      title: 'LLM / CHAT',
+      nodes: [
+        { icon: MessageSquare, name: 'Chat GPT', description: 'OpenAI модель' },
+        { icon: MessageSquare, name: 'Claude', description: 'Anthropic модель' },
+        { icon: Brain, name: 'Gemini', description: 'Google модель' },
+        { icon: Code, name: 'System Prompt', description: 'Системный промпт' },
+        { icon: TestTube, name: 'Few-shot', description: 'Примеры' }
+      ]
+    },
+    {
+      key: 'knowledge',
+      title: 'ЗНАНИЯ',
+      nodes: [
+        { icon: Search, name: 'RAG Search', description: 'Поиск по базе' },
+        { icon: Database, name: 'Vector DB', description: 'Векторная БД' },
+        { icon: FileText, name: 'Document', description: 'Документы' },
+        { icon: Globe, name: 'Web Scraper', description: 'Веб парсер' },
+        { icon: Sparkles, name: 'Embeddings', description: 'Векторизация' }
+      ]
+    },
+    {
+      key: 'tools',
+      title: 'ИНСТРУМЕНТЫ',
+      nodes: [
+        { icon: Network, name: 'HTTP Request', description: 'API запрос' },
+        { icon: Database, name: 'SQL Query', description: 'SQL запрос' },
+        { icon: Code, name: 'Python Script', description: 'Python код' },
+        { icon: Mail, name: 'Email', description: 'Отправка почты' },
+        { icon: Github, name: 'Git Actions', description: 'Git операции' }
+      ]
+    },
+    {
+      key: 'memory',
+      title: 'ПАМЯТЬ',
+      nodes: [
+        { icon: Brain, name: 'Short Memory', description: 'Краткосрочная' },
+        { icon: Database, name: 'Long Memory', description: 'Долгосрочная' },
+        { icon: Users, name: 'Session Store', description: 'Сессия' }
+      ]
+    },
+    {
+      key: 'guardrails',
+      title: 'БЕЗОПАСНОСТЬ',
+      nodes: [
+        { icon: Shield, name: 'PII Masking', description: 'Маскировка данных' },
+        { icon: AlertTriangle, name: 'Content Filter', description: 'Фильтр контента' },
+        { icon: Lock, name: 'Rate Limits', description: 'Лимиты запросов' }
+      ]
+    },
+    {
+      key: 'eval',
+      title: 'МОНИТОРИНГ',
+      nodes: [
+        { icon: Activity, name: 'Logging', description: 'Логирование' },
+        { icon: BarChart3, name: 'Metrics', description: 'Метрики' },
+        { icon: Star, name: 'Feedback', description: 'Обратная связь' }
+      ]
+    },
+    {
+      key: 'actions',
+      title: 'ДЕЙСТВИЯ',
+      nodes: [
+        { icon: Globe, name: 'REST API', description: 'REST эндпоинт' },
+        { icon: MessageSquare, name: 'Chat Widget', description: 'Виджет чата' },
+        { icon: Slack, name: 'Slack Bot', description: 'Slack бот' },
+        { icon: Share2, name: 'Webhook Out', description: 'Исходящий вебхук' }
+      ]
+    }
+  ];
 
   return (
     <div className="flex flex-col h-full">
@@ -68,119 +174,253 @@ export default function Lab() {
             </TabsList>
 
             <TabsContent value="agents" className="mt-6">
-              <div className="flex gap-4 h-[600px]">
-                {/* Left Sidebar - Node Library */}
-                <div className="w-80 bg-card border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">Библиотека узлов</h3>
-                    <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Создать флоу
-                    </Button>
+              <div className="flex flex-col gap-4 h-[700px]">
+                <div className="flex gap-4 flex-1">
+                  {/* Left Sidebar - Node Library */}
+                  <div className="w-80 bg-card border rounded-lg overflow-hidden flex flex-col">
+                    <div className="p-4 border-b">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold">Библиотека узлов</h3>
+                        <Button size="sm" className="bg-primary hover:bg-primary/90">
+                          <Plus className="h-4 w-4 mr-2" />
+                          Создать флоу
+                        </Button>
+                      </div>
+                      <div className="relative">
+                        <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+                        <Input placeholder="Поиск узлов..." className="pl-9 h-8" />
+                      </div>
+                    </div>
+                    
+                    <ScrollArea className="flex-1 p-4">
+                      <div className="space-y-3">
+                        {nodeCategories.map((category) => (
+                          <div key={category.key}>
+                            <button
+                              onClick={() => toggleCategory(category.key)}
+                              className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-muted/50 transition-colors"
+                            >
+                              {expandedCategories[category.key] ? (
+                                <ChevronDown className="h-3 w-3" />
+                              ) : (
+                                <ChevronRight className="h-3 w-3" />
+                              )}
+                              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                {category.title}
+                              </span>
+                            </button>
+                            
+                            {expandedCategories[category.key] && (
+                              <div className="ml-5 space-y-1">
+                                {category.nodes.map((node, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex items-center gap-3 p-2 rounded hover:bg-muted/70 cursor-grab active:cursor-grabbing transition-colors group"
+                                    draggable
+                                  >
+                                    <node.icon className="h-4 w-4 text-primary flex-shrink-0" />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                        {node.name}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground truncate">
+                                        {node.description}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
                   </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-2">ТРИГГЕРЫ</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <Zap className="h-4 w-4" />
-                          <span className="text-sm">Webhook</span>
+
+                  {/* Center Canvas */}
+                  <div className="flex-1 bg-card border rounded-lg overflow-hidden flex flex-col">
+                    <div className="p-4 border-b bg-muted/30">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-semibold">Визуальный редактор</h3>
+                          <Badge variant="secondary" className="text-xs">
+                            Нет активных узлов
+                          </Badge>
                         </div>
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <Play className="h-4 w-4" />
-                          <span className="text-sm">Расписание</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-2">LLM / CHAT</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <FileText className="h-4 w-4" />
-                          <span className="text-sm">Chat GPT</span>
-                        </div>
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <FileText className="h-4 w-4" />
-                          <span className="text-sm">Claude</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-2">KNOWLEDGE</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <Search className="h-4 w-4" />
-                          <span className="text-sm">RAG Search</span>
-                        </div>
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <FileText className="h-4 w-4" />
-                          <span className="text-sm">Document</span>
+                        <div className="flex items-center gap-2">
+                          <Button variant="outline" size="sm" title="Сохранить">
+                            <Download className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" title="Масштаб">
+                            <ZoomIn className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" title="По размеру">
+                            <Maximize2 className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" title="Отладка" onClick={() => setShowDebugConsole(!showDebugConsole)}>
+                            <Terminal className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                            <Play className="h-4 w-4 mr-2" />
+                            Запустить
+                          </Button>
                         </div>
                       </div>
                     </div>
                     
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-2">TOOLS</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <Database className="h-4 w-4" />
-                          <span className="text-sm">HTTP</span>
-                        </div>
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <Database className="h-4 w-4" />
-                          <span className="text-sm">SQL</span>
+                    <div className="flex-1 relative bg-gradient-to-br from-background to-muted/20">
+                      {/* Grid pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-30"
+                        style={{
+                          backgroundImage: `
+                            linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+                            linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
+                          `,
+                          backgroundSize: '20px 20px'
+                        }}
+                      />
+                      
+                      {/* Empty state */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Workflow className="h-8 w-8 text-primary" />
+                          </div>
+                          <h4 className="text-lg font-semibold mb-2">Создайте свой первый флоу</h4>
+                          <p className="text-muted-foreground mb-4 max-w-md">
+                            Перетащите узлы из библиотеки слева или выберите готовый шаблон
+                          </p>
+                          <div className="flex gap-2 justify-center">
+                            <Button variant="outline" size="sm">
+                              <Palette className="h-4 w-4 mr-2" />
+                              Шаблоны
+                            </Button>
+                            <Button size="sm">
+                              <Plus className="h-4 w-4 mr-2" />
+                              Начать с пустого
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-2">БЕЗОПАСНОСТЬ</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 rounded hover:bg-muted cursor-pointer">
-                          <AlertTriangle className="h-4 w-4" />
-                          <span className="text-sm">Guardrails</span>
-                        </div>
+                  </div>
+
+                  {/* Right Sidebar - Node Settings */}
+                  <div className="w-80 bg-card border rounded-lg overflow-hidden flex flex-col">
+                    <div className="p-4 border-b">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold">
+                          {selectedNode ? 'Настройки узла' : 'Свойства'}
+                        </h3>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="h-4 w-4" />
+                        </Button>
                       </div>
+                    </div>
+                    
+                    <div className="flex-1 p-4">
+                      {selectedNode ? (
+                        <div className="space-y-4">
+                          <div>
+                            <label className="text-sm font-medium">Название узла</label>
+                            <Input value={selectedNode} className="mt-1" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">Описание</label>
+                            <Textarea placeholder="Опишите функцию узла..." className="mt-1" rows={3} />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">Параметры</label>
+                            <div className="mt-2 space-y-2">
+                              <Input placeholder="Ключ" />
+                              <Input placeholder="Значение" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center text-muted-foreground">
+                          <MapPin className="h-8 w-8 mx-auto mb-3 opacity-50" />
+                          <p className="text-sm">Выберите узел на холсте для настройки его параметров</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                {/* Center Canvas */}
-                <div className="flex-1 bg-card border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">Canvas</h3>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Play className="h-4 w-4" />
-                      </Button>
+                {/* Debug Console (collapsible) */}
+                {showDebugConsole && (
+                  <div className="h-48 bg-card border rounded-lg overflow-hidden flex flex-col">
+                    <div className="p-3 border-b bg-muted/30">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <h4 className="font-medium">Консоль отладки</h4>
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span className="text-xs text-muted-foreground">Активна</span>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => setShowDebugConsole(false)}>
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button 
+                          variant={debugTab === "logs" ? "secondary" : "ghost"} 
+                          size="sm"
+                          onClick={() => setDebugTab("logs")}
+                        >
+                          <FileText className="h-3 w-3 mr-1" />
+                          Логи
+                        </Button>
+                        <Button 
+                          variant={debugTab === "context" ? "secondary" : "ghost"} 
+                          size="sm"
+                          onClick={() => setDebugTab("context")}
+                        >
+                          <Database className="h-3 w-3 mr-1" />
+                          Контекст
+                        </Button>
+                        <Button 
+                          variant={debugTab === "errors" ? "secondary" : "ghost"} 
+                          size="sm"
+                          onClick={() => setDebugTab("errors")}
+                        >
+                          <Bug className="h-3 w-3 mr-1" />
+                          Ошибки
+                        </Button>
+                      </div>
                     </div>
+                    
+                    <ScrollArea className="flex-1 p-3">
+                      {debugTab === "logs" && (
+                        <div className="space-y-2 font-mono text-sm">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <span className="text-xs">12:34:56</span>
+                            <CheckCircle2 className="h-3 w-3 text-green-500" />
+                            <span>Флоу инициализирован</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <span className="text-xs">12:34:57</span>
+                            <AlertCircle className="h-3 w-3 text-yellow-500" />
+                            <span>Ожидание входных данных...</span>
+                          </div>
+                        </div>
+                      )}
+                      {debugTab === "context" && (
+                        <div className="text-sm text-muted-foreground">
+                          <p>Контекст выполнения будет отображаться здесь</p>
+                        </div>
+                      )}
+                      {debugTab === "errors" && (
+                        <div className="text-sm text-muted-foreground">
+                          <p>Ошибки будут отображаться здесь</p>
+                        </div>
+                      )}
+                    </ScrollArea>
                   </div>
-                  <div className="h-full min-h-[400px] border-2 border-dashed border-muted rounded-lg flex items-center justify-center">
-                    <div className="text-center text-muted-foreground">
-                      <FlaskConical className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                      <p>Перетащите узлы для создания флоу</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Sidebar - Settings */}
-                <div className="w-80 bg-card border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">Настройки узла</h3>
-                    <Button variant="ghost" size="sm">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="text-center text-muted-foreground">
-                    <p className="text-sm">Выберите узел для настройки</p>
-                  </div>
-                </div>
+                )}
               </div>
             </TabsContent>
 
@@ -188,20 +428,27 @@ export default function Lab() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-semibold">Данные</h3>
-                    <p className="text-muted-foreground">Управление данными и AutoML</p>
+                    <h3 className="text-xl font-semibold">Данные и AutoML</h3>
+                    <p className="text-muted-foreground">Управление данными, трансформация и автоматическое машинное обучение</p>
                   </div>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Подключить источник
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Загрузить файл
+                    </Button>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Подключить источник
+                    </Button>
+                  </div>
                 </div>
 
                 <Tabs defaultValue="datasets" className="w-full">
-                  <TabsList>
+                  <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="datasets">Датасеты</TabsTrigger>
-                    <TabsTrigger value="automl">AutoML</TabsTrigger>
                     <TabsTrigger value="transformation">Трансформация</TabsTrigger>
+                    <TabsTrigger value="automl">AutoML</TabsTrigger>
+                    <TabsTrigger value="models">Модели</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="datasets" className="mt-4">
@@ -214,101 +461,338 @@ export default function Lab() {
                         <Filter className="h-4 w-4 mr-2" />
                         Фильтр
                       </Button>
+                      <Button variant="outline">
+                        <TrendingUp className="h-4 w-4 mr-2" />
+                        Аналитика
+                      </Button>
                     </div>
 
                     <div className="space-y-4">
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <Database className="h-8 w-8 text-blue-500" />
-                              <div>
-                                <h4 className="font-medium">Продажи 2024</h4>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                  <span>Тип: CSV</span>
-                                  <span>Строк: 50,000</span>
-                                  <span>Владелец: Аналитик</span>
-                                  <span>Обновлен: 15/01/2024</span>
+                      {[
+                        { name: "Продажи 2024", type: "CSV", rows: "50,000", owner: "Аналитик", updated: "15/01/2024", status: "Активен", color: "blue" },
+                        { name: "Клиентская база", type: "PostgreSQL", rows: "120,000", owner: "ML Team", updated: "14/01/2024", status: "Активен", color: "green" },
+                        { name: "Веб-логи", type: "JSON", rows: "1,500,000", owner: "DevOps", updated: "13/01/2024", status: "Обработка", color: "orange" },
+                        { name: "Отзывы клиентов", type: "Text", rows: "25,000", owner: "Маркетинг", updated: "12/01/2024", status: "Активен", color: "purple" }
+                      ].map((dataset, index) => (
+                        <Card key={index} className="hover:shadow-md transition-shadow">
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <div className={`h-10 w-10 rounded-lg bg-${dataset.color}-100 dark:bg-${dataset.color}-900/20 flex items-center justify-center`}>
+                                  <Database className={`h-5 w-5 text-${dataset.color}-600 dark:text-${dataset.color}-400`} />
+                                </div>
+                                <div>
+                                  <h4 className="font-medium">{dataset.name}</h4>
+                                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                    <span>Тип: {dataset.type}</span>
+                                    <span>Строк: {dataset.rows}</span>
+                                    <span>Владелец: {dataset.owner}</span>
+                                    <span>Обновлен: {dataset.updated}</span>
+                                  </div>
                                 </div>
                               </div>
+                              <div className="flex items-center gap-2">
+                                <Badge variant={dataset.status === "Активен" ? "secondary" : "outline"}>
+                                  {dataset.status}
+                                </Badge>
+                                <Button variant="ghost" size="sm" title="Профилирование">
+                                  <BarChart3 className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" title="Просмотр">
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" title="Настройки">
+                                  <Settings className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" title="Скачать">
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge variant="secondary">Активен</Badge>
-                              <Button variant="ghost" size="sm">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <Settings className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </TabsContent>
 
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <Database className="h-8 w-8 text-green-500" />
-                              <div>
-                                <h4 className="font-medium">Клиентская база</h4>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                  <span>Тип: PostgreSQL</span>
-                                  <span>Строк: 120,000</span>
-                                  <span>Владелец: ML Team</span>
-                                  <span>Обновлен: 14/01/2024</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Badge variant="secondary">Активен</Badge>
-                              <Button variant="ghost" size="sm">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <Settings className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                  <TabsContent value="transformation" className="mt-4">
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-lg font-semibold">Конструктор трансформаций</h4>
+                          <p className="text-muted-foreground">Визуальное создание пайплайнов обработки данных</p>
+                        </div>
+                        <Button>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Новый рецепт
+                        </Button>
+                      </div>
 
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <Database className="h-8 w-8 text-orange-500" />
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Transform Builder */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Workflow className="h-5 w-5" />
+                              Шаги трансформации
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              {[
+                                { icon: Filter, name: "Фильтр", desc: "Строки где age > 25" },
+                                { icon: Layers, name: "Группировка", desc: "По городам" },
+                                { icon: BarChart3, name: "Агрегация", desc: "Среднее значение дохода" }
+                              ].map((step, index) => (
+                                <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                                  <step.icon className="h-4 w-4 text-primary" />
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm">{step.name}</div>
+                                    <div className="text-xs text-muted-foreground">{step.desc}</div>
+                                  </div>
+                                  <Button variant="ghost" size="sm">
+                                    <Settings className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                              <Button variant="outline" className="w-full">
+                                <Plus className="h-4 w-4 mr-2" />
+                                Добавить шаг
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Preview */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Eye className="h-5 w-5" />
+                              Предпросмотр результата
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div className="text-sm text-muted-foreground">Первые 10 строк после трансформации:</div>
+                              <div className="border rounded overflow-hidden">
+                                <table className="w-full text-sm">
+                                  <thead className="bg-muted">
+                                    <tr>
+                                      <th className="p-2 text-left">Город</th>
+                                      <th className="p-2 text-left">Средний доход</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr className="border-t">
+                                      <td className="p-2">Алматы</td>
+                                      <td className="p-2">₸450,000</td>
+                                    </tr>
+                                    <tr className="border-t">
+                                      <td className="p-2">Астана</td>
+                                      <td className="p-2">₸520,000</td>
+                                    </tr>
+                                    <tr className="border-t">
+                                      <td className="p-2">Шымкент</td>
+                                      <td className="p-2">₸380,000</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button variant="outline" size="sm">
+                                  <Download className="h-4 w-4 mr-2" />
+                                  Экспорт
+                                </Button>
+                                <Button size="sm">
+                                  <Play className="h-4 w-4 mr-2" />
+                                  Применить
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="automl" className="mt-4">
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-lg font-semibold">Мастер AutoML</h4>
+                          <p className="text-muted-foreground">Автоматическое создание и обучение ML моделей</p>
+                        </div>
+                        <Button>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Новая модель
+                        </Button>
+                      </div>
+
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Step 1 */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <span className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm">1</span>
+                              Выбор данных
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
                               <div>
-                                <h4 className="font-medium">Веб-логи</h4>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                  <span>Тип: JSON</span>
-                                  <span>Строк: 1,500,000</span>
-                                  <span>Владелец: DevOps</span>
-                                  <span>Обновлен: 13/01/2024</span>
+                                <label className="text-sm font-medium">Источник данных</label>
+                                <div className="mt-1 p-3 border rounded bg-muted/50">
+                                  <div className="flex items-center gap-2">
+                                    <Database className="h-4 w-4" />
+                                    <span className="text-sm">Продажи 2024</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium">Целевая переменная</label>
+                                <Input placeholder="Выберите столбец..." className="mt-1" />
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium">Тип задачи</label>
+                                <div className="mt-1 grid grid-cols-2 gap-2">
+                                  <Button variant="outline" size="sm">Регрессия</Button>
+                                  <Button variant="outline" size="sm">Классификация</Button>
                                 </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline">Обработка</Badge>
-                              <Button variant="ghost" size="sm">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <Settings className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <Download className="h-4 w-4" />
+                          </CardContent>
+                        </Card>
+
+                        {/* Step 2 */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <span className="w-6 h-6 bg-muted text-muted-foreground rounded-full flex items-center justify-center text-sm">2</span>
+                              Обучение
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div className="text-center text-muted-foreground">
+                                <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                                <p className="text-sm">Запустите эксперимент для начала автоматического обучения</p>
+                              </div>
+                              <Button className="w-full" disabled>
+                                <Play className="h-4 w-4 mr-2" />
+                                Начать обучение
                               </Button>
                             </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                          </CardContent>
+                        </Card>
+
+                        {/* Step 3 */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <span className="w-6 h-6 bg-muted text-muted-foreground rounded-full flex items-center justify-center text-sm">3</span>
+                              Результаты
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div className="text-center text-muted-foreground">
+                                <BarChart3 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                                <p className="text-sm">Результаты появятся после завершения обучения</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      {/* Templates */}
+                      <div>
+                        <h5 className="font-medium mb-3">Готовые шаблоны AutoML</h5>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          {[
+                            { name: "Прогноз продаж", desc: "Временные ряды", icon: TrendingUp, color: "blue" },
+                            { name: "Скоринг клиентов", desc: "Классификация", icon: Users, color: "green" },
+                            { name: "Детекция аномалий", desc: "Аномалии", icon: AlertTriangle, color: "orange" },
+                            { name: "Прогноз оттока", desc: "Churn prediction", icon: Users, color: "red" }
+                          ].map((template, index) => (
+                            <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
+                              <CardContent className="p-4">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <div className={`w-8 h-8 rounded bg-${template.color}-100 dark:bg-${template.color}-900/20 flex items-center justify-center`}>
+                                    <template.icon className={`h-4 w-4 text-${template.color}-600 dark:text-${template.color}-400`} />
+                                  </div>
+                                  <div>
+                                    <div className="font-medium text-sm">{template.name}</div>
+                                    <div className="text-xs text-muted-foreground">{template.desc}</div>
+                                  </div>
+                                </div>
+                                <Button variant="outline" size="sm" className="w-full">
+                                  Использовать
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="models" className="mt-4">
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-lg font-semibold">Реестр моделей</h4>
+                          <p className="text-muted-foreground">Управление обученными моделями и их развертывание</p>
+                        </div>
+                        <Button variant="outline">
+                          <Filter className="h-4 w-4 mr-2" />
+                          Фильтр по статусу
+                        </Button>
+                      </div>
+
+                      <div className="space-y-4">
+                        {[
+                          { name: "Sales Forecast v1.2", type: "Регрессия", accuracy: "92.5%", status: "Продакшн", updated: "14/01/2024", color: "green" },
+                          { name: "Customer Churn v2.1", type: "Классификация", accuracy: "87.2%", status: "Тестирование", updated: "13/01/2024", color: "blue" },
+                          { name: "Anomaly Detection v1.0", type: "Аномалии", accuracy: "94.1%", status: "Разработка", updated: "12/01/2024", color: "orange" }
+                        ].map((model, index) => (
+                          <Card key={index} className="hover:shadow-md transition-shadow">
+                            <CardContent className="p-4">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <div className={`h-10 w-10 rounded-lg bg-${model.color}-100 dark:bg-${model.color}-900/20 flex items-center justify-center`}>
+                                    <Brain className={`h-5 w-5 text-${model.color}-600 dark:text-${model.color}-400`} />
+                                  </div>
+                                  <div>
+                                    <h4 className="font-medium">{model.name}</h4>
+                                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                      <span>Тип: {model.type}</span>
+                                      <span>Точность: {model.accuracy}</span>
+                                      <span>Обновлено: {model.updated}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Badge variant={model.status === "Продакшн" ? "secondary" : "outline"}>
+                                    {model.status}
+                                  </Badge>
+                                  <Button variant="ghost" size="sm" title="Тестировать">
+                                    <TestTube className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm" title="API">
+                                    <Code className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm" title="Развернуть">
+                                    <Play className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm" title="Настройки">
+                                    <Settings className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
