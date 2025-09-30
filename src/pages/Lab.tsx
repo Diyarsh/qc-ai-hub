@@ -35,11 +35,12 @@ export default function Lab() {
   const [showDebugConsole, setShowDebugConsole] = useState(false);
   const [debugTab, setDebugTab] = useState("logs");
 
-  useEffect(() => {
-    if (!isDeveloperMode) {
-      navigate('/dashboard');
-    }
-  }, [isDeveloperMode, navigate]);
+  // Remove the developer mode restriction - Laboratory is now accessible to all users
+  // useEffect(() => {
+  //   if (!isDeveloperMode) {
+  //     navigate('/dashboard');
+  //   }
+  // }, [isDeveloperMode, navigate]);
 
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => ({
