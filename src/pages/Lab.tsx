@@ -695,7 +695,7 @@ export default function Lab() {
                               <CardDescription>Создание моделей для категоризации данных</CardDescription>
                             </CardHeader>
                             <CardContent>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                              <Button className="w-full bg-primary">
                                 Создать модель
                               </Button>
                             </CardContent>
@@ -710,7 +710,7 @@ export default function Lab() {
                               <CardDescription>Прогнозирование числовых значений</CardDescription>
                             </CardHeader>
                             <CardContent>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                              <Button className="w-full bg-primary">
                                 Создать модель
                               </Button>
                             </CardContent>
@@ -725,7 +725,7 @@ export default function Lab() {
                               <CardDescription>Анализ и прогнозирование трендов</CardDescription>
                             </CardHeader>
                             <CardContent>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                              <Button className="w-full bg-primary">
                                 Создать модель
                               </Button>
                             </CardContent>
@@ -740,7 +740,7 @@ export default function Lab() {
                               <CardDescription>Группировка данных по схожести</CardDescription>
                             </CardHeader>
                             <CardContent>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                              <Button className="w-full bg-primary">
                                 Создать модель
                               </Button>
                             </CardContent>
@@ -755,7 +755,7 @@ export default function Lab() {
                               <CardDescription>Системы рекомендаций и персонализация</CardDescription>
                             </CardHeader>
                             <CardContent>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                              <Button className="w-full bg-primary">
                                 Создать модель
                               </Button>
                             </CardContent>
@@ -790,7 +790,7 @@ export default function Lab() {
                                 </Button>
                               </div>
                             </div>
-                            <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                            <Button className="w-full bg-primary">
                               <Play className="h-4 w-4 mr-2" />
                               Запустить AutoML
                             </Button>
