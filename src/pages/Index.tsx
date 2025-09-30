@@ -1,12 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Navigation } from "@/components/Navigation";
+import { HeroSection } from "@/components/HeroSection";
+import { AdvantagesSection } from "@/components/AdvantagesSection";
+import { ServicesSection } from "@/components/ServicesSection";
+import { PlatformSection } from "@/components/PlatformSection";
+import { LoginForm } from "@/components/LoginForm";
 
 const Index = () => {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navigation onLoginClick={() => setShowLogin(true)} />
+      <HeroSection onLoginClick={() => setShowLogin(true)} />
+      <AdvantagesSection />
+      <ServicesSection />
+      <PlatformSection />
+      
+      {showLogin && (
+        <LoginForm onClose={() => setShowLogin(false)} />
+      )}
     </div>
   );
 };
