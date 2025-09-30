@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, FlaskConical, Code, ChevronRight, User } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Brain, Code, ChevronRight, User } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ const menuItems = [{
 }, {
   title: "sidebar.lab",
   url: "/lab",
-  icon: FlaskConical
+  icon: Brain
 }];
 export function AppSidebar() {
   const {
@@ -58,7 +58,7 @@ export function AppSidebar() {
       <SidebarContent className="px-3 py-4">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-0.5">
               {menuItems.map(item => <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="h-10">
                     <NavLink to={item.url} className={({
