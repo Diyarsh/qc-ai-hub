@@ -6,10 +6,21 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
+import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Lab() {
   const { t } = useLanguage();
   const { theme, setTheme } = useTheme();
+  const { isDeveloperMode } = useDeveloperMode();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isDeveloperMode) {
+      navigate('/dashboard');
+    }
+  }, [isDeveloperMode, navigate]);
 
   return (
     <div className="flex flex-col h-full">
@@ -44,35 +55,44 @@ export default function Lab() {
             <p className="text-muted-foreground">Исследования и разработка новых AI решений</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="border-dashed border-2 hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center">
-                <Zap className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                <CardTitle>Быстрые эксперименты</CardTitle>
-                <CardDescription>
+              <CardHeader className="text-center py-4">
+                <Zap className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
+                <CardTitle className="text-lg">Быстрые эксперименты</CardTitle>
+                <CardDescription className="text-sm">
                   Тестирование новых алгоритмов
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0">
+                <Button className="w-full" size="sm">Запустить</Button>
+              </CardContent>
             </Card>
 
             <Card className="border-dashed border-2 hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center">
-                <Brain className="h-12 w-12 text-purple-500 mx-auto mb-4" />
-                <CardTitle>Нейронные сети</CardTitle>
-                <CardDescription>
+              <CardHeader className="text-center py-4">
+                <Brain className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                <CardTitle className="text-lg">Нейронные сети</CardTitle>
+                <CardDescription className="text-sm">
                   Обучение и тестирование моделей
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0">
+                <Button className="w-full" size="sm">Обучить</Button>
+              </CardContent>
             </Card>
 
             <Card className="border-dashed border-2 hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center">
-                <Cpu className="h-12 w-12 text-blue-500 mx-auto mb-4" />
-                <CardTitle>Вычислительные ресурсы</CardTitle>
-                <CardDescription>
+              <CardHeader className="text-center py-4">
+                <Cpu className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                <CardTitle className="text-lg">Вычислительные ресурсы</CardTitle>
+                <CardDescription className="text-sm">
                   Мониторинг производительности
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0">
+                <Button className="w-full" size="sm">Мониторинг</Button>
+              </CardContent>
             </Card>
           </div>
         </div>

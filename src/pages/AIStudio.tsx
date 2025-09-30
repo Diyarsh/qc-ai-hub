@@ -71,10 +71,10 @@ export default function AIStudio() {
           </div>
 
           {/* Models Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {/* QazLLM-Ultra */}
             <Card className="hover:shadow-md transition-shadow">
-              <CardHeader>
+              <CardHeader className="py-4">
                 <CardTitle className="text-lg">QazLLM-Ultra</CardTitle>
                 <CardDescription className="text-sm">
                   Суверенная казахская модель для корпоративного сектора Казахстана
@@ -85,13 +85,13 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Английский</Badge>
                   <Badge variant="outline" className="text-xs">+1</Badge>
                 </div>
-                <Button className="w-full mt-4">{t('ai-studio.use')}</Button>
+                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
 
             {/* Other models would follow similar pattern */}
             <Card className="hover:shadow-md transition-shadow">
-              <CardHeader>
+              <CardHeader className="py-4">
                 <CardTitle className="text-lg">QazAssistant Pro</CardTitle>
                 <CardDescription className="text-sm">
                   Корпоративный ассистент для казахстанских предприятий
@@ -101,12 +101,12 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Документооборот</Badge>
                   <Badge variant="outline" className="text-xs">Планирование</Badge>
                 </div>
-                <Button className="w-full mt-4">{t('ai-studio.use')}</Button>
+                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
 
             <Card className="hover:shadow-md transition-shadow">
-              <CardHeader>
+              <CardHeader className="py-4">
                 <CardTitle className="text-lg">KazDoc AI</CardTitle>
                 <CardDescription className="text-sm">
                   Специализированный анализ казахстанской документации
@@ -116,12 +116,12 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Правовые акты</Badge>
                   <Badge variant="outline" className="text-xs">OCR</Badge>
                 </div>
-                <Button className="w-full mt-4">{t('ai-studio.use')}</Button>
+                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
 
             <Card className="hover:shadow-md transition-shadow">
-              <CardHeader>
+              <CardHeader className="py-4">
                 <CardTitle className="text-lg">KazCode Assistant</CardTitle>
                 <CardDescription className="text-sm">
                   Помощник программиста для разработки в Казахстане
@@ -131,7 +131,7 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">JavaScript</Badge>
                   <Badge variant="outline" className="text-xs">Код-ревью</Badge>
                 </div>
-                <Button className="w-full mt-4">{t('ai-studio.use')}</Button>
+                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
           </div>

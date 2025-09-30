@@ -56,32 +56,32 @@ export default function Dashboard() {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center">
-                <FileText className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle className="text-xl">{t('dashboard.documents.title')}</CardTitle>
-                <CardDescription>
+              <CardHeader className="text-center py-4">
+                <FileText className="h-8 w-8 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">{t('dashboard.documents.title')}</CardTitle>
+                <CardDescription className="text-sm">
                   {t('dashboard.documents.desc')}
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center">
-                <Bot className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle className="text-xl">{t('dashboard.bots.title')}</CardTitle>
-                <CardDescription>
+              <CardHeader className="text-center py-4">
+                <Bot className="h-8 w-8 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">{t('dashboard.bots.title')}</CardTitle>
+                <CardDescription className="text-sm">
                   {t('dashboard.bots.desc')}
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center">
-                <Settings className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle className="text-xl">{t('dashboard.developers.title')}</CardTitle>
-                <CardDescription>
+              <CardHeader className="text-center py-4">
+                <Settings className="h-8 w-8 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">{t('dashboard.developers.title')}</CardTitle>
+                <CardDescription className="text-sm">
                   {t('dashboard.developers.desc')}
                 </CardDescription>
               </CardHeader>

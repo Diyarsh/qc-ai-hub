@@ -11,6 +11,9 @@ import {
   User
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 import {
   Sidebar,
@@ -40,6 +43,7 @@ export function AppSidebar() {
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
   const { t } = useLanguage();
+  const { isDeveloperMode, toggleDeveloperMode } = useDeveloperMode();
 
   const isActive = (path: string) => currentPath === path;
 
@@ -72,9 +76,16 @@ export function AppSidebar() {
                         `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
                           isActive 
                             ? "bg-primary text-primary-foreground" 
+                            : item.title === 'sidebar.lab' && !isDeveloperMode
+                            ? "text-muted-foreground/50 cursor-not-allowed"
                             : "text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`
                       }
+                      onClick={(e) => {
+                        if (item.title === 'sidebar.lab' && !isDeveloperMode) {
+                          e.preventDefault();
+                        }
+                      }}
                     >
                       <item.icon className="h-5 w-5 shrink-0" />
                       {!collapsed && <span className="font-medium">{t(item.title)}</span>}
@@ -105,7 +116,14 @@ export function AppSidebar() {
                     {!collapsed && (
                       <div className="flex items-center justify-between w-full">
                         <span className="font-medium">{t('sidebar.developer')}</span>
-                        <ChevronRight className="h-4 w-4" />
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={isDeveloperMode}
+                            onCheckedChange={toggleDeveloperMode}
+                            className="scale-75"
+                          />
+                          <ChevronRight className="h-4 w-4" />
+                        </div>
                       </div>
                     )}
                   </NavLink>
