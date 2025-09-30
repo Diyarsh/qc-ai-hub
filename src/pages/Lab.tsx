@@ -259,7 +259,7 @@ export default function Lab() {
                     <div className="p-4 border-b">
                       <div className="flex items-center justify-between mb-3">
                         <h3 className="font-semibold">Библиотека узлов</h3>
-                        <Button size="sm" className="bg-primary hover:bg-primary/90">
+                        <Button size="sm" className="bg-primary">
                           <Plus className="h-4 w-4 mr-2" />
                           Создать флоу
                         </Button>
@@ -273,7 +273,7 @@ export default function Lab() {
                     <ScrollArea className="flex-1 p-4">
                       <div className="space-y-3">
                         {nodeCategories.map(category => <div key={category.key}>
-                            <button onClick={() => toggleCategory(category.key)} className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-muted/50 transition-colors">
+                            <button onClick={() => toggleCategory(category.key)} className="flex items-center gap-2 w-full text-left p-2 rounded">
                               {expandedCategories[category.key] ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                               <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                                 {category.title}
@@ -281,10 +281,10 @@ export default function Lab() {
                             </button>
                             
                             {expandedCategories[category.key] && <div className="ml-5 space-y-1">
-                                {category.nodes.map((node, index) => <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-muted/70 cursor-grab active:cursor-grabbing transition-colors group" draggable>
+                                {category.nodes.map((node, index) => <div key={index} className="flex items-center gap-3 p-2 rounded cursor-grab active:cursor-grabbing group" draggable>
                                     <node.icon className="h-4 w-4 text-primary flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
-                                      <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                      <div className="text-sm font-medium text-foreground">
                                         {node.name}
                                       </div>
                                       <div className="text-xs text-muted-foreground truncate">
@@ -321,7 +321,7 @@ export default function Lab() {
                           <Button variant="outline" size="sm" title="Отладка" onClick={() => setShowDebugConsole(!showDebugConsole)}>
                             <Terminal className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                          <Button size="sm" className="bg-green-600">
                             <Play className="h-4 w-4 mr-2" />
                             Запустить
                           </Button>
@@ -534,7 +534,7 @@ export default function Lab() {
                       updated: "12/01/2024",
                       status: "Активен",
                       color: "purple"
-                    }].map((dataset, index) => <Card key={index} className="hover:shadow-md transition-shadow">
+                    }].map((dataset, index) => <Card key={index} className="transition-shadow">
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
@@ -686,7 +686,7 @@ export default function Lab() {
                       <div>
                         <h4 className="text-lg font-semibold mb-4">Типы моделей AutoML</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                          <Card className="cursor-pointer">
                             <CardHeader>
                               <CardTitle className="flex items-center gap-2">
                                 <BarChart3 className="h-5 w-5 text-blue-600" />
@@ -701,7 +701,7 @@ export default function Lab() {
                             </CardContent>
                           </Card>
 
-                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                          <Card className="cursor-pointer">
                             <CardHeader>
                               <CardTitle className="flex items-center gap-2">
                                 <TrendingUp className="h-5 w-5 text-blue-600" />
@@ -716,7 +716,7 @@ export default function Lab() {
                             </CardContent>
                           </Card>
 
-                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                          <Card className="cursor-pointer">
                             <CardHeader>
                               <CardTitle className="flex items-center gap-2">
                                 <Clock className="h-5 w-5 text-blue-600" />
@@ -731,7 +731,7 @@ export default function Lab() {
                             </CardContent>
                           </Card>
 
-                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                          <Card className="cursor-pointer">
                             <CardHeader>
                               <CardTitle className="flex items-center gap-2">
                                 <Network className="h-5 w-5 text-blue-600" />
@@ -746,7 +746,7 @@ export default function Lab() {
                             </CardContent>
                           </Card>
 
-                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                          <Card className="cursor-pointer">
                             <CardHeader>
                               <CardTitle className="flex items-center gap-2">
                                 <Bot className="h-5 w-5 text-blue-600" />
@@ -822,7 +822,7 @@ export default function Lab() {
                           desc: "Churn prediction",
                           icon: Users,
                           color: "red"
-                        }].map((template, index) => <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
+                        }].map((template, index) => <Card key={index} className="cursor-pointer">
                               <CardContent className="p-4">
                                 <div className="flex items-center gap-3 mb-2">
                                   <div className={`w-8 h-8 rounded bg-${template.color}-100 dark:bg-${template.color}-900/20 flex items-center justify-center`}>
@@ -878,7 +878,7 @@ export default function Lab() {
                         status: "Разработка",
                         updated: "12/01/2024",
                         color: "orange"
-                      }].map((model, index) => <Card key={index} className="hover:shadow-md transition-shadow">
+                      }].map((model, index) => <Card key={index} className="">
                             <CardContent className="p-4">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -945,7 +945,7 @@ export default function Lab() {
 
                   <TabsContent value="all" className="mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <Card className="hover:shadow-md transition-shadow">
+                      <Card className="">
                         <CardHeader>
                           <div className="flex items-center justify-between">
                             <FileText className="h-8 w-8 text-blue-500" />
@@ -977,7 +977,7 @@ export default function Lab() {
                         </CardContent>
                       </Card>
 
-                      <Card className="hover:shadow-md transition-shadow">
+                      <Card className="">
                         <CardHeader>
                           <div className="flex items-center justify-between">
                             <Database className="h-8 w-8 text-green-500" />
@@ -1009,7 +1009,7 @@ export default function Lab() {
                         </CardContent>
                       </Card>
 
-                      <Card className="hover:shadow-md transition-shadow">
+                      <Card className="">
                         <CardHeader>
                           <div className="flex items-center justify-between">
                             <BarChart3 className="h-8 w-8 text-purple-500" />
@@ -1172,7 +1172,7 @@ export default function Lab() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card className="cursor-pointer">
                     <CardContent className="p-6">
                       <FileText className="h-8 w-8 text-blue-500 mb-4" />
                       <h4 className="font-medium mb-2">Начало работы</h4>
@@ -1180,7 +1180,7 @@ export default function Lab() {
                     </CardContent>
                   </Card>
 
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card className="cursor-pointer">
                     <CardContent className="p-6">
                       <Settings className="h-8 w-8 text-green-500 mb-4" />
                       <h4 className="font-medium mb-2">API Reference</h4>
@@ -1188,7 +1188,7 @@ export default function Lab() {
                     </CardContent>
                   </Card>
 
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card className="cursor-pointer">
                     <CardContent className="p-6">
                       <BarChart3 className="h-8 w-8 text-purple-500 mb-4" />
                       <h4 className="font-medium mb-2">Примеры использования</h4>
