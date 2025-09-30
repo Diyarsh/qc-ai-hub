@@ -45,9 +45,7 @@ export function AppSidebar() {
   return <Sidebar className="border-r border-border bg-card">
       <SidebarHeader className="border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-sm">
-            QC
-          </div>
+          
           {!collapsed && <div>
               <h2 className="font-semibold text-lg">AI-HUB</h2>
               <p className="text-xs text-muted-foreground">Enterprise Platform</p>
