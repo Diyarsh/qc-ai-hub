@@ -682,89 +682,118 @@ export default function Lab() {
 
                   <TabsContent value="automl" className="mt-4">
                     <div className="space-y-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-lg font-semibold">Мастер AutoML</h4>
-                          <p className="text-muted-foreground">Автоматическое создание и обучение ML моделей</p>
+                      {/* AutoML Model Types */}
+                      <div>
+                        <h4 className="text-lg font-semibold mb-4">Типы моделей AutoML</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                <BarChart3 className="h-5 w-5 text-blue-600" />
+                                Классификация
+                              </CardTitle>
+                              <CardDescription>Создание моделей для категоризации данных</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                Создать модель
+                              </Button>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                <TrendingUp className="h-5 w-5 text-blue-600" />
+                                Регрессия
+                              </CardTitle>
+                              <CardDescription>Прогнозирование числовых значений</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                Создать модель
+                              </Button>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-blue-600" />
+                                Временные ряды
+                              </CardTitle>
+                              <CardDescription>Анализ и прогнозирование трендов</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                Создать модель
+                              </Button>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                <Network className="h-5 w-5 text-blue-600" />
+                                Кластеризация
+                              </CardTitle>
+                              <CardDescription>Группировка данных по схожести</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                Создать модель
+                              </Button>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                <Bot className="h-5 w-5 text-blue-600" />
+                                Рекомендации
+                              </CardTitle>
+                              <CardDescription>Системы рекомендаций и персонализация</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                Создать модель
+                              </Button>
+                            </CardContent>
+                          </Card>
                         </div>
-                        <Button>
-                          <Plus className="h-4 w-4 mr-2" />
-                          Новая модель
-                        </Button>
                       </div>
 
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {/* Step 1 */}
+                      {/* AutoML Master */}
+                      <div>
                         <Card>
                           <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                              <span className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm">1</span>
-                              Выбор данных
+                              <Sparkles className="h-5 w-5" />
+                              Мастер AutoML
                             </CardTitle>
+                            <CardDescription>Пошаговое создание модели машинного обучения</CardDescription>
                           </CardHeader>
                           <CardContent>
-                            <div className="space-y-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                               <div>
-                                <label className="text-sm font-medium">Источник данных</label>
-                                <div className="mt-1 p-3 border rounded bg-muted/50">
-                                  <div className="flex items-center gap-2">
-                                    <Database className="h-4 w-4" />
-                                    <span className="text-sm">Продажи 2024</span>
-                                  </div>
-                                </div>
+                                <label className="text-sm font-medium mb-2 block">Датасет</label>
+                                <Button variant="outline" className="w-full justify-between">
+                                  Выберите датасет
+                                  <ChevronDown className="h-4 w-4" />
+                                </Button>
                               </div>
                               <div>
-                                <label className="text-sm font-medium">Целевая переменная</label>
-                                <Input placeholder="Выберите столбец..." className="mt-1" />
-                              </div>
-                              <div>
-                                <label className="text-sm font-medium">Тип задачи</label>
-                                <div className="mt-1 grid grid-cols-2 gap-2">
-                                  <Button variant="outline" size="sm">Регрессия</Button>
-                                  <Button variant="outline" size="sm">Классификация</Button>
-                                </div>
+                                <label className="text-sm font-medium mb-2 block">Целевая переменная</label>
+                                <Button variant="outline" className="w-full justify-between">
+                                  Выберите колонку
+                                  <ChevronDown className="h-4 w-4" />
+                                </Button>
                               </div>
                             </div>
-                          </CardContent>
-                        </Card>
-
-                        {/* Step 2 */}
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                              <span className="w-6 h-6 bg-muted text-muted-foreground rounded-full flex items-center justify-center text-sm">2</span>
-                              Обучение
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-3">
-                              <div className="text-center text-muted-foreground">
-                                <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">Запустите эксперимент для начала автоматического обучения</p>
-                              </div>
-                              <Button className="w-full" disabled>
-                                <Play className="h-4 w-4 mr-2" />
-                                Начать обучение
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        {/* Step 3 */}
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                              <span className="w-6 h-6 bg-muted text-muted-foreground rounded-full flex items-center justify-center text-sm">3</span>
-                              Результаты
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-3">
-                              <div className="text-center text-muted-foreground">
-                                <BarChart3 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">Результаты появятся после завершения обучения</p>
-                              </div>
-                            </div>
+                            <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                              <Play className="h-4 w-4 mr-2" />
+                              Запустить AutoML
+                            </Button>
                           </CardContent>
                         </Card>
                       </div>
