@@ -746,20 +746,7 @@ export default function Lab() {
                             </CardContent>
                           </Card>
 
-                          <Card className="cursor-pointer">
-                            <CardHeader>
-                              <CardTitle className="flex items-center gap-2">
-                                <Bot className="h-5 w-5 text-blue-600" />
-                                Рекомендации
-                              </CardTitle>
-                              <CardDescription>Системы рекомендаций и персонализация</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                              <Button className="w-full bg-primary">
-                                Создать модель
-                              </Button>
-                            </CardContent>
-                          </Card>
+                          
                         </div>
                       </div>
 
@@ -800,45 +787,8 @@ export default function Lab() {
 
                       {/* Templates */}
                       <div>
-                        <h5 className="font-medium mb-3">Готовые шаблоны AutoML</h5>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          {[{
-                          name: "Прогноз продаж",
-                          desc: "Временные ряды",
-                          icon: TrendingUp,
-                          color: "blue"
-                        }, {
-                          name: "Скоринг клиентов",
-                          desc: "Классификация",
-                          icon: Users,
-                          color: "green"
-                        }, {
-                          name: "Детекция аномалий",
-                          desc: "Аномалии",
-                          icon: AlertTriangle,
-                          color: "orange"
-                        }, {
-                          name: "Прогноз оттока",
-                          desc: "Churn prediction",
-                          icon: Users,
-                          color: "red"
-                        }].map((template, index) => <Card key={index} className="cursor-pointer">
-                              <CardContent className="p-4">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <div className={`w-8 h-8 rounded bg-${template.color}-100 dark:bg-${template.color}-900/20 flex items-center justify-center`}>
-                                    <template.icon className={`h-4 w-4 text-${template.color}-600 dark:text-${template.color}-400`} />
-                                  </div>
-                                  <div>
-                                    <div className="font-medium text-sm">{template.name}</div>
-                                    <div className="text-xs text-muted-foreground">{template.desc}</div>
-                                  </div>
-                                </div>
-                                <Button variant="outline" size="sm" className="w-full">
-                                  Использовать
-                                </Button>
-                              </CardContent>
-                            </Card>)}
-                        </div>
+                        
+                        
                       </div>
                     </div>
                   </TabsContent>
