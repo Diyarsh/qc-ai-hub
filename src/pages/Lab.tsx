@@ -243,10 +243,9 @@ export default function Lab() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="agents">Агенты</TabsTrigger>
               <TabsTrigger value="data">ML-Studio</TabsTrigger>
-              <TabsTrigger value="catalog">Каталог</TabsTrigger>
               <TabsTrigger value="monitoring">Мониторинг</TabsTrigger>
               <TabsTrigger value="documentation">Документация</TabsTrigger>
             </TabsList>
@@ -871,130 +870,6 @@ export default function Lab() {
               </div>
             </TabsContent>
 
-            <TabsContent value="catalog" className="mt-6">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold">Каталог</h3>
-                    <p className="text-muted-foreground">Готовые флоу и модели для быстрого старта</p>
-                  </div>
-                </div>
-
-                <Tabs defaultValue="all" className="w-full">
-                  <div className="flex items-center justify-between">
-                    <TabsList>
-                      <TabsTrigger value="all">Все</TabsTrigger>
-                      <TabsTrigger value="flows">Флоу</TabsTrigger>
-                      <TabsTrigger value="models">Модели</TabsTrigger>
-                    </TabsList>
-                    <div className="relative">
-                      <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                      <Input placeholder="Поиск в каталоге..." className="pl-9 w-64" />
-                    </div>
-                  </div>
-
-                  <TabsContent value="all" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                       <Card>
-                         <CardHeader>
-                           <div className="flex items-center justify-between">
-                             <FileText className="h-8 w-8 text-primary" />
-                             <Badge>Флоу</Badge>
-                           </div>
-                          <CardTitle className="text-lg">FAQ-бот по документам</CardTitle>
-                          <CardDescription>
-                            Автоматический бот для ответов на вопросы по корпоративным документам с использованием RAG
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Вход:</span>
-                              <span className="text-muted-foreground">Текст вопроса</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Выход:</span>
-                              <span className="text-muted-foreground">Ответ с источниками</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>⭐ 4.8</span>
-                              <span className="text-muted-foreground">1250</span>
-                            </div>
-                            <Button size="sm">Установить</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                       <Card>
-                         <CardHeader>
-                           <div className="flex items-center justify-between">
-                             <Database className="h-8 w-8 text-primary" />
-                             <Badge>Флоу</Badge>
-                           </div>
-                          <CardTitle className="text-lg">Data-assistant для SQL</CardTitle>
-                          <CardDescription>
-                            Помощник для создания SQL запросов и анализа данных на естественном языке
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Вход:</span>
-                              <span className="text-muted-foreground">Вопрос на естественном языке</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Выход:</span>
-                              <span className="text-muted-foreground">SQL запрос + результат</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>⭐ 4.6</span>
-                              <span className="text-muted-foreground">890</span>
-                            </div>
-                            <Button size="sm">Установить</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                       <Card>
-                         <CardHeader>
-                           <div className="flex items-center justify-between">
-                             <BarChart3 className="h-8 w-8 text-primary" />
-                             <Badge variant="secondary">Модель</Badge>
-                           </div>
-                          <CardTitle className="text-lg">Прогноз спроса</CardTitle>
-                          <CardDescription>
-                            Модель для прогнозирования спроса на товары на основе исторических данных
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Вход:</span>
-                              <span className="text-muted-foreground">Исторические данные продаж</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">Выход:</span>
-                              <span className="text-muted-foreground">Прогноз спроса</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>⭐ 4.7</span>
-                              <span className="text-muted-foreground">650</span>
-                            </div>
-                            <Button size="sm">Установить</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-            </TabsContent>
 
             <TabsContent value="monitoring" className="mt-6">
               <div className="space-y-6">
