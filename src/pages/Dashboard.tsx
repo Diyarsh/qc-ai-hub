@@ -1,15 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Send, Paperclip, FileText, Bot, Sun, Moon, Settings } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const { theme, setTheme } = useTheme();
   const { t } = useLanguage();
+  
+  const examplePrompts = [
+    "Создайте ИИ-агента для анализа документов и извлечения ключевой информации",
+    "Разработайте чат-бота для обработки клиентских запросов с использованием NLP",
+    "Настройте модель машинного обучения для прогнозирования трендов продаж",
+    "Интегрируйте API для обработки естественного языка в существующую систему",
+    "Создайте автоматизированную систему классификации и тегирования контента",
+    "Разработайте рекомендательную систему на основе поведения пользователей"
+  ];
+  
+  const [currentPrompt, setCurrentPrompt] = useState(0);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPrompt((prev) => (prev + 1) % examplePrompts.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -36,16 +56,16 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-3xl">
           <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
           
           {/* Message Input */}
           <div className="relative mb-8">
-            <Input
-              placeholder={t('dashboard.input.placeholder')}
-              className="h-12 pr-20 text-lg bg-muted border-border"
+            <Textarea
+              placeholder={examplePrompts[currentPrompt]}
+              className="min-h-[120px] pr-20 text-lg bg-muted border-border resize-none"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            <div className="absolute right-2 bottom-2 flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <Paperclip className="h-4 w-4" />
               </Button>
@@ -56,32 +76,32 @@ export default function Dashboard() {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
             <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center py-4">
-                <FileText className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">{t('dashboard.documents.title')}</CardTitle>
-                <CardDescription className="text-sm">
+              <CardHeader className="text-center py-2 px-3">
+                <FileText className="h-5 w-5 text-primary mx-auto mb-1" />
+                <CardTitle className="text-sm font-medium">{t('dashboard.documents.title')}</CardTitle>
+                <CardDescription className="text-xs">
                   {t('dashboard.documents.desc')}
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center py-4">
-                <Bot className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">{t('dashboard.bots.title')}</CardTitle>
-                <CardDescription className="text-sm">
+              <CardHeader className="text-center py-2 px-3">
+                <Bot className="h-5 w-5 text-primary mx-auto mb-1" />
+                <CardTitle className="text-sm font-medium">{t('dashboard.bots.title')}</CardTitle>
+                <CardDescription className="text-xs">
                   {t('dashboard.bots.desc')}
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer">
-              <CardHeader className="text-center py-4">
-                <Settings className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">{t('dashboard.developers.title')}</CardTitle>
-                <CardDescription className="text-sm">
+              <CardHeader className="text-center py-2 px-3">
+                <Settings className="h-5 w-5 text-primary mx-auto mb-1" />
+                <CardTitle className="text-sm font-medium">{t('dashboard.developers.title')}</CardTitle>
+                <CardDescription className="text-xs">
                   {t('dashboard.developers.desc')}
                 </CardDescription>
               </CardHeader>
