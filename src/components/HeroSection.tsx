@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export const HeroSection = ({ onLoginClick }: HeroSectionProps) => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center py-12" style={{ backgroundColor: 'hsl(220, 30%, 4%)' }}>
+    <section className="relative min-h-screen flex items-center justify-center bg-background py-12">
       <div className="container mx-auto px-4">
         <Card className="w-full min-h-[600px] bg-card relative overflow-hidden border-border">
           <Spotlight
