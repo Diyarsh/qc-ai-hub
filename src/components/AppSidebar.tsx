@@ -6,6 +6,9 @@ import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
+import { useTheme } from "next-themes";
+import logoDark from "@/assets/QC-AI-HUB-Dark.svg";
+import logoLight from "@/assets/QC-AI-HUB-Light.svg";
 const menuItems = [{
   title: "sidebar.chat",
   url: "/dashboard",
@@ -41,17 +44,16 @@ export function AppSidebar() {
     isDeveloperMode,
     toggleDeveloperMode
   } = useDeveloperMode();
+  const { theme } = useTheme();
   const isActive = (path: string) => currentPath === path;
   return <Sidebar className="border-r border-border bg-card">
       <SidebarHeader className="border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-sm">
-            QC
-          </div>
-          {!collapsed && <div>
-              <h2 className="font-semibold text-lg">AI-HUB</h2>
-              <p className="text-xs text-muted-foreground">Enterprise Platform</p>
-            </div>}
+          <img 
+            src={theme === "dark" ? logoLight : logoDark} 
+            alt="QazCloud AI-HUB" 
+            className={collapsed ? "h-8" : "h-10"}
+          />
         </div>
       </SidebarHeader>
 
