@@ -17,10 +17,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ 
-      backgroundColor: 'hsl(220, 30%, 4%)', 
-      color: 'hsl(210, 40%, 98%)' 
-    }}>
+    <div className="min-h-screen bg-background">
       <Navigation onLoginClick={() => setShowLogin(true)} />
       <HeroSection onLoginClick={() => setShowLogin(true)} />
       <AdvantagesSection />
