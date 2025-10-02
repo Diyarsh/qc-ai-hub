@@ -3,20 +3,16 @@ import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Spotlight } from "@/components/ui/spotlight";
 import { SplineScene } from "@/components/ui/splite";
-
 interface HeroSectionProps {
   onLoginClick: () => void;
 }
-
-export const HeroSection = ({ onLoginClick }: HeroSectionProps) => {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center bg-background py-12">
+export const HeroSection = ({
+  onLoginClick
+}: HeroSectionProps) => {
+  return <section className="relative min-h-screen flex items-center justify-center bg-background py-12">
       <div className="container mx-auto px-4">
         <Card className="w-full min-h-[600px] bg-card relative overflow-hidden border-border">
-          <Spotlight
-            className="-top-40 left-0 md:left-60 md:-top-20"
-            fill="hsl(var(--primary))"
-          />
+          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="hsl(var(--primary))" />
           
           <div className="flex flex-col lg:flex-row h-full min-h-[600px]">
             {/* Left content */}
@@ -25,9 +21,7 @@ export const HeroSection = ({ onLoginClick }: HeroSectionProps) => {
                 Централизованная платформа ИИ для цифрового суверенитета
               </p>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                QazCloud AI-HUB
-              </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">AI-HUB</h1>
               
               <p className="text-lg text-muted-foreground max-w-lg mb-8">
                 Единая точка доступа к возможностям искусственного интеллекта. 
@@ -46,14 +40,10 @@ export const HeroSection = ({ onLoginClick }: HeroSectionProps) => {
 
             {/* Right content - 3D Scene */}
             <div className="flex-1 relative min-h-[400px] lg:min-h-[600px]">
-              <SplineScene 
-                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                className="w-full h-full"
-              />
+              <SplineScene scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" className="w-full h-full" />
             </div>
           </div>
         </Card>
       </div>
-    </section>
-  );
+    </section>;
 };
