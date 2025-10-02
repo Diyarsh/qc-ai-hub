@@ -1,5 +1,3 @@
-# Welcome to your Lovable project
-
 ## Project info
 
 **URL**: https://lovable.dev/projects/f07f3b98-963a-4fda-80c6-6a3a37a050ff
@@ -10,7 +8,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f07f3b98-963a-4fda-80c6-6a3a37a050ff) and start prompting.
+https://github.com/Diyarsh/ai-hub-digital-bridge
 
 Changes made via Lovable will be committed automatically to this repo.
 
