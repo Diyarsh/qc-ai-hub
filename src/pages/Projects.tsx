@@ -1,13 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Badge } from "@/components/ui/badge";
 import { Plus, Search, BarChart3, Flame, Link, MessageCircle, FileText, Command } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { LanguageSelector } from "@/components/LanguageSelector";
-import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 
 const projects = [
   { id: 1, name: "QC", icon: "🌐", type: "web" },
@@ -31,35 +27,18 @@ const getProjectIcon = (type: string) => {
 
 export default function Projects() {
   const { t } = useLanguage();
-  const { theme, setTheme } = useTheme();
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b border-border bg-background px-6 py-4">
-        <div className="flex items-center gap-4">
-          <SidebarTrigger />
-          <h1 className="text-2xl font-bold">{t('projects.title')}</h1>
-        </div>
-        <div className="flex items-center gap-2">
+      <PageHeader 
+        title={t('projects.title')}
+        actions={
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
             {t('projects.create')}
           </Button>
-          <LanguageSelector />
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </header>
+        }
+      />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
