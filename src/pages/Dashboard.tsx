@@ -2,26 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Send, Paperclip, FileText, Bot, Sun, Moon, Settings, Code } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Send, Paperclip, FileText, Bot, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
-import { LanguageSelector } from "@/components/LanguageSelector";
-import { Switch } from "@/components/ui/switch";
+import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect } from "react";
 export default function Dashboard() {
-  const {
-    theme,
-    setTheme
-  } = useTheme();
-  const {
-    t
-  } = useLanguage();
-  const {
-    isDeveloperMode,
-    toggleDeveloperMode
-  } = useDeveloperMode();
+  const { t } = useLanguage();
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   useEffect(() => {
@@ -31,24 +17,7 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
   return <div className="flex flex-col h-full">
-      {/* Header */}
-      <header className="flex items-center justify-between bg-background px-6 py-4">
-        <div className="flex items-center gap-3">
-          <SidebarTrigger className="h-9 w-9" />
-        </div>
-        <div className="flex items-center gap-3">
-          <LanguageSelector />
-          
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Dev Mode</span>
-            <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} />
-          </div>
-        </div>
-      </header>
+      <PageHeader />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">

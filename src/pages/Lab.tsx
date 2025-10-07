@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -8,20 +7,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FlaskConical, Plus, Search, Filter, Settings, Play, BarChart3, FileText, Database, Clock, AlertTriangle, Zap, Activity, Download, Eye, MoreHorizontal, Brain, MessageSquare, Upload, Mail, Shield, ChevronDown, ChevronRight, Workflow, Code, Bot, TestTube, Users, Gauge, BookOpen, Star, TrendingUp, AlertCircle, CheckCircle2, XCircle, CalendarDays, Globe, Slack, Github, RotateCcw, Maximize2, ZoomIn, ZoomOut, Terminal, Bug, MapPin, Layers, Share2, Palette, Network, Sparkles, Lock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { LanguageSelector } from "@/components/LanguageSelector";
-import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function Lab() {
-  const {
-    t
-  } = useLanguage();
-  const {
-    theme,
-    setTheme
-  } = useTheme();
+  const { t } = useLanguage();
   const {
     isDeveloperMode
   } = useDeveloperMode();
@@ -220,19 +211,7 @@ export default function Lab() {
     }]
   }];
   return <div className="flex flex-col h-full">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b border-border bg-background px-6 py-4">
-        <div className="flex items-center gap-4">
-          <SidebarTrigger />
-          <h1 className="text-2xl font-bold">{t('sidebar.lab')}</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <LanguageSelector />
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-        </div>
-      </header>
+      <PageHeader title={t('sidebar.lab')} />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
