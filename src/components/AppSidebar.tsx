@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Bot, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import logoLight from "@/assets/QC-AI-HUB-Light.svg";
 const menuItems = [{
   title: "sidebar.chat",
   url: "/dashboard",
-  icon: Bot
+  icon: MessageCircle
 }, {
   title: "sidebar.ai-studio",
   url: "/ai-studio",
