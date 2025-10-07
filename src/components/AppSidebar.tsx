@@ -48,20 +48,20 @@ export function AppSidebar() {
     theme
   } = useTheme();
   const isActive = (path: string) => currentPath === path;
-  return <Sidebar className="border-r border-border bg-card">
-      <SidebarHeader className="border-b border-border px-6 py-4">
-        <div className="flex items-center gap-3">
-          <img src={theme === "dark" ? logoLight : logoDark} alt="QazCloud AI-HUB" className={collapsed ? "h-8" : "h-10"} />
+  return <Sidebar collapsible="icon" className="border-r border-border bg-card">
+      <SidebarHeader className="border-b border-border px-3 py-4">
+        <div className="flex items-center justify-center">
+          <img src={theme === "dark" ? logoLight : logoDark} alt="QazCloud AI-HUB" className={collapsed ? "h-8 w-8 object-contain" : "h-10"} />
         </div>
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-2">
-        <SidebarMenu className="space-y-0">
+        <SidebarMenu className="space-y-1">
           {menuItems.map(item => <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild className="h-9">
+              <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
                 <NavLink to={item.url} className={({
               isActive
-            }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"}`}>
+            }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
                   <item.icon className="h-5 w-5 shrink-0" />
                   {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
                 </NavLink>
@@ -70,8 +70,8 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border p-3 mt-auto space-y-2">
-        <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
+      <SidebarFooter className="border-t border-border p-2 mt-auto">
+        <div className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 ${collapsed ? "justify-center" : ""}`}>
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
             <span className="text-primary-foreground text-sm font-semibold">RL</span>
           </div>
@@ -80,7 +80,6 @@ export function AppSidebar() {
             </div>}
           {!collapsed && <Settings className="h-4 w-4 text-muted-foreground shrink-0" />}
         </div>
-        
       </SidebarFooter>
     </Sidebar>;
 }
