@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Brain, Code, ChevronRight, User } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Brain, Code, ChevronRight, User, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -70,11 +70,22 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border p-3 mt-auto">
+      <SidebarFooter className="border-t border-border p-3 mt-auto space-y-2">
+        <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
+          <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+            <span className="text-primary-foreground text-sm font-semibold">RL</span>
+          </div>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">Личный кабинет</p>
+            </div>
+          )}
+          {!collapsed && <Settings className="h-4 w-4 text-muted-foreground shrink-0" />}
+        </div>
         <div className="flex items-center justify-between px-2 py-2">
           <div className="flex items-center gap-2">
-            <Code className="h-5 w-5 shrink-0" />
-            {!collapsed && <span className="text-sm font-medium">DevMode</span>}
+            <Code className="h-4 w-4 shrink-0" />
+            {!collapsed && <span className="text-xs font-medium">DevMode</span>}
           </div>
           {!collapsed && <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} className="scale-75" />}
         </div>
