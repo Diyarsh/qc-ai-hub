@@ -41,18 +41,17 @@ export default function Dashboard() {
           <SidebarTrigger />
           <h1 className="text-2xl font-bold">{t('dashboard.title')}</h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <LanguageSelector />
           
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border">
-            <Code className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">Dev Mode</span>
-            <Switch 
-              checked={isDeveloperMode}
-              onCheckedChange={toggleDeveloperMode}
-              className="ml-1"
-            />
-          </div>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={toggleDeveloperMode}
+            className={isDeveloperMode ? "bg-primary/10" : ""}
+          >
+            <Code className={`h-4 w-4 ${isDeveloperMode ? "text-primary" : ""}`} />
+          </Button>
 
           <Button 
             variant="ghost" 
