@@ -3,15 +3,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Send, Paperclip, FileText, Bot, Sun, Moon, Settings } from "lucide-react";
+import { Send, Paperclip, FileText, Bot, Sun, Moon, Settings, Code } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { Switch } from "@/components/ui/switch";
 import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const { theme, setTheme } = useTheme();
   const { t } = useLanguage();
+  const { isDeveloperMode, toggleDeveloperMode } = useDeveloperMode();
   
   const examplePrompts = [
     "Создайте ИИ-агента для анализа документов и извлечения ключевой информации",
@@ -38,8 +41,19 @@ export default function Dashboard() {
           <SidebarTrigger />
           <h1 className="text-2xl font-bold">{t('dashboard.title')}</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <LanguageSelector />
+          
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border">
+            <Code className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Dev Mode</span>
+            <Switch 
+              checked={isDeveloperMode}
+              onCheckedChange={toggleDeveloperMode}
+              className="ml-1"
+            />
+          </div>
+
           <Button 
             variant="ghost" 
             size="icon"
