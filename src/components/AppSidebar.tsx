@@ -75,20 +75,12 @@ export function AppSidebar() {
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
             <span className="text-primary-foreground text-sm font-semibold">RL</span>
           </div>
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
+          {!collapsed && <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">Личный кабинет</p>
-            </div>
-          )}
+            </div>}
           {!collapsed && <Settings className="h-4 w-4 text-muted-foreground shrink-0" />}
         </div>
-        <div className="flex items-center justify-between px-2 py-2">
-          <div className="flex items-center gap-2">
-            <Code className="h-4 w-4 shrink-0" />
-            {!collapsed && <span className="text-xs font-medium">DevMode</span>}
-          </div>
-          {!collapsed && <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} className="scale-75" />}
-        </div>
+        
       </SidebarFooter>
     </Sidebar>;
 }
