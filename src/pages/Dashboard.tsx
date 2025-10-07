@@ -56,10 +56,13 @@ export default function Dashboard() {
             )}
           </Button>
 
-          <Switch 
-            checked={isDeveloperMode}
-            onCheckedChange={toggleDeveloperMode}
-          />
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Dev Mode</span>
+            <Switch 
+              checked={isDeveloperMode}
+              onCheckedChange={toggleDeveloperMode}
+            />
+          </div>
         </div>
       </header>
 
