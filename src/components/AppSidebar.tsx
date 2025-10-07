@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Code, ChevronRight, User, Settings } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Beaker, ChevronRight, User, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ const menuItems = [{
 }, {
   title: "sidebar.lab",
   url: "/lab",
-  icon: Code
+  icon: Beaker
 }];
 export function AppSidebar() {
   const {
