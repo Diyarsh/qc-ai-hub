@@ -44,16 +44,14 @@ export function AppSidebar() {
     isDeveloperMode,
     toggleDeveloperMode
   } = useDeveloperMode();
-  const { theme } = useTheme();
+  const {
+    theme
+  } = useTheme();
   const isActive = (path: string) => currentPath === path;
   return <Sidebar className="border-r border-border bg-card">
       <SidebarHeader className="border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
-          <img 
-            src={theme === "dark" ? logoLight : logoDark} 
-            alt="QazCloud AI-HUB" 
-            className={collapsed ? "h-8" : "h-10"}
-          />
+          <img src={theme === "dark" ? logoLight : logoDark} alt="QazCloud AI-HUB" className={collapsed ? "h-8" : "h-10"} />
         </div>
       </SidebarHeader>
 
@@ -76,15 +74,9 @@ export function AppSidebar() {
         <div className="flex items-center justify-between px-2 py-2">
           <div className="flex items-center gap-2">
             <Code className="h-5 w-5 shrink-0" />
-            {!collapsed && <span className="text-sm font-medium">Режим разработчика</span>}
+            {!collapsed && <span className="text-sm font-medium">DevMode</span>}
           </div>
-          {!collapsed && (
-            <Switch 
-              checked={isDeveloperMode} 
-              onCheckedChange={toggleDeveloperMode}
-              className="scale-75"
-            />
-          )}
+          {!collapsed && <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} className="scale-75" />}
         </div>
       </SidebarFooter>
     </Sidebar>;
