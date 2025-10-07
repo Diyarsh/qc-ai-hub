@@ -3,10 +3,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Search, Clock, MessageCircle, Settings, Sun, Moon } from "lucide-react";
+import { Search, Clock, MessageCircle, Settings, Sun, Moon, Code } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTheme } from "next-themes";
+import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
+import { Switch } from "@/components/ui/switch";
 
 const historyItems = [
   { text: "Как оформить отпуск в...", time: "3 days ago" },
@@ -25,6 +27,7 @@ const historyItems = [
 export default function History() {
   const { t } = useLanguage();
   const { theme, setTheme } = useTheme();
+  const { isDeveloperMode, toggleDeveloperMode } = useDeveloperMode();
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -46,6 +49,10 @@ export default function History() {
               <Moon className="h-4 w-4" />
             )}
           </Button>
+          <div className="flex items-center gap-2 px-2">
+            <Code className="h-4 w-4" />
+            <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} className="scale-75" />
+          </div>
         </div>
       </header>
 
