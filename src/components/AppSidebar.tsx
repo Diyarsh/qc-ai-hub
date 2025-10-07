@@ -28,7 +28,8 @@ const menuItems = [{
 }, {
   title: "sidebar.lab",
   url: "/lab",
-  icon: Brain
+  icon: Code,
+  devOnly: true
 }];
 export function AppSidebar() {
   const {
@@ -57,16 +58,35 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="space-y-0">
-          {menuItems.map(item => <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild className="h-9">
-                <NavLink to={item.url} className={({
-              isActive
-            }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"}`}>
-                  <item.icon className="h-5 w-5 shrink-0" />
-                  {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>)}
+          {menuItems.map(item => {
+            const isDevOnly = (item as any).devOnly;
+            const isDisabled = isDevOnly && !isDeveloperMode;
+            
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild className="h-9">
+                  <NavLink 
+                    to={isDisabled ? "#" : item.url} 
+                    onClick={(e) => {
+                      if (isDisabled) e.preventDefault();
+                    }}
+                    className={({isActive}) => 
+                      `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+                        isDisabled 
+                          ? "opacity-40 cursor-not-allowed text-muted-foreground" 
+                          : isActive 
+                            ? "bg-muted text-foreground" 
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      }`
+                    }
+                  >
+                    <item.icon className="h-5 w-5 shrink-0" />
+                    {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
 
