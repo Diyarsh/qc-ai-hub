@@ -50,7 +50,7 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="border-b border-border px-3 py-4">
-        <div className="flex items-center justify-center">
+        <div className={`flex items-center ${collapsed ? "justify-center" : "justify-start"}`}>
           <img src={theme === "dark" ? logoLight : logoDark} alt="QazCloud AI-HUB" className={collapsed ? "h-8 w-8 object-contain" : "h-10"} />
         </div>
       </SidebarHeader>
