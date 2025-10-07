@@ -32,7 +32,7 @@ export default function Dashboard() {
   }, []);
   return <div className="flex flex-col h-full">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border bg-background px-6 py-4">
+      <header className="flex items-center justify-between bg-background px-6 py-4">
         <div className="flex items-center gap-4">
           <SidebarTrigger />
           
