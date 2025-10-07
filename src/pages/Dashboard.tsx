@@ -17,11 +17,13 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
   return <div className="flex flex-col h-full">
-      <PageHeader title={t('dashboard.title')} />
+      <PageHeader />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
         <div className="w-full max-w-3xl">
+          <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
+          
           {/* Message Input */}
           <div className="relative mb-8">
             <Textarea placeholder={examplePrompts[currentPrompt]} className="min-h-[120px] pr-20 text-lg bg-muted border-border resize-none" />
