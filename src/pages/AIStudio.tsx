@@ -14,12 +14,6 @@ export default function AIStudio() {
       <PageHeader 
         title={t('ai-studio.title')}
         subtitle={t('ai-studio.subtitle')}
-        actions={
-          <Button variant="ghost" size="sm" className="gap-2">
-            <Filter className="h-4 w-4" />
-            {t('ai-studio.filters')}
-          </Button>
-        }
       />
 
       {/* Main Content */}
