@@ -57,56 +57,34 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-4">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-0.5">
-              {menuItems.map(item => <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-10">
-                    <NavLink to={item.url} className={({
-                  isActive
-                }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
-                      <item.icon className="h-5 w-5 shrink-0" />
-                      {!collapsed && <span className="font-medium">{t(item.title)}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>)}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        {/* Developer Mode Toggle */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Настройки</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <div className="px-3 py-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Code className="h-4 w-4" />
-                  {!collapsed && <span className="text-sm font-medium">Режим разработчика</span>}
-                </div>
-                {!collapsed && (
-                  <Switch 
-                    checked={isDeveloperMode} 
-                    onCheckedChange={toggleDeveloperMode}
-                    className="scale-75"
-                  />
-                )}
-              </div>
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        
+      <SidebarContent className="px-2 py-2">
+        <SidebarMenu className="space-y-0">
+          {menuItems.map(item => <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild className="h-9">
+                <NavLink to={item.url} className={({
+              isActive
+            }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"}`}>
+                  <item.icon className="h-5 w-5 shrink-0" />
+                  {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>)}
+        </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
-            AD
+      <SidebarFooter className="border-t border-border p-3 mt-auto">
+        <div className="flex items-center justify-between px-2 py-2">
+          <div className="flex items-center gap-2">
+            <Code className="h-5 w-5 shrink-0" />
+            {!collapsed && <span className="text-sm font-medium">Режим разработчика</span>}
           </div>
-          {!collapsed && <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">admin</p>
-              <p className="text-xs text-muted-foreground truncate">admin@company.com</p>
-            </div>}
+          {!collapsed && (
+            <Switch 
+              checked={isDeveloperMode} 
+              onCheckedChange={toggleDeveloperMode}
+              className="scale-75"
+            />
+          )}
         </div>
       </SidebarFooter>
     </Sidebar>;
