@@ -211,16 +211,14 @@ export default function Lab() {
     }]
   }];
   return <div className="flex flex-col h-full">
-      <PageHeader title={t('sidebar.lab')} />
+      <PageHeader 
+        title={t('sidebar.lab')} 
+        subtitle="Создание и управление AI агентами и моделями"
+      />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <h2 className="text-3xl font-bold mb-2">{t('sidebar.lab')}</h2>
-            <p className="text-muted-foreground">Создание и управление AI агентами и моделями</p>
-          </div>
-
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="agents">Агенты</TabsTrigger>

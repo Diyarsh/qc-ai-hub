@@ -28,10 +28,6 @@ export default function History() {
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-2">{t('history.title')}</h2>
-          </div>
-
           {/* Search */}
           <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
