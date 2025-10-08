@@ -19,17 +19,17 @@ export function PageHeader({ title, subtitle, showDevMode = true, actions }: Pag
   const { isDeveloperMode, toggleDeveloperMode } = useDeveloperMode();
 
   return (
-    <header className="flex items-center justify-between bg-background px-6 py-4">
-      <div className="flex items-center gap-3">
-        <SidebarTrigger className="h-9 w-9" />
+    <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-background px-4 sm:px-6 py-4">
+      <div className="flex items-center gap-3 w-full sm:w-auto">
+        <SidebarTrigger className="h-9 w-9 flex-shrink-0" />
         {(title || subtitle) && (
-          <div>
-            {title && <h1 className="text-2xl font-bold">{title}</h1>}
-            {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+          <div className="min-w-0 flex-1">
+            {title && <h1 className="text-xl sm:text-2xl font-bold truncate">{title}</h1>}
+            {subtitle && <p className="text-xs sm:text-sm text-muted-foreground truncate">{subtitle}</p>}
           </div>
         )}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end flex-wrap">
         {actions}
         <LanguageSelector />
         
@@ -39,7 +39,7 @@ export function PageHeader({ title, subtitle, showDevMode = true, actions }: Pag
 
         {showDevMode && (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Dev Mode</span>
+            <span className="text-xs sm:text-sm font-medium hidden sm:inline">Dev Mode</span>
             <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} />
           </div>
         )}
