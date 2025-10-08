@@ -10,7 +10,7 @@ export default function ProjectChat() {
   const [activeTab, setActiveTab] = useState("files");
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-full w-full overflow-hidden">.
       {/* Project Sidebar */}
       <div className="w-72 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
@@ -57,12 +57,12 @@ export default function ProjectChat() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Chat Messages */}
-        <ScrollArea className="flex-1 p-6">
-          <div className="max-w-3xl mx-auto">
-            <div className="flex flex-col items-center justify-center h-full text-center py-20">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+        <ScrollArea className="flex-1 p-6 overflow-y-auto">.
+          <div className="max-w-3xl mx-auto">.
+            <div className="flex flex-col items-center justify-center h-full text-center py-20">.
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">.
                 <Bot className="h-8 w-8 text-primary" />
               </div>
               <h2 className="text-2xl font-semibold mb-2">Начать беседу</h2>
