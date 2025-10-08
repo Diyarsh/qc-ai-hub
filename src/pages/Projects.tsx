@@ -15,14 +15,17 @@ import {
 const projects = [{
   id: 1,
   name: "QazDoc Analyzer",
+  description: "AI-powered document analysis and processing system for Kazakh documents",
   fileCount: 12
 }, {
   id: 2,
   name: "KazLLM Assistant",
+  description: "Multilingual chatbot assistant with Kazakh language support",
   fileCount: 8
 }, {
   id: 3,
   name: "Business Analytics",
+  description: "Comprehensive business intelligence and analytics dashboard",
   fileCount: 15
 }];
 export default function Projects() {
@@ -54,15 +57,15 @@ export default function Projects() {
           </div>
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {projects.map(project => <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
-                <CardContent className="p-4">
-                  <div className="flex flex-col space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map(project => <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]">
+                <CardContent className="p-6">
+                  <div className="flex flex-col space-y-3">
                     <div className="flex items-start justify-between">
-                      <h3 className="font-medium text-sm flex-1">{project.name}</h3>
+                      <h3 className="font-semibold text-base flex-1">{project.name}</h3>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-6 w-6 -mt-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -78,6 +81,7 @@ export default function Projects() {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
                     <p className="text-xs text-muted-foreground">{project.fileCount} files</p>
                   </div>
                 </CardContent>
