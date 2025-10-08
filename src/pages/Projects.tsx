@@ -31,10 +31,7 @@ export default function Projects() {
   } = useLanguage();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   return <div className="flex flex-col h-full">
-      <PageHeader title={t('projects.title')} actions={<Button className="gap-2" onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="h-4 w-4" />
-            {t('projects.create')}
-          </Button>} />
+      <PageHeader title={t('projects.title')} />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
@@ -50,6 +47,10 @@ export default function Projects() {
               </Button>
             </div>
             
+            <Button className="gap-2" size="sm" onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="h-4 w-4" />
+              {t('projects.create')}
+            </Button>
           </div>
 
           {/* Projects Grid */}
