@@ -13,7 +13,7 @@ interface ProjectSettingsDialogProps {
 
 export function ProjectSettingsDialog({ open, onOpenChange }: ProjectSettingsDialogProps) {
   const [instructions, setInstructions] = useState("");
-  const [model, setModel] = useState("gpt-4-turbo");
+  const [model, setModel] = useState("gpt-oss-20b");
 
   const handleSave = () => {
     // Save logic here
@@ -48,22 +48,19 @@ export function ProjectSettingsDialog({ open, onOpenChange }: ProjectSettingsDia
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gpt-4-turbo">
+                <SelectItem value="gpt-oss-20b">
                   <div>
-                    <div className="font-medium">GPT-4 Turbo</div>
-                    <div className="text-xs text-muted-foreground">Fast and accurate responses</div>
+                    <div className="font-medium">GPT-OSS-20b</div>
                   </div>
                 </SelectItem>
-                <SelectItem value="gpt-4">
+                <SelectItem value="deepseek">
                   <div>
-                    <div className="font-medium">GPT-4</div>
-                    <div className="text-xs text-muted-foreground">Most capable model</div>
+                    <div className="font-medium">DeepSeek</div>
                   </div>
                 </SelectItem>
-                <SelectItem value="gpt-3.5-turbo">
+                <SelectItem value="grok">
                   <div>
-                    <div className="font-medium">GPT-3.5 Turbo</div>
-                    <div className="text-xs text-muted-foreground">Faster and more affordable</div>
+                    <div className="font-medium">Grok</div>
                   </div>
                 </SelectItem>
               </SelectContent>
