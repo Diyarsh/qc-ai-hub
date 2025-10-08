@@ -39,9 +39,9 @@ export default function ProjectChat() {
               </Button>
               
               <div className="flex flex-col items-center justify-center py-6 text-center border border-border rounded-lg">`
-                <FolderOpen className="h-16 w-16 text-muted-foreground mb-4 opacity-50" />
-                <h3 className="font-medium mb-2">Файлов пока нет</h3>
-                <p className="text-sm text-muted-foreground max-w-[200px]">
+                <FolderOpen className="h-10 w-10 text-muted-foreground mb-3 opacity-50" />
+                <h3 className="font-medium mb-2 text-sm">Файлов пока нет</h3>
+                <p className="text-xs text-muted-foreground max-w-[200px]">
                   Начните с прикрепления файлов к вашему проекту. Они будут использоваться во всех чатах этого проекта.
                 </p>
               </div>
