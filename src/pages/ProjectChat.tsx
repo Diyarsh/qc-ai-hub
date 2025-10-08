@@ -21,7 +21,7 @@ export default function ProjectChat() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-2 mx-4 mt-4">
+          <TabsList className="grid w-full grid-cols-2 px-4 mt-4">
             <TabsTrigger value="files" className="text-xs">Файлы</TabsTrigger>
             <TabsTrigger value="conversations" className="text-xs">Чаты</TabsTrigger>
           </TabsList>
