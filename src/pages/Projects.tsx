@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Plus, MoreVertical, Edit, Share2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -15,24 +14,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 const projects = [{
   id: 1,
-  name: "QazLLM-Ultra",
-  description: "Суверенная казахская модель для корпоративного сектора Казахстана",
-  tags: ["Казахский", "Русский", "Английский", "+1"]
+  name: "QazDoc Analyzer",
+  fileCount: 12
 }, {
   id: 2,
-  name: "QazAssistant Pro",
-  description: "Корпоративный ассистент для казахстанских предприятий",
-  tags: ["HR", "Документооборот", "Планирование"]
+  name: "KazLLM Assistant",
+  fileCount: 8
 }, {
   id: 3,
-  name: "KazDoc AI",
-  description: "Специализированный анализ казахстанской документации",
-  tags: ["Госдокументы", "Правовые акты", "OCR"]
-}, {
-  id: 4,
-  name: "KazCode Assistant",
-  description: "Помощник программиста для разработки в Казахстане",
-  tags: ["Python", "JavaScript", "Код-ревью"]
+  name: "Business Analytics",
+  fileCount: 15
 }];
 export default function Projects() {
   const {
@@ -63,15 +54,15 @@ export default function Projects() {
           </div>
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {projects.map(project => <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] flex flex-col">
-                <CardContent className="p-5 flex flex-col flex-1">
-                  <div className="flex flex-col h-full space-y-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-base flex-1 line-clamp-1">{project.name}</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            {projects.map(project => <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
+                <CardContent className="p-4">
+                  <div className="flex flex-col space-y-2">
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-medium text-sm flex-1">{project.name}</h3>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 -mt-1 shrink-0">
+                          <Button variant="ghost" size="icon" className="h-6 w-6 -mt-1">
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -87,12 +78,7 @@ export default function Projects() {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mt-auto">
-                      {project.tags.map((tag, index) => <Badge key={index} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>)}
-                    </div>
+                    <p className="text-xs text-muted-foreground">{project.fileCount} files</p>
                   </div>
                 </CardContent>
               </Card>)}
