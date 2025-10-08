@@ -28,7 +28,6 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/project-chat" element={<ProjectChat />} />
               <Route
                 path="/*"
                 element={
@@ -38,6 +37,7 @@ const App = () => (
                       <Route path="/ai-studio" element={<AIStudio />} />
                       <Route path="/history" element={<History />} />
                       <Route path="/projects" element={<Projects />} />
+                      <Route path="/project-chat" element={<ProjectChat />} />
                       <Route path="/lab" element={<Lab />} />
                       <Route path="/developer" element={<Developer />} />
                       <Route path="*" element={<NotFound />} />
