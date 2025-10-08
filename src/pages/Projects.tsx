@@ -2,41 +2,52 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Search, MoreVertical, Share2, Copy, Trash2 } from "lucide-react";
+import { Plus, Search, BarChart3, Flame, Link, MessageCircle, FileText, Command } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { CreateProjectDialog } from "@/components/CreateProjectDialog";
-import { ShareProjectDialog } from "@/components/ShareProjectDialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const projects = [
-  { id: 1, name: "QazDoc Analyzer", files: 24 },
-  { id: 2, name: "KazLLM Assistant", files: 18 },
-  { id: 3, name: "Business Analytics", files: 31 }
-];
-
+const projects = [{
+  id: 1,
+  name: "QazDoc Analyzer",
+  icon: "📄",
+  type: "document"
+}, {
+  id: 2,
+  name: "KazLLM Assistant",
+  icon: "💬",
+  type: "chat"
+}, {
+  id: 3,
+  name: "Business Analytics",
+  icon: "📊",
+  type: "analytics"
+}];
+const getProjectIcon = (type: string) => {
+  switch (type) {
+    case 'analytics':
+      return <BarChart3 className="h-8 w-8 text-blue-500" />;
+    case 'new':
+      return <Flame className="h-8 w-8 text-orange-500" />;
+    case 'link':
+      return <Link className="h-8 w-8 text-gray-500" />;
+    case 'chat':
+      return <MessageCircle className="h-8 w-8 text-green-500" />;
+    case 'document':
+      return <FileText className="h-8 w-8 text-purple-500" />;
+    default:
+      return <Command className="h-8 w-8 text-blue-500" />;
+  }
+};
 export default function Projects() {
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
-
-  return (
-    <div className="flex flex-col h-full">
-      <PageHeader 
-        title={t('projects.title')}
-        actions={
-          <Button className="gap-2" onClick={() => setIsCreateDialogOpen(true)}>
+  return <div className="flex flex-col h-full">
+      <PageHeader title={t('projects.title')} actions={<Button className="gap-2" onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="h-4 w-4" />
             {t('projects.create')}
-          </Button>
-        }
-      />
+          </Button>} />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
@@ -51,74 +62,27 @@ export default function Projects() {
                 {t('projects.shared')}
               </Button>
             </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={`${t('projects.search')} ⌘K`}
-                className="w-80 pl-10"
-              />
-            </div>
+            
           </div>
 
           {/* Projects Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {projects.map((project) => (
-              <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105 relative">
+            {projects.map(project => <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
                 <CardContent className="p-4">
-                  <div className="flex flex-col text-center space-y-1">
-                    <h3 className="font-medium text-sm">{project.name}</h3>
-                    <p className="text-xs text-muted-foreground">{project.files} files</p>
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                      {getProjectIcon(project.type)}
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-xs">{project.name}</h3>
+                    </div>
                   </div>
-                  
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem 
-                        className="gap-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedProject(project);
-                          setIsShareDialogOpen(true);
-                        }}
-                      >
-                        <Share2 className="h-4 w-4" />
-                        Share
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="gap-2">
-                        <Copy className="h-4 w-4" />
-                        Clone
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="gap-2 text-destructive">
-                        <Trash2 className="h-4 w-4" />
-                        Remove
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </main>
 
-      <CreateProjectDialog 
-        open={isCreateDialogOpen} 
-        onOpenChange={setIsCreateDialogOpen} 
-      />
-      
-      <ShareProjectDialog 
-        open={isShareDialogOpen} 
-        onOpenChange={setIsShareDialogOpen}
-        projectName={selectedProject?.name || ""}
-      />
-    </div>
-  );
+      <CreateProjectDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
+    </div>;
 }
