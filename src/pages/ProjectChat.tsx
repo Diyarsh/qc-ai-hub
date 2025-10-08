@@ -15,7 +15,7 @@ export default function ProjectChat() {
       <div className="w-72 border-r bg-card flex flex-col">
         <button 
           onClick={() => setSettingsOpen(true)}
-          className="p-4 border-b text-left hover:bg-accent/50 transition-colors"
+          className="p-4 m-4 border rounded-lg text-left hover:bg-accent hover:border-primary/50 transition-all duration-200"
         >
           <div className="flex items-center gap-2 mb-3">
             <Settings className="h-5 w-5 text-muted-foreground" />
