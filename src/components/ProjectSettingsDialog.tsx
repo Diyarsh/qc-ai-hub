@@ -31,7 +31,7 @@ export function ProjectSettingsDialog({ open, onOpenChange }: ProjectSettingsDia
           <div className="space-y-2">
             <Label>Инструкции проекта</Label>
             <Textarea
-              placeholder="Добавьте инструкции о тоне, стиле и персоне, которую должен принять AI"
+              placeholder="AI-HUB будет следовать инструкциям во всех разговорах этого проекта"
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               className="min-h-[200px] resize-none"
