@@ -55,25 +55,27 @@ export default function History() {
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Search and Filter */}
-          <div className="flex justify-between items-center gap-4 mb-6">
-            <div className="relative w-80">
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={t('history.search')}
                 className="pl-10"
               />
             </div>
-            <Select defaultValue="all">
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by update" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All time</SelectItem>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="week">This week</SelectItem>
-                <SelectItem value="month">This month</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex justify-end">
+              <Select defaultValue="all">
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filter by update" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All time</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">This week</SelectItem>
+                  <SelectItem value="month">This month</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Table */}
