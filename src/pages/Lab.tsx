@@ -219,16 +219,62 @@ export default function Lab() {
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="agents">Agents-Studio</TabsTrigger>
               <TabsTrigger value="data">ML-Studio</TabsTrigger>
-              <TabsTrigger value="monitoring">Мониторинг</TabsTrigger>
-              <TabsTrigger value="documentation">Документация</TabsTrigger>
             </TabsList>
 
             <TabsContent value="agents" className="mt-6">
-              <div className="flex flex-col gap-4 h-[700px]">
-                <div className="flex gap-4 flex-1">
+              <div className="space-y-6">
+                {/* Monitoring Section for Agents */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Мониторинг агентов</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <Card>
+                      <CardContent className="p-4">
+                         <div className="flex items-center gap-2">
+                           <Activity className="h-5 w-5 text-primary" />
+                           <span className="font-medium">Активные агенты</span>
+                         </div>
+                        <div className="text-2xl font-bold mt-2">2</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                         <div className="flex items-center gap-2">
+                           <Clock className="h-5 w-5 text-primary" />
+                           <span className="font-medium">Среднее время ответа</span>
+                         </div>
+                        <div className="text-2xl font-bold mt-2">667ms</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-5 w-5 text-red-500" />
+                          <span className="font-medium">Общая ошибок %</span>
+                        </div>
+                        <div className="text-2xl font-bold mt-2">34.5%</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                         <div className="flex items-center gap-2">
+                           <Zap className="h-5 w-5 text-primary" />
+                           <span className="font-medium">Всего токенов</span>
+                         </div>
+                        <div className="text-2xl font-bold mt-2">77K</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+
+                {/* Agent Studio */}
+                <div className="flex flex-col gap-4 h-[700px]">
+                  <div className="flex gap-4 flex-1">
                   {/* Left Sidebar - Node Library */}
                   <div className="w-80 bg-card border rounded-lg overflow-hidden flex flex-col">
                     <div className="p-4 border-b">
@@ -430,11 +476,58 @@ export default function Lab() {
                         </div>}
                     </ScrollArea>
                   </div>}
+                </div>
               </div>
             </TabsContent>
 
             <TabsContent value="data" className="mt-6">
               <div className="space-y-6">
+                {/* Monitoring Section for ML */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Мониторинг моделей</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <Card>
+                      <CardContent className="p-4">
+                         <div className="flex items-center gap-2">
+                           <Brain className="h-5 w-5 text-primary" />
+                           <span className="font-medium">Активные модели</span>
+                         </div>
+                        <div className="text-2xl font-bold mt-2">5</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                         <div className="flex items-center gap-2">
+                           <BarChart3 className="h-5 w-5 text-primary" />
+                           <span className="font-medium">Средний AUC</span>
+                         </div>
+                        <div className="text-2xl font-bold mt-2">0.89</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-primary" />
+                          <span className="font-medium">Прирост точности</span>
+                        </div>
+                        <div className="text-2xl font-bold mt-2">+12%</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                         <div className="flex items-center gap-2">
+                           <Activity className="h-5 w-5 text-primary" />
+                           <span className="font-medium">Предикшены/день</span>
+                         </div>
+                        <div className="text-2xl font-bold mt-2">2.4K</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-semibold">Данные и AutoML</h3>
@@ -843,160 +936,6 @@ export default function Lab() {
                     </div>
                   </TabsContent>
                 </Tabs>
-              </div>
-            </TabsContent>
-
-
-            <TabsContent value="monitoring" className="mt-6">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold">Мониторинг</h3>
-                    <p className="text-muted-foreground">Отслеживание производительности агентов и моделей</p>
-                  </div>
-                </div>
-
-                <Tabs defaultValue="agents" className="w-full">
-                  <TabsList>
-                    <TabsTrigger value="agents">Агенты</TabsTrigger>
-                    <TabsTrigger value="models">Модели</TabsTrigger>
-                    
-                  </TabsList>
-
-                  <TabsContent value="agents" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                      <Card>
-                        <CardContent className="p-4">
-                           <div className="flex items-center gap-2">
-                             <Activity className="h-5 w-5 text-primary" />
-                             <span className="font-medium">Активные агенты</span>
-                           </div>
-                          <div className="text-2xl font-bold mt-2">2</div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardContent className="p-4">
-                           <div className="flex items-center gap-2">
-                             <Clock className="h-5 w-5 text-primary" />
-                             <span className="font-medium">Среднее время ответа</span>
-                           </div>
-                          <div className="text-2xl font-bold mt-2">667ms</div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 text-red-500" />
-                            <span className="font-medium">Общая ошибок %</span>
-                          </div>
-                          <div className="text-2xl font-bold mt-2">34.5%</div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardContent className="p-4">
-                           <div className="flex items-center gap-2">
-                             <Zap className="h-5 w-5 text-primary" />
-                             <span className="font-medium">Всего токенов</span>
-                           </div>
-                          <div className="text-2xl font-bold mt-2">77K</div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Детали по агентам</h4>
-                      
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                             <div className="w-2 h-2 bg-primary rounded-full"></div>
-                              <div>
-                                <h5 className="font-medium">FAQ Bot</h5>
-                                <div className="text-sm text-muted-foreground">
-                                  Время ответа: 1200ms • Ошибки: 2.1% • Токены: 45,000 • Последняя активность: 14:30:00
-                                </div>
-                              </div>
-                            </div>
-                            <Badge variant="secondary">Активен</Badge>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                             <div className="w-2 h-2 bg-primary rounded-full"></div>
-                              <div>
-                                <h5 className="font-medium">SQL Assistant</h5>
-                                <div className="text-sm text-muted-foreground">
-                                  Время ответа: 800ms • Ошибки: 1.5% • Токены: 32,000 • Последняя активность: 14:25:00
-                                </div>
-                              </div>
-                            </div>
-                            <Badge variant="secondary">Активен</Badge>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                              <div>
-                                <h5 className="font-medium">Content Generator</h5>
-                                <div className="text-sm text-muted-foreground">
-                                  Время ответа: 0ms • Ошибки: 100% • Токены: 0 • Последняя активность: 12:15:00
-                                </div>
-                              </div>
-                            </div>
-                            <Badge variant="destructive">Ошибка</Badge>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="documentation" className="mt-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold">Документация</h3>
-                  <p className="text-muted-foreground">Руководства и справочные материалы</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                   <Card>
-                     <CardContent className="p-6">
-                       <FileText className="h-8 w-8 text-primary mb-4" />
-                       <h4 className="font-medium mb-2">Начало работы</h4>
-                       <p className="text-sm text-muted-foreground">Основы создания и настройки AI агентов</p>
-                     </CardContent>
-                   </Card>
-
-                   <Card>
-                     <CardContent className="p-6">
-                       <Settings className="h-8 w-8 text-primary mb-4" />
-                       <h4 className="font-medium mb-2">API Reference</h4>
-                       <p className="text-sm text-muted-foreground">Полная документация по API</p>
-                     </CardContent>
-                   </Card>
-
-                   <Card>
-                     <CardContent className="p-6">
-                       <BarChart3 className="h-8 w-8 text-primary mb-4" />
-                       <h4 className="font-medium mb-2">Примеры использования</h4>
-                       <p className="text-sm text-muted-foreground">Практические кейсы и решения</p>
-                     </CardContent>
-                   </Card>
-                </div>
               </div>
             </TabsContent>
           </Tabs>
