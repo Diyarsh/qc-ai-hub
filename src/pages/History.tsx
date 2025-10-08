@@ -1,40 +1,75 @@
 import { Input } from "@/components/ui/input";
 import { Search, MoreHorizontal, ExternalLink, Edit2, Trash2, ChevronDown } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-const historyItems = [
-  { text: "Analyze quantum computing algorithms", time: "17 hours ago", type: "chat", model: "GPT-4" },
-  { text: "Create AI-powered data visualization", time: "1 week ago", type: "chat", model: "Claude 3" },
-  { text: "Generate video from text description", time: "1 week ago", type: "veo", model: "Veo 2" },
-  { text: "Optimize database query performance", time: "1 week ago", type: "chat", model: "GPT-4" },
-  { text: "Build machine learning model pipeline", time: "1 week ago", type: "chat", model: "Gemini Pro" },
-  { text: "Generate product demo video", time: "1 week ago", type: "veo", model: "Veo 2" },
-  { text: "Implement natural language processing", time: "1 week ago", type: "chat", model: "Claude 3" },
-  { text: "Create animated explainer video", time: "1 week ago", type: "veo", model: "Veo 2" },
-  { text: "Develop recommendation system", time: "1 week ago", type: "chat", model: "GPT-4" },
-  { text: "Generate marketing campaign video", time: "1 week ago", type: "veo", model: "Veo 2" },
-  { text: "Design distributed system architecture", time: "2 weeks ago", type: "chat", model: "Gemini Pro" },
-  { text: "Implement real-time data streaming", time: "2 weeks ago", type: "chat", model: "Claude 3" }
-];
-
+const historyItems = [{
+  text: "Analyze quantum computing algorithms",
+  time: "17 hours ago",
+  type: "chat",
+  model: "GPT-4"
+}, {
+  text: "Create AI-powered data visualization",
+  time: "1 week ago",
+  type: "chat",
+  model: "Claude 3"
+}, {
+  text: "Generate video from text description",
+  time: "1 week ago",
+  type: "veo",
+  model: "Veo 2"
+}, {
+  text: "Optimize database query performance",
+  time: "1 week ago",
+  type: "chat",
+  model: "GPT-4"
+}, {
+  text: "Build machine learning model pipeline",
+  time: "1 week ago",
+  type: "chat",
+  model: "Gemini Pro"
+}, {
+  text: "Generate product demo video",
+  time: "1 week ago",
+  type: "veo",
+  model: "Veo 2"
+}, {
+  text: "Implement natural language processing",
+  time: "1 week ago",
+  type: "chat",
+  model: "Claude 3"
+}, {
+  text: "Create animated explainer video",
+  time: "1 week ago",
+  type: "veo",
+  model: "Veo 2"
+}, {
+  text: "Develop recommendation system",
+  time: "1 week ago",
+  type: "chat",
+  model: "GPT-4"
+}, {
+  text: "Generate marketing campaign video",
+  time: "1 week ago",
+  type: "veo",
+  model: "Veo 2"
+}, {
+  text: "Design distributed system architecture",
+  time: "2 weeks ago",
+  type: "chat",
+  model: "Gemini Pro"
+}, {
+  text: "Implement real-time data streaming",
+  time: "2 weeks ago",
+  type: "chat",
+  model: "Claude 3"
+}];
 export default function History() {
-  const { t } = useLanguage();
-  
+  const {
+    t
+  } = useLanguage();
   const formatTime = (time: string) => {
     if (time.includes('hours ago')) return time.replace('hours ago', t('history.hours-ago'));
     if (time.includes('week ago')) return time.replace('week ago', t('history.week-ago'));
@@ -42,13 +77,10 @@ export default function History() {
     if (time.includes('days ago')) return time.replace('days ago', t('history.days-ago'));
     return time;
   };
-
   const getTypeLabel = (type: string) => {
     return type === 'veo' ? t('history.veo-prompt') : t('history.chat-prompt');
   };
-
-  return (
-    <div className="flex flex-col h-full">
+  return <div className="flex flex-col h-full">
       <PageHeader title={t('history.title')} />
 
       {/* Main Content */}
@@ -58,24 +90,9 @@ export default function History() {
           <div className="flex flex-col gap-4 mb-6">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t('history.search')}
-                className="pl-10"
-              />
+              <Input placeholder={t('history.search')} className="pl-10" />
             </div>
-            <div className="flex justify-end">
-              <Select defaultValue="all">
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by update" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All time</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="week">This week</SelectItem>
-                  <SelectItem value="month">This month</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            
           </div>
 
           {/* Table */}
@@ -97,8 +114,7 @@ export default function History() {
                   </tr>
                 </thead>
                 <tbody>
-                  {historyItems.map((item, index) => (
-                    <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
+                  {historyItems.map((item, index) => <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-4">
                         <span className="text-sm">
                           {item.text}
@@ -137,14 +153,12 @@ export default function History() {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </td>
-                    </tr>
-                  ))}
+                    </tr>)}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
