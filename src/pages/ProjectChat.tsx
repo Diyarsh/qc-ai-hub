@@ -4,13 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Settings, Paperclip, Send, FolderOpen, Bot, Menu } from "lucide-react";
-
 export default function ProjectChat() {
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("files");
-
-  return (
-    <div className="flex h-full w-full overflow-hidden">.
+  return <div className="flex h-full w-full overflow-hidden">.
       {/* Project Sidebar */}
       <div className="w-72 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
@@ -26,11 +23,10 @@ export default function ProjectChat() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
           <TabsList className="grid w-full grid-cols-2 mx-4 mt-4">
             <TabsTrigger value="files" className="text-xs">Файлы</TabsTrigger>
-            <TabsTrigger value="conversations" className="text-xs">Беседы</TabsTrigger>
+            <TabsTrigger value="conversations" className="text-xs">Чаты</TabsTrigger>
           </TabsList>
 
-          {activeTab === "files" && (
-            <div className="flex-1 p-4">
+          {activeTab === "files" && <div className="flex-1 p-4">
               <Button variant="outline" className="w-full justify-start gap-2 mb-4">
                 <Paperclip className="h-4 w-4" />
                 Прикрепить
@@ -43,16 +39,13 @@ export default function ProjectChat() {
                   Начните с прикрепления файлов к вашему проекту. Они будут использоваться во всех чатах этого проекта.
                 </p>
               </div>
-            </div>
-          )}
+            </div>}
 
-          {activeTab === "conversations" && (
-            <ScrollArea className="flex-1 p-4">
+          {activeTab === "conversations" && <ScrollArea className="flex-1 p-4">
               <div className="text-sm text-muted-foreground text-center py-8">
                 Нет активных бесед
               </div>
-            </ScrollArea>
-          )}
+            </ScrollArea>}
         </Tabs>
       </div>
 
@@ -80,12 +73,7 @@ export default function ProjectChat() {
               <Button variant="ghost" size="icon" className="flex-shrink-0">
                 <Paperclip className="h-5 w-5" />
               </Button>
-              <Input
-                placeholder="Начните беседу в этом проекте"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="flex-1"
-              />
+              <Input placeholder="Начните беседу в этом проекте" value={message} onChange={e => setMessage(e.target.value)} className="flex-1" />
               <Button size="icon" className="flex-shrink-0">
                 <Send className="h-5 w-5" />
               </Button>
@@ -93,6 +81,5 @@ export default function ProjectChat() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
