@@ -6,12 +6,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 
 const projects = [
-  { id: 1, name: "QC", icon: "🌐", type: "web" },
-  { id: 2, name: "New Project", icon: "🔥", type: "new" },
-  { id: 3, name: "New Project", icon: "🔗", type: "link" },
-  { id: 4, name: "AI Assistant", icon: "💬", type: "chat" },
-  { id: 5, name: "Document Processor", icon: "📄", type: "document" },
-  { id: 6, name: "Data Analytics", icon: "📊", type: "analytics" }
+  { id: 1, name: "QazDoc Analyzer", icon: "📄", type: "document" },
+  { id: 2, name: "KazLLM Assistant", icon: "💬", type: "chat" },
+  { id: 3, name: "Business Analytics", icon: "📊", type: "analytics" }
 ];
 
 const getProjectIcon = (type: string) => {
@@ -63,16 +60,16 @@ export default function Projects() {
           </div>
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {projects.map((project) => (
-              <Card key={project.id} className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center space-y-4">
-                    <div className="w-16 h-16 rounded-lg bg-muted flex items-center justify-center">
+              <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
+                <CardContent className="p-4">
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
                       {getProjectIcon(project.type)}
                     </div>
                     <div>
-                      <h3 className="font-medium text-sm">{project.name}</h3>
+                      <h3 className="font-medium text-xs">{project.name}</h3>
                     </div>
                   </div>
                 </CardContent>
