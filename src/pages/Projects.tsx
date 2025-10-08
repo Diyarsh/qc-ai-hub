@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Search, BarChart3, Flame, Link, MessageCircle, FileText, Command } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
+import { CreateProjectDialog } from "@/components/CreateProjectDialog";
 
 const projects = [
   { id: 1, name: "QazDoc Analyzer", icon: "📄", type: "document" },
@@ -24,13 +26,14 @@ const getProjectIcon = (type: string) => {
 
 export default function Projects() {
   const { t } = useLanguage();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   return (
     <div className="flex flex-col h-full">
       <PageHeader 
         title={t('projects.title')}
         actions={
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="h-4 w-4" />
             {t('projects.create')}
           </Button>
@@ -78,6 +81,11 @@ export default function Projects() {
           </div>
         </div>
       </main>
+
+      <CreateProjectDialog 
+        open={isCreateDialogOpen} 
+        onOpenChange={setIsCreateDialogOpen} 
+      />
     </div>
   );
 }
