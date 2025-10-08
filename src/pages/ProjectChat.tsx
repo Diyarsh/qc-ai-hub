@@ -33,7 +33,7 @@ export default function ProjectChat() {
           </TabsList>
 
           {activeTab === "files" && <div className="flex-1 p-4">
-              <Button variant="outline" className="w-full justify-start gap-2 mb-4">
+              <Button variant="outline" className="w-full justify-center gap-2 mb-4">
                 <Paperclip className="h-4 w-4" />
                 Прикрепить
               </Button>
