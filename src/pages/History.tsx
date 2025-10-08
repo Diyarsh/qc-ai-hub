@@ -64,7 +64,7 @@ export default function History() {
           <div className="rounded-lg overflow-hidden border-y">
             <ScrollArea className="h-[calc(100vh-280px)]">
               <table className="w-full">
-                <thead className="bg-muted/50 sticky top-0 z-10">
+                <thead className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10 border-b">
                   <tr className="border-b">
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
                       {t('history.name')}
