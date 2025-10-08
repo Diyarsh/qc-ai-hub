@@ -55,7 +55,7 @@ export default function History() {
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Search and Filter */}
-          <div className="flex justify-center items-center gap-4 mb-6">
+          <div className="flex justify-between items-center gap-4 mb-6">
             <div className="relative w-80">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
