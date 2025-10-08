@@ -1,5 +1,12 @@
 import { Input } from "@/components/ui/input";
-import { Search, MoreHorizontal, ExternalLink, Edit2, Trash2 } from "lucide-react";
+import { Search, MoreHorizontal, ExternalLink, Edit2, Trash2, ChevronDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import {
@@ -47,8 +54,8 @@ export default function History() {
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Search */}
-          <div className="flex justify-end mb-6">
+          {/* Search and Filter */}
+          <div className="flex justify-center items-center gap-4 mb-6">
             <div className="relative w-80">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -56,6 +63,17 @@ export default function History() {
                 className="pl-10"
               />
             </div>
+            <Select defaultValue="all">
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by update" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This week</SelectItem>
+                <SelectItem value="month">This month</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Table */}
