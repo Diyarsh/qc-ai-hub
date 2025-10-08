@@ -9,8 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 
 const historyItems = [
   { text: "Analyze quantum computing algorithms", time: "17 hours ago", type: "chat", model: "GPT-4" },
@@ -62,23 +60,20 @@ export default function History() {
 
           {/* Table */}
           <div className="rounded-lg overflow-hidden border-y">
-            <ScrollArea className="h-[calc(100vh-280px)]">
-              <table className="w-full">
-                <thead className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10 border-b">
+            <div className="overflow-auto h-[calc(100vh-200px)]">
+              <table className="w-full relative">
+                <thead className="bg-background sticky top-0 z-10 shadow-sm">
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
                       {t('history.name')}
                     </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      {t('history.type')}
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
                       {t('history.model')}
                     </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
                       {t('history.updated')}
                     </th>
-                    <th className="w-12"></th>
+                    <th className="w-12 bg-background"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -88,11 +83,6 @@ export default function History() {
                         <span className="text-sm">
                           {item.text}
                         </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge variant="outline" className="text-xs">
-                          {getTypeLabel(item.type)}
-                        </Badge>
                       </td>
                       <td className="py-3 px-4">
                         <span className="text-sm text-muted-foreground">
@@ -131,7 +121,7 @@ export default function History() {
                   ))}
                 </tbody>
               </table>
-            </ScrollArea>
+            </div>
           </div>
         </div>
       </main>
