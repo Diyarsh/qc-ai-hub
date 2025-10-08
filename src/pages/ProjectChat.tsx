@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, Paperclip, Send, FolderOpen, MessageSquare, Bot } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Settings, Paperclip, Send, FolderOpen, Bot, Menu } from "lucide-react";
 
 export default function ProjectChat() {
   const [message, setMessage] = useState("");
@@ -15,12 +14,9 @@ export default function ProjectChat() {
       {/* Project Sidebar */}
       <div className="w-72 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <SidebarTrigger className="h-8 w-8" />
-              <Settings className="h-5 w-5 text-muted-foreground" />
-              <h2 className="font-semibold">Инструкции</h2>
-            </div>
+          <div className="flex items-center gap-2 mb-3">
+            <Settings className="h-5 w-5 text-muted-foreground" />
+            <h2 className="font-semibold">Инструкции</h2>
           </div>
           <p className="text-sm text-muted-foreground">
             Настройте инструкции для AI-HUB в этом проекте
