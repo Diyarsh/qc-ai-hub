@@ -12,7 +12,9 @@ import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function Lab() {
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const {
     isDeveloperMode
   } = useDeveloperMode();
@@ -211,17 +213,14 @@ export default function Lab() {
     }]
   }];
   return <div className="flex flex-col h-full">
-      <PageHeader 
-        title={t('sidebar.lab')} 
-        subtitle="Создание и управление AI агентами и моделями"
-      />
+      <PageHeader title={t('sidebar.lab')} subtitle="Создание и управление AI агентами и моделями" />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="agents">Агенты</TabsTrigger>
+              <TabsTrigger value="agents">Agents-Studio</TabsTrigger>
               <TabsTrigger value="data">ML-Studio</TabsTrigger>
               <TabsTrigger value="monitoring">Мониторинг</TabsTrigger>
               <TabsTrigger value="documentation">Документация</TabsTrigger>
