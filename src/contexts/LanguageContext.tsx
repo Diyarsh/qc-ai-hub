@@ -79,6 +79,7 @@ const translations = {
     'sidebar.ai-studio': 'AI-Студия',
     'sidebar.projects': 'Менің жобаларым',
     'sidebar.history': 'Тарих',
+    'sidebar.recent-prompts': 'Соңғы сұраулар',
     'sidebar.lab': 'Зертхана',
     'sidebar.developer': 'Әзірлеуші режимі',
     
@@ -217,6 +218,7 @@ const translations = {
     'sidebar.ai-studio': 'AI-Студия',
     'sidebar.projects': 'Мои проекты',
     'sidebar.history': 'История',
+    'sidebar.recent-prompts': 'Недавние запросы',
     'sidebar.lab': 'Лаборатория',
     'sidebar.developer': 'Режим разработчика',
     
@@ -351,10 +353,12 @@ const translations = {
     'language.en': 'English',
     
     // Sidebar
+    // Sidebar
     'sidebar.chat': 'Chat',
     'sidebar.ai-studio': 'AI Studio',
     'sidebar.projects': 'My Projects',
     'sidebar.history': 'History',
+    'sidebar.recent-prompts': 'Recent Prompts',
     'sidebar.lab': 'Laboratory',
     'sidebar.developer': 'Developer Mode',
     
