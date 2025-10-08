@@ -1,10 +1,11 @@
 import { Input } from "@/components/ui/input";
-import { Search, MoreHorizontal, ExternalLink, Edit2, Trash2, ChevronDown } from "lucide-react";
+import { Search, MoreHorizontal, ExternalLink, Edit2, Trash2, ChevronDown, ArrowUpDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 const historyItems = [{
   text: "Analyze quantum computing algorithms",
   time: "17 hours ago",
@@ -70,6 +71,7 @@ export default function History() {
   const {
     t
   } = useLanguage();
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const formatTime = (time: string) => {
     if (time.includes('hours ago')) return time.replace('hours ago', t('history.hours-ago'));
     if (time.includes('week ago')) return time.replace('week ago', t('history.week-ago'));
@@ -80,6 +82,27 @@ export default function History() {
   const getTypeLabel = (type: string) => {
     return type === 'veo' ? t('history.veo-prompt') : t('history.chat-prompt');
   };
+  
+  const parseTime = (time: string) => {
+    const hoursMatch = time.match(/(\d+)\s*hours?\s*ago/);
+    if (hoursMatch) return parseInt(hoursMatch[1]);
+    const weeksMatch = time.match(/(\d+)\s*weeks?\s*ago/);
+    if (weeksMatch) return parseInt(weeksMatch[1]) * 7 * 24;
+    const daysMatch = time.match(/(\d+)\s*days?\s*ago/);
+    if (daysMatch) return parseInt(daysMatch[1]) * 24;
+    return 0;
+  };
+  
+  const sortedItems = [...historyItems].sort((a, b) => {
+    const timeA = parseTime(a.time);
+    const timeB = parseTime(b.time);
+    return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+  });
+  
+  const toggleSort = () => {
+    setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+  };
+  
   return <div className="flex flex-col h-full">
       <PageHeader title={t('history.title')} />
 
@@ -107,14 +130,20 @@ export default function History() {
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
                       {t('history.model')}
                     </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
-                      {t('history.updated')}
+                    <th 
+                      className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background cursor-pointer hover:text-foreground transition-colors"
+                      onClick={toggleSort}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t('history.updated')}
+                        <ArrowUpDown className="h-3 w-3" />
+                      </div>
                     </th>
                     <th className="w-12 bg-background"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {historyItems.map((item, index) => <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
+                  {sortedItems.map((item, index) => <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-4">
                         <span className="text-sm">
                           {item.text}
