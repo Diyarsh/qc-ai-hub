@@ -131,6 +131,10 @@ const translations = {
     'history.open-new-tab': 'Жаңа қойындыда ашу',
     'history.rename': 'Атауын өзгерту',
     'history.delete': 'Жою',
+    'history.this-week': 'Осы апта',
+    'history.october': 'Қазан',
+    'history.september': 'Қыркүйек',
+    'history.see-all': 'Барлығын көру',
     
     // Auth
     'auth.title': 'AI-HUB',
@@ -270,6 +274,10 @@ const translations = {
     'history.open-new-tab': 'Открыть в новой вкладке',
     'history.rename': 'Переименовать',
     'history.delete': 'Удалить',
+    'history.this-week': 'На этой неделе',
+    'history.october': 'Октябрь',
+    'history.september': 'Сентябрь',
+    'history.see-all': 'Смотреть все',
     
     // Auth
     'auth.title': 'AI-HUB',
@@ -410,6 +418,10 @@ const translations = {
     'history.open-new-tab': 'Open in new tab',
     'history.rename': 'Rename',
     'history.delete': 'Delete',
+    'history.this-week': 'This Week',
+    'history.october': 'October',
+    'history.september': 'September',
+    'history.see-all': 'See all',
     
     // Auth
     'auth.title': 'AI-HUB',

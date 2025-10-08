@@ -31,11 +31,19 @@ const menuItems = [{
   title: "sidebar.history",
   url: "/history",
   icon: History,
-  subItems: [{
-    title: "sidebar.recent-prompts",
-    url: "/history#recent",
-    icon: Clock
-  }]
+  subItems: [
+    { group: "history.this-week", items: [
+      { title: "Российский ИТ-форум: тренд", url: "/history#1" },
+      { title: "Higgsfield AI: Breakthrough in", url: "/history#2" }
+    ]},
+    { group: "history.october", items: [
+      { title: "Қазақстан: центр ИИ через т", url: "/history#3" }
+    ]},
+    { group: "history.september", items: [
+      { title: "Lovable vs BlueMint: Лучший", url: "/history#4" },
+      { title: "Mental Health Support and St", url: "/history#5" }
+    ]}
+  ]
 }];
 export function AppSidebar() {
   const {
@@ -65,34 +73,28 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="space-y-0.5">
-          {menuItems.map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu || isActive(item.url)} onOpenChange={setOpenHistoryMenu} asChild>
+          {menuItems.map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
-                      <NavLink to={item.url} className={({
-                  isActive
-                }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
-                        <item.icon className="h-5 w-5 shrink-0" />
-                        {!collapsed && <>
-                            <span className="font-medium text-sm flex-1">{t(item.title)}</span>
-                            <ChevronRight className={`h-4 w-4 transition-transform ${openHistoryMenu || isActive(item.url) ? "rotate-90" : ""}`} />
-                          </>}
-                      </NavLink>
+                    <SidebarMenuButton tooltip={collapsed ? t(item.title) : undefined} className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive(item.url) ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
+                      {openHistoryMenu ? <ChevronRight className="h-5 w-5 shrink-0 transition-transform rotate-90" /> : <item.icon className="h-5 w-5 shrink-0" />}
+                      {!collapsed && <>
+                          <span className="font-medium text-sm flex-1">{t(item.title)}</span>
+                        </>}
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
-                  {!collapsed && <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.subItems.map(subItem => <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild>
-                              <NavLink to={subItem.url} className={({
-                          isActive
-                        }) => `flex items-center gap-3 rounded-lg px-3 py-2 ml-6 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"}`}>
-                                <subItem.icon className="h-4 w-4 shrink-0" />
-                                <span className="text-sm">{t(subItem.title)}</span>
-                              </NavLink>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>)}
-                      </SidebarMenuSub>
+                  {!collapsed && <CollapsibleContent className="animate-accordion-down">
+                      <div className="ml-3 mt-1 space-y-3">
+                        {item.subItems.map((subGroup: any, idx: number) => <div key={idx} className="space-y-1">
+                            <p className="text-xs text-muted-foreground px-3 py-1 font-medium">{t(subGroup.group)}</p>
+                            {subGroup.items.map((historyItem: any, itemIdx: number) => <NavLink key={itemIdx} to={historyItem.url} className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate">
+                                {historyItem.title}
+                              </NavLink>)}
+                          </div>)}
+                        <NavLink to="/history" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">
+                          {t('history.see-all')}
+                        </NavLink>
+                      </div>
                     </CollapsibleContent>}
                 </SidebarMenuItem>
               </Collapsible> : <SidebarMenuItem key={item.title}>
