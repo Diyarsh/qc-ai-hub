@@ -1,22 +1,24 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Zap, Lock } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const AdvantagesSection = () => {
+  const { t } = useLanguage();
   const advantages = [
     {
       icon: Shield,
-      title: "Цифровой суверенитет",
-      description: "Технологическая независимость и контроль над ИИ-решениями"
+      title: t('advantages.sovereignty.title'),
+      description: t('advantages.sovereignty.description')
     },
     {
       icon: Zap,
-      title: "Масштабируемость",
-      description: "От прототипа до промышленного внедрения без ограничений"
+      title: t('advantages.scalability.title'),
+      description: t('advantages.scalability.description')
     },
     {
       icon: Lock,
-      title: "Безопасность",
-      description: "Национальный ИТ-контур с высоким уровнем защиты данных"
+      title: t('advantages.security.title'),
+      description: t('advantages.security.description')
     }
   ];
 
@@ -24,9 +26,9 @@ export const AdvantagesSection = () => {
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Ключевые преимущества</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('advantages.title')}</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Современные технологии ИИ с полным контролем и безопасностью
+            {t('advantages.subtitle')}
           </p>
         </div>
         

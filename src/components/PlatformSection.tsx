@@ -1,22 +1,24 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Server, Database, Shield } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const PlatformSection = () => {
+  const { t } = useLanguage();
   const features = [
     {
       icon: Server,
-      title: "Мощные вычисления",
-      description: "Высокопроизводительные GPU и CPU для обучения и инференса AI-моделей"
+      title: t('platform.compute.title'),
+      description: t('platform.compute.description')
     },
     {
       icon: Database,
-      title: "Безопасные данные",
-      description: "Защищенное хранение и обработка данных в соответствии с требованиями безопасности"
+      title: t('platform.data.title'),
+      description: t('platform.data.description')
     },
     {
       icon: Shield,
-      title: "Надежная инфраструктура",
-      description: "Отказоустойчивая архитектура с высоким уровнем доступности сервисов"
+      title: t('platform.infrastructure.title'),
+      description: t('platform.infrastructure.description')
     }
   ];
 
@@ -24,10 +26,9 @@ export const PlatformSection = () => {
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6">О платформе AI-HUB</h2>
+          <h2 className="text-4xl font-bold mb-6">{t('platform.title')}</h2>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Современная облачная платформа для разработки, обучения и развертывания 
-            решений искусственного интеллекта с полным контролем над данными и процессами
+            {t('platform.subtitle')}
           </p>
         </div>
         

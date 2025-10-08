@@ -1,26 +1,28 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cpu, Users, Wrench } from "lucide-react";
+import { Cpu, Users } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const ServicesSection = () => {
+  const { t } = useLanguage();
   const services = [
     {
-      title: "Self-Service",
-      description: "Самостоятельная работа с платформой и инструментами ИИ",
+      title: t('services.self-service.title'),
+      description: t('services.self-service.description'),
       icon: Cpu,
       features: [
-        "Доступ к GPU кластеру",
-        "Библиотека моделей",
-        "Автономная разработка"
+        t('services.self-service.feature1'),
+        t('services.self-service.feature2'),
+        t('services.self-service.feature3')
       ]
     },
     {
-      title: "AI-as-a-Service",
-      description: "Полное сопровождение от идеи до внедрения с экспертной поддержкой",
+      title: t('services.ai-service.title'),
+      description: t('services.ai-service.description'),
       icon: Users,
       features: [
-        "Консультации экспертов",
-        "Кастомная разработка",
-        "Техническая поддержка"
+        t('services.ai-service.feature1'),
+        t('services.ai-service.feature2'),
+        t('services.ai-service.feature3')
       ]
     }
   ];
@@ -29,9 +31,9 @@ export const ServicesSection = () => {
     <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Модели взаимодействия</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('services.title')}</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Выберите подходящий способ работы с платформой
+            {t('services.subtitle')}
           </p>
         </div>
         

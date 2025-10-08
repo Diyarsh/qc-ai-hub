@@ -12,6 +12,63 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 const translations = {
   kk: {
+    // Navigation
+    'nav.login': 'Кіру',
+    
+    // Hero Section
+    'hero.subtitle': 'Цифрлық егемендік үшін орталықтандырылған AI платформасы',
+    'hero.description': 'Жасанды интеллект мүмкіндіктеріне бірыңғай қол жеткізу нүктесі. Идеядан технологиялық егемендікпен өнеркәсіптік енгізуге дейін.',
+    'hero.cta': 'AI-HUB',
+    'hero.learn-more': 'Толығырақ білу',
+    
+    // Services Section
+    'services.title': 'Өзара әрекеттесу модельдері',
+    'services.subtitle': 'Платформамен жұмыс істеудің қолайлы тәсілін таңдаңыз',
+    'services.self-service.title': 'Self-Service',
+    'services.self-service.description': 'AI құралдары мен платформасымен өз бетінше жұмыс',
+    'services.self-service.feature1': 'GPU кластеріне қол жеткізу',
+    'services.self-service.feature2': 'Модельдер кітапханасы',
+    'services.self-service.feature3': 'Автономды әзірлеу',
+    'services.ai-service.title': 'AI-as-a-Service',
+    'services.ai-service.description': 'Сарапшы қолдауымен идеядан енгізуге дейін толық қолдау',
+    'services.ai-service.feature1': 'Сарапшылардың кеңестері',
+    'services.ai-service.feature2': 'Теңшелген әзірлеу',
+    'services.ai-service.feature3': 'Техникалық қолдау',
+    
+    // Advantages Section
+    'advantages.title': 'Негізгі артықшылықтар',
+    'advantages.subtitle': 'Толық бақылау мен қауіпсіздікпен заманауи AI технологиялары',
+    'advantages.sovereignty.title': 'Цифрлық егемендік',
+    'advantages.sovereignty.description': 'Технологиялық тәуелсіздік және AI шешімдерін бақылау',
+    'advantages.scalability.title': 'Масштабталу',
+    'advantages.scalability.description': 'Прототиптен шектеусіз өнеркәсіптік енгізуге дейін',
+    'advantages.security.title': 'Қауіпсіздік',
+    'advantages.security.description': 'Деректерді жоғары деңгейде қорғаумен ұлттық IT контуры',
+    
+    // Platform Section
+    'platform.title': 'AI-HUB платформасы туралы',
+    'platform.subtitle': 'Деректер мен процестерді толық бақылаумен жасанды интеллект шешімдерін әзірлеу, үйрету және орналастыруға арналған заманауи бұлтты платформа',
+    'platform.compute.title': 'Қуатты есептеулер',
+    'platform.compute.description': 'AI модельдерін оқыту және инференс үшін жоғары өнімді GPU және CPU',
+    'platform.data.title': 'Қауіпсіз деректер',
+    'platform.data.description': 'Қауіпсіздік талаптарына сәйкес деректерді қорғалған сақтау және өңдеу',
+    'platform.infrastructure.title': 'Сенімді инфрақұрылым',
+    'platform.infrastructure.description': 'Қызметтердің жоғары қол жетімділік деңгейімен ақауларға төзімді архитектура',
+    
+    // Footer
+    'footer.description': 'Құралдар мен қызметтердің толық жинағымен AI шешімдерін әзірлеу және орналастыруға арналған платформа.',
+    'footer.products': 'Өнімдер',
+    'footer.products.studio': 'AI Studio',
+    'footer.products.projects': 'Жобалар',
+    'footer.products.history': 'Тарих',
+    'footer.products.lab': 'Зертхана',
+    'footer.company': 'Компания',
+    'footer.company.about': 'Біз туралы',
+    'footer.company.contact': 'Байланыстар',
+    'footer.company.docs': 'Құжаттама',
+    'footer.company.support': 'Қолдау',
+    'footer.copyright': '© 2024 QazCloud AI-HUB. Барлық құқықтар қорғалған.',
+    
     // Header
     'language.kk': 'Қазақша',
     'language.ru': 'Орысша',  
@@ -63,6 +120,63 @@ const translations = {
     'history.days-ago': 'күн бұрын'
   },
   ru: {
+    // Navigation
+    'nav.login': 'Войти',
+    
+    // Hero Section
+    'hero.subtitle': 'Централизованная платформа ИИ для цифрового суверенитета',
+    'hero.description': 'Единая точка доступа к возможностям искусственного интеллекта. От идеи до промышленного внедрения с технологическим суверенитетом.',
+    'hero.cta': 'AI-HUB',
+    'hero.learn-more': 'Узнать больше',
+    
+    // Services Section
+    'services.title': 'Модели взаимодействия',
+    'services.subtitle': 'Выберите подходящий способ работы с платформой',
+    'services.self-service.title': 'Self-Service',
+    'services.self-service.description': 'Самостоятельная работа с платформой и инструментами ИИ',
+    'services.self-service.feature1': 'Доступ к GPU кластеру',
+    'services.self-service.feature2': 'Библиотека моделей',
+    'services.self-service.feature3': 'Автономная разработка',
+    'services.ai-service.title': 'AI-as-a-Service',
+    'services.ai-service.description': 'Полное сопровождение от идеи до внедрения с экспертной поддержкой',
+    'services.ai-service.feature1': 'Консультации экспертов',
+    'services.ai-service.feature2': 'Кастомная разработка',
+    'services.ai-service.feature3': 'Техническая поддержка',
+    
+    // Advantages Section
+    'advantages.title': 'Ключевые преимущества',
+    'advantages.subtitle': 'Современные технологии ИИ с полным контролем и безопасностью',
+    'advantages.sovereignty.title': 'Цифровой суверенитет',
+    'advantages.sovereignty.description': 'Технологическая независимость и контроль над ИИ-решениями',
+    'advantages.scalability.title': 'Масштабируемость',
+    'advantages.scalability.description': 'От прототипа до промышленного внедрения без ограничений',
+    'advantages.security.title': 'Безопасность',
+    'advantages.security.description': 'Национальный ИТ-контур с высоким уровнем защиты данных',
+    
+    // Platform Section
+    'platform.title': 'О платформе AI-HUB',
+    'platform.subtitle': 'Современная облачная платформа для разработки, обучения и развертывания решений искусственного интеллекта с полным контролем над данными и процессами',
+    'platform.compute.title': 'Мощные вычисления',
+    'platform.compute.description': 'Высокопроизводительные GPU и CPU для обучения и инференса AI-моделей',
+    'platform.data.title': 'Безопасные данные',
+    'platform.data.description': 'Защищенное хранение и обработка данных в соответствии с требованиями безопасности',
+    'platform.infrastructure.title': 'Надежная инфраструктура',
+    'platform.infrastructure.description': 'Отказоустойчивая архитектура с высоким уровнем доступности сервисов',
+    
+    // Footer
+    'footer.description': 'Платформа для разработки и развертывания AI-решений с полным набором инструментов и сервисов.',
+    'footer.products': 'Продукты',
+    'footer.products.studio': 'AI Studio',
+    'footer.products.projects': 'Проекты',
+    'footer.products.history': 'История',
+    'footer.products.lab': 'Лаборатория',
+    'footer.company': 'Компания',
+    'footer.company.about': 'О нас',
+    'footer.company.contact': 'Контакты',
+    'footer.company.docs': 'Документация',
+    'footer.company.support': 'Поддержка',
+    'footer.copyright': '© 2024 QazCloud AI-HUB. Все права защищены.',
+    
     // Header
     'language.kk': 'Казахский',
     'language.ru': 'Русский',
@@ -114,6 +228,63 @@ const translations = {
     'history.days-ago': 'дня назад'
   },
   en: {
+    // Navigation
+    'nav.login': 'Login',
+    
+    // Hero Section
+    'hero.subtitle': 'Centralized AI platform for digital sovereignty',
+    'hero.description': 'Single point of access to artificial intelligence capabilities. From idea to industrial implementation with technological sovereignty.',
+    'hero.cta': 'AI-HUB',
+    'hero.learn-more': 'Learn More',
+    
+    // Services Section
+    'services.title': 'Interaction Models',
+    'services.subtitle': 'Choose the right way to work with the platform',
+    'services.self-service.title': 'Self-Service',
+    'services.self-service.description': 'Independent work with platform and AI tools',
+    'services.self-service.feature1': 'GPU cluster access',
+    'services.self-service.feature2': 'Model library',
+    'services.self-service.feature3': 'Autonomous development',
+    'services.ai-service.title': 'AI-as-a-Service',
+    'services.ai-service.description': 'Full support from idea to implementation with expert assistance',
+    'services.ai-service.feature1': 'Expert consultations',
+    'services.ai-service.feature2': 'Custom development',
+    'services.ai-service.feature3': 'Technical support',
+    
+    // Advantages Section
+    'advantages.title': 'Key Advantages',
+    'advantages.subtitle': 'Modern AI technologies with full control and security',
+    'advantages.sovereignty.title': 'Digital Sovereignty',
+    'advantages.sovereignty.description': 'Technological independence and control over AI solutions',
+    'advantages.scalability.title': 'Scalability',
+    'advantages.scalability.description': 'From prototype to industrial deployment without limitations',
+    'advantages.security.title': 'Security',
+    'advantages.security.description': 'National IT perimeter with high-level data protection',
+    
+    // Platform Section
+    'platform.title': 'About AI-HUB Platform',
+    'platform.subtitle': 'Modern cloud platform for developing, training and deploying artificial intelligence solutions with full control over data and processes',
+    'platform.compute.title': 'Powerful Computing',
+    'platform.compute.description': 'High-performance GPU and CPU for AI model training and inference',
+    'platform.data.title': 'Secure Data',
+    'platform.data.description': 'Protected storage and processing of data in accordance with security requirements',
+    'platform.infrastructure.title': 'Reliable Infrastructure',
+    'platform.infrastructure.description': 'Fault-tolerant architecture with high availability of services',
+    
+    // Footer
+    'footer.description': 'Platform for developing and deploying AI solutions with a complete set of tools and services.',
+    'footer.products': 'Products',
+    'footer.products.studio': 'AI Studio',
+    'footer.products.projects': 'Projects',
+    'footer.products.history': 'History',
+    'footer.products.lab': 'Laboratory',
+    'footer.company': 'Company',
+    'footer.company.about': 'About Us',
+    'footer.company.contact': 'Contact',
+    'footer.company.docs': 'Documentation',
+    'footer.company.support': 'Support',
+    'footer.copyright': '© 2024 QazCloud AI-HUB. All rights reserved.',
+    
     // Header
     'language.kk': 'Kazakh',
     'language.ru': 'Russian',
