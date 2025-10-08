@@ -47,7 +47,7 @@ export default function AIStudio() {
           {/* Models Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {/* QazLLM-Ultra */}
-            <Card className="hover:shadow-md transition-shadow">
+            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('QazLLM-Ultra selected')}>
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">QazLLM-Ultra</CardTitle>
                 <CardDescription className="text-sm">
@@ -59,12 +59,11 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Английский</Badge>
                   <Badge variant="outline" className="text-xs">+1</Badge>
                 </div>
-                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
 
             {/* Other models would follow similar pattern */}
-            <Card className="hover:shadow-md transition-shadow">
+            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('QazAssistant Pro selected')}>
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">QazAssistant Pro</CardTitle>
                 <CardDescription className="text-sm">
@@ -75,11 +74,10 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Документооборот</Badge>
                   <Badge variant="outline" className="text-xs">Планирование</Badge>
                 </div>
-                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
 
-            <Card className="hover:shadow-md transition-shadow">
+            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('KazDoc AI selected')}>
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">KazDoc AI</CardTitle>
                 <CardDescription className="text-sm">
@@ -90,11 +88,10 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Правовые акты</Badge>
                   <Badge variant="outline" className="text-xs">OCR</Badge>
                 </div>
-                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
 
-            <Card className="hover:shadow-md transition-shadow">
+            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('KazCode Assistant selected')}>
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">KazCode Assistant</CardTitle>
                 <CardDescription className="text-sm">
@@ -105,7 +102,6 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">JavaScript</Badge>
                   <Badge variant="outline" className="text-xs">Код-ревью</Badge>
                 </div>
-                <Button className="w-full mt-3" size="sm">{t('ai-studio.use')}</Button>
               </CardHeader>
             </Card>
           </div>
