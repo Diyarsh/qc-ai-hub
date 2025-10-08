@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,6 +64,9 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                 <Sparkles className="h-5 w-5 text-primary" />
                 Название проекта
               </DialogTitle>
+              <DialogDescription className="sr-only">
+                Создайте новый проект с названием и инструкциями
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -102,6 +105,9 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                 <Sparkles className="h-5 w-5 text-primary" />
                 Файлы проекта
               </DialogTitle>
+              <DialogDescription className="sr-only">
+                Прикрепите файлы к вашему проекту
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-6">
               <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 text-center">
