@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 import logoDark from "@/assets/QC-AI-HUB-Dark.svg";
 import logoLight from "@/assets/QC-AI-HUB-Light.svg";
 
@@ -11,6 +12,7 @@ interface NavigationProps {
 
 export const Navigation = ({ onLoginClick }: NavigationProps) => {
   const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
   
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border">
@@ -30,7 +32,7 @@ export const Navigation = ({ onLoginClick }: NavigationProps) => {
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
           <Button onClick={onLoginClick}>
-            Войти
+            {t('nav.login')}
           </Button>
         </div>
       </div>

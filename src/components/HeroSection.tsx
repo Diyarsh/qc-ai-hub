@@ -3,12 +3,16 @@ import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Spotlight } from "@/components/ui/spotlight";
 import { SplineScene } from "@/components/ui/splite";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 interface HeroSectionProps {
   onLoginClick: () => void;
 }
 export const HeroSection = ({
   onLoginClick
 }: HeroSectionProps) => {
+  const { t } = useLanguage();
+  
   return <section className="relative min-h-screen flex items-center justify-center bg-background py-12">
       <div className="container mx-auto px-4">
         <Card className="w-full min-h-[600px] bg-card relative overflow-hidden border-border">
@@ -18,22 +22,21 @@ export const HeroSection = ({
             {/* Left content */}
             <div className="flex-1 p-8 lg:p-12 relative z-10 flex flex-col justify-center">
               <p className="text-sm uppercase tracking-wide text-muted-foreground mb-4">
-                Централизованная платформа ИИ для цифрового суверенитета
+                {t('hero.subtitle')}
               </p>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">AI-HUB</h1>
               
               <p className="text-lg text-muted-foreground max-w-lg mb-8">
-                Единая точка доступа к возможностям искусственного интеллекта. 
-                От идеи до промышленного внедрения с технологическим суверенитетом.
+                {t('hero.description')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button variant="hero" size="lg" onClick={onLoginClick}>
-                  AI-HUB <ArrowRight className="ml-2 h-5 w-5" />
+                  {t('hero.cta')} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button variant="outline-hero" size="lg">
-                  Узнать больше
+                  {t('hero.learn-more')}
                 </Button>
               </div>
             </div>
