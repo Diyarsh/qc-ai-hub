@@ -117,7 +117,25 @@ const translations = {
     // History
     'history.title': 'Тарих',
     'history.search': 'Іздеу',
-    'history.days-ago': 'күн бұрын'
+    'history.days-ago': 'күн бұрын',
+    
+    // Auth
+    'auth.title': 'AI-HUB',
+    'auth.subtitle': 'Кіріңіз немесе тіркеліңіз',
+    'auth.requiredFields': '* Міндетті өрістер',
+    'auth.loginTab': 'Кіру',
+    'auth.registerTab': 'Тіркелу',
+    'auth.username': 'Пайдаланушы аты',
+    'auth.password': 'Құпия сөз',
+    'auth.confirmPassword': 'Құпия сөзді растаңыз',
+    'auth.email': 'Email',
+    'auth.firstName': 'Аты',
+    'auth.lastName': 'Тегі',
+    'auth.loginButton': 'Кіру',
+    'auth.registerButton': 'Тіркелу',
+    'auth.forgotPassword': 'Құпия сөзді ұмыттыңыз ба?',
+    'auth.backToLogin': '« Кіруге оралу',
+    'auth.loginPlaceholder': 'admin'
   },
   ru: {
     // Navigation
@@ -225,7 +243,25 @@ const translations = {
     // History
     'history.title': 'История',
     'history.search': 'Поиск',
-    'history.days-ago': 'дня назад'
+    'history.days-ago': 'дня назад',
+    
+    // Auth
+    'auth.title': 'AI-HUB',
+    'auth.subtitle': 'Войдите или зарегистрируйтесь',
+    'auth.requiredFields': '* Обязательные поля',
+    'auth.loginTab': 'Вход',
+    'auth.registerTab': 'Регистрация',
+    'auth.username': 'Имя пользователя',
+    'auth.password': 'Пароль',
+    'auth.confirmPassword': 'Подтвердите пароль',
+    'auth.email': 'Email',
+    'auth.firstName': 'Имя',
+    'auth.lastName': 'Фамилия',
+    'auth.loginButton': 'Войти',
+    'auth.registerButton': 'Зарегистрироваться',
+    'auth.forgotPassword': 'Забыли пароль?',
+    'auth.backToLogin': '« Назад к входу',
+    'auth.loginPlaceholder': 'admin'
   },
   en: {
     // Navigation
@@ -333,7 +369,25 @@ const translations = {
     // History
     'history.title': 'History',
     'history.search': 'Search',
-    'history.days-ago': 'days ago'
+    'history.days-ago': 'days ago',
+    
+    // Auth
+    'auth.title': 'AI-HUB',
+    'auth.subtitle': 'Login or register',
+    'auth.requiredFields': '* Required fields',
+    'auth.loginTab': 'Login',
+    'auth.registerTab': 'Register',
+    'auth.username': 'Username',
+    'auth.password': 'Password',
+    'auth.confirmPassword': 'Confirm password',
+    'auth.email': 'Email',
+    'auth.firstName': 'First name',
+    'auth.lastName': 'Last name',
+    'auth.loginButton': 'Login',
+    'auth.registerButton': 'Register',
+    'auth.forgotPassword': 'Forgot password?',
+    'auth.backToLogin': '« Back to Login',
+    'auth.loginPlaceholder': 'admin'
   }
 };
 

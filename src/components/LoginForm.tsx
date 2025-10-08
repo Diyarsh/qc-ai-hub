@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LoginFormProps {
   onClose: () => void;
@@ -12,12 +13,15 @@ interface LoginFormProps {
 }
 
 export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
+  const { t } = useLanguage();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
-  const [registerName, setRegisterName] = useState("");
+  const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerLastName, setRegisterLastName] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,27 +66,27 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
             <X className="h-4 w-4" />
           </Button>
           <CardTitle className="text-2xl font-bold text-center">
-            AI-HUB
+            {t('auth.title')}
           </CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Войдите или зарегистрируйтесь
+            {t('auth.subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Вход</TabsTrigger>
-              <TabsTrigger value="register">Регистрация</TabsTrigger>
+              <TabsTrigger value="login">{t('auth.loginTab')}</TabsTrigger>
+              <TabsTrigger value="register">{t('auth.registerTab')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Логин</Label>
+                  <Label htmlFor="login-email">{t('auth.username')}</Label>
                   <Input
                     id="login-email"
                     type="text"
-                    placeholder="admin"
+                    placeholder={t('auth.loginPlaceholder')}
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     required
@@ -90,7 +94,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Пароль</Label>
+                  <Label htmlFor="login-password">{t('auth.password')}</Label>
                   <Input
                     id="login-password"
                     type="password"
@@ -101,48 +105,41 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <Button type="submit" variant="hero" className="w-full">
-                  Войти
+                  {t('auth.loginButton')}
                 </Button>
                 <div className="text-center">
                   <Button type="button" variant="link" className="text-primary">
-                    Забыли пароль?
+                    {t('auth.forgotPassword')}
                   </Button>
                 </div>
               </form>
             </TabsContent>
             
             <TabsContent value="register">
+              <div className="mb-4 text-sm text-muted-foreground">
+                {t('auth.requiredFields')}
+              </div>
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-name">Имя</Label>
+                  <Label htmlFor="register-username">
+                    {t('auth.username')} <span className="text-destructive">*</span>
+                  </Label>
                   <Input
-                    id="register-name"
+                    id="register-username"
                     type="text"
-                    placeholder="Ваше имя"
-                    value={registerName}
-                    onChange={(e) => setRegisterName(e.target.value)}
+                    value={registerUsername}
+                    onChange={(e) => setRegisterUsername(e.target.value)}
                     required
                     className="bg-muted border-border"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-email">Email</Label>
-                  <Input
-                    id="register-email"
-                    type="email"
-                    placeholder="email@example.com"
-                    value={registerEmail}
-                    onChange={(e) => setRegisterEmail(e.target.value)}
-                    required
-                    className="bg-muted border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="register-password">Пароль</Label>
+                  <Label htmlFor="register-password">
+                    {t('auth.password')} <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="register-password"
                     type="password"
-                    placeholder="Минимум 6 символов"
                     value={registerPassword}
                     onChange={(e) => setRegisterPassword(e.target.value)}
                     required
@@ -150,20 +147,73 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-confirm-password">Подтвердите пароль</Label>
+                  <Label htmlFor="register-confirm-password">
+                    {t('auth.confirmPassword')} <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="register-confirm-password"
                     type="password"
-                    placeholder="Повторите пароль"
                     value={registerConfirmPassword}
                     onChange={(e) => setRegisterConfirmPassword(e.target.value)}
                     required
                     className="bg-muted border-border"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-email">
+                    {t('auth.email')} <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="register-email"
+                    type="email"
+                    value={registerEmail}
+                    onChange={(e) => setRegisterEmail(e.target.value)}
+                    required
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-first-name">
+                    {t('auth.firstName')} <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="register-first-name"
+                    type="text"
+                    value={registerFirstName}
+                    onChange={(e) => setRegisterFirstName(e.target.value)}
+                    required
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-last-name">
+                    {t('auth.lastName')} <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="register-last-name"
+                    type="text"
+                    value={registerLastName}
+                    onChange={(e) => setRegisterLastName(e.target.value)}
+                    required
+                    className="bg-muted border-border"
+                  />
+                </div>
                 <Button type="submit" variant="hero" className="w-full">
-                  Зарегистрироваться
+                  {t('auth.registerButton')}
                 </Button>
+                <div className="text-center">
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="text-primary"
+                    onClick={() => {
+                      const loginTab = document.querySelector('[value="login"]') as HTMLElement;
+                      loginTab?.click();
+                    }}
+                  >
+                    {t('auth.backToLogin')}
+                  </Button>
+                </div>
               </form>
             </TabsContent>
           </Tabs>
