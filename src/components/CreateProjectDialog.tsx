@@ -62,6 +62,15 @@ export function CreateProjectDialog({
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="projectName">Название проекта</Label>
+                <Input 
+                  id="projectName" 
+                  placeholder="Введите название проекта" 
+                  value={projectName} 
+                  onChange={e => setProjectName(e.target.value)} 
+                />
+              </div>
               
               <div className="space-y-2">
                 <Label htmlFor="instructions">Инструкции проекта</Label>
