@@ -117,7 +117,16 @@ const translations = {
     // History
     'history.title': 'Тарих',
     'history.search': 'Іздеу',
+    'history.name': 'Атауы',
+    'history.type': 'Түрі',
+    'history.updated': 'Жаңартылған',
+    'history.chat-prompt': 'Чат сұрауы',
+    'history.hours-ago': 'сағат бұрын',
     'history.days-ago': 'күн бұрын',
+    'history.weeks-ago': 'апта бұрын',
+    'history.open-new-tab': 'Жаңа қойындыда ашу',
+    'history.rename': 'Атын өзгерту',
+    'history.delete': 'Жою',
     
     // Auth
     'auth.title': 'AI-HUB',
@@ -243,7 +252,16 @@ const translations = {
     // History
     'history.title': 'История',
     'history.search': 'Поиск',
-    'history.days-ago': 'дня назад',
+    'history.name': 'Название',
+    'history.type': 'Тип',
+    'history.updated': 'Обновлено',
+    'history.chat-prompt': 'Chat prompt',
+    'history.hours-ago': 'часов назад',
+    'history.days-ago': 'дней назад',
+    'history.weeks-ago': 'недели назад',
+    'history.open-new-tab': 'Открыть в новой вкладке',
+    'history.rename': 'Переименовать',
+    'history.delete': 'Удалить',
     
     // Auth
     'auth.title': 'AI-HUB',
@@ -369,7 +387,16 @@ const translations = {
     // History
     'history.title': 'History',
     'history.search': 'Search',
+    'history.name': 'Name',
+    'history.type': 'Type',
+    'history.updated': 'Updated',
+    'history.chat-prompt': 'Chat prompt',
+    'history.hours-ago': 'hours ago',
     'history.days-ago': 'days ago',
+    'history.weeks-ago': 'weeks ago',
+    'history.open-new-tab': 'Open in new tab',
+    'history.rename': 'Rename',
+    'history.delete': 'Delete',
     
     // Auth
     'auth.title': 'AI-HUB',
