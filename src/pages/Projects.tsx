@@ -2,27 +2,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Search, BarChart3, Flame, Link, MessageCircle, FileText, Command } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { CreateProjectDialog } from "@/components/CreateProjectDialog";
 
 const projects = [
-  { id: 1, name: "QazDoc Analyzer", icon: "📄", type: "document" },
-  { id: 2, name: "KazLLM Assistant", icon: "💬", type: "chat" },
-  { id: 3, name: "Business Analytics", icon: "📊", type: "analytics" }
+  { id: 1, name: "QazDoc Analyzer", files: 24 },
+  { id: 2, name: "KazLLM Assistant", files: 18 },
+  { id: 3, name: "Business Analytics", files: 31 }
 ];
-
-const getProjectIcon = (type: string) => {
-  switch (type) {
-    case 'analytics': return <BarChart3 className="h-8 w-8 text-blue-500" />;
-    case 'new': return <Flame className="h-8 w-8 text-orange-500" />;
-    case 'link': return <Link className="h-8 w-8 text-gray-500" />;
-    case 'chat': return <MessageCircle className="h-8 w-8 text-green-500" />;
-    case 'document': return <FileText className="h-8 w-8 text-purple-500" />;
-    default: return <Command className="h-8 w-8 text-blue-500" />;
-  }
-};
 
 export default function Projects() {
   const { t } = useLanguage();
@@ -67,13 +56,9 @@ export default function Projects() {
             {projects.map((project) => (
               <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
                 <CardContent className="p-4">
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
-                      {getProjectIcon(project.type)}
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-xs">{project.name}</h3>
-                    </div>
+                  <div className="flex flex-col text-center space-y-1">
+                    <h3 className="font-medium text-sm">{project.name}</h3>
+                    <p className="text-xs text-muted-foreground">{project.files} files</p>
                   </div>
                 </CardContent>
               </Card>
