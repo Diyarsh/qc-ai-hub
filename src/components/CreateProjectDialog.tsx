@@ -6,29 +6,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sparkles, FolderOpen, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 interface CreateProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogProps) {
+export function CreateProjectDialog({
+  open,
+  onOpenChange
+}: CreateProjectDialogProps) {
   const [step, setStep] = useState(1);
   const [projectName, setProjectName] = useState("");
   const [projectInstructions, setProjectInstructions] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
-
   const handleNext = () => {
     if (step === 1 && projectName.trim()) {
       setStep(2);
     }
   };
-
   const handleBack = () => {
     setStep(1);
   };
-
   const handleComplete = () => {
     // Navigate to project chat
     navigate('/project-chat');
@@ -39,13 +37,11 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
     setProjectInstructions("");
     setFiles([]);
   };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles(Array.from(e.target.files));
     }
   };
-
   const handleCancel = () => {
     onOpenChange(false);
     setStep(1);
@@ -53,12 +49,9 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
     setProjectInstructions("");
     setFiles([]);
   };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+  return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
-        {step === 1 ? (
-          <>
+        {step === 1 ? <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -69,24 +62,10 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Название</Label>
-                <Input
-                  id="name"
-                  placeholder="Введите название проекта"
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                />
-              </div>
+              
               <div className="space-y-2">
                 <Label htmlFor="instructions">Инструкции проекта</Label>
-                <Textarea
-                  id="instructions"
-                  placeholder="Добавьте инструкции о tone, стиле и персоне, которую должен принять AI"
-                  rows={6}
-                  value={projectInstructions}
-                  onChange={(e) => setProjectInstructions(e.target.value)}
-                />
+                <Textarea id="instructions" placeholder="Добавьте инструкции о tone, стиле и персоне, которую должен принять AI" rows={6} value={projectInstructions} onChange={e => setProjectInstructions(e.target.value)} />
               </div>
             </div>
             <div className="flex justify-end gap-3">
@@ -97,9 +76,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                 Далее
               </Button>
             </div>
-          </>
-        ) : (
-          <>
+          </> : <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -116,13 +93,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                 <p className="text-sm text-muted-foreground mb-4">
                   Начните с прикрепления файлов к вашему проекту. Они будут использоваться во всех чатах этого проекта.
                 </p>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="file-upload"
-                />
+                <input type="file" multiple onChange={handleFileChange} className="hidden" id="file-upload" />
                 <label htmlFor="file-upload">
                   <Button variant="outline" asChild>
                     <span className="cursor-pointer">
@@ -131,18 +102,14 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                     </span>
                   </Button>
                 </label>
-                {files.length > 0 && (
-                  <div className="mt-4 w-full text-left">
+                {files.length > 0 && <div className="mt-4 w-full text-left">
                     <p className="text-sm font-medium mb-2">Выбрано файлов: {files.length}</p>
                     <div className="space-y-1">
-                      {files.map((file, index) => (
-                        <p key={index} className="text-xs text-muted-foreground truncate">
+                      {files.map((file, index) => <p key={index} className="text-xs text-muted-foreground truncate">
                           {file.name}
-                        </p>
-                      ))}
+                        </p>)}
                     </div>
-                  </div>
-                )}
+                  </div>}
               </div>
             </div>
             <div className="flex justify-between">
@@ -153,9 +120,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                 Готово
               </Button>
             </div>
-          </>
-        )}
+          </>}
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 }
