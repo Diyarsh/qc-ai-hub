@@ -4,13 +4,19 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Settings, Paperclip, Send, FolderOpen, Bot, Menu } from "lucide-react";
+import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
+
 export default function ProjectChat() {
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("files");
+  const [settingsOpen, setSettingsOpen] = useState(false);
   return <div className="flex h-full w-full overflow-hidden">.
       {/* Project Sidebar */}
       <div className="w-72 border-r bg-card flex flex-col">
-        <div className="p-4 border-b">
+        <button 
+          onClick={() => setSettingsOpen(true)}
+          className="p-4 border-b text-left hover:bg-accent/50 transition-colors"
+        >
           <div className="flex items-center gap-2 mb-3">
             <Settings className="h-5 w-5 text-muted-foreground" />
             <h2 className="font-semibold">Инструкции</h2>
@@ -18,7 +24,7 @@ export default function ProjectChat() {
           <p className="text-sm text-muted-foreground">
             Настройте инструкции для AI-HUB в этом проекте
           </p>
-        </div>
+        </button>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
           <TabsList className="grid w-full grid-cols-2 px-4 mt-4">
@@ -81,5 +87,7 @@ export default function ProjectChat() {
           </div>
         </div>
       </div>
+
+      <ProjectSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>;
 }
