@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import AIStudio from "./pages/AIStudio";
 import History from "./pages/History";
 import Projects from "./pages/Projects";
+import ProjectChat from "./pages/ProjectChat";
 import Lab from "./pages/Lab";
 import Developer from "./pages/Developer";
 import NotFound from "./pages/NotFound";
@@ -27,6 +28,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/project-chat" element={<ProjectChat />} />
               <Route
                 path="/*"
                 element={
