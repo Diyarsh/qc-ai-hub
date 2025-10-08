@@ -6,6 +6,7 @@ import { AdvantagesSection } from "@/components/AdvantagesSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { PlatformSection } from "@/components/PlatformSection";
 import { LoginForm } from "@/components/LoginForm";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -23,6 +24,7 @@ const Index = () => {
       <AdvantagesSection />
       <ServicesSection />
       <PlatformSection />
+      <Footer />
       
       {showLogin && (
         <LoginForm 
