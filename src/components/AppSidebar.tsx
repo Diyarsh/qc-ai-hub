@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useTheme } from "next-themes";
 import logoDark from "@/assets/QC-AI-HUB-Dark.svg";
 import logoLight from "@/assets/QC-AI-HUB-Light.svg";
+
 const menuItems = [{
   title: "sidebar.chat",
   url: "/dashboard",
@@ -22,13 +24,18 @@ const menuItems = [{
   url: "/projects",
   icon: FolderOpen
 }, {
-  title: "sidebar.history",
-  url: "/history",
-  icon: History
-}, {
   title: "sidebar.lab",
   url: "/lab",
   icon: Terminal
+}, {
+  title: "sidebar.history",
+  url: "/history",
+  icon: History,
+  subItems: [{
+    title: "sidebar.recent-prompts",
+    url: "/history#recent",
+    icon: Clock
+  }]
 }];
 export function AppSidebar() {
   const {
@@ -47,6 +54,7 @@ export function AppSidebar() {
   const {
     theme
   } = useTheme();
+  const [openHistoryMenu, setOpenHistoryMenu] = useState(false);
   const isActive = (path: string) => currentPath === path;
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="border-b border-border px-3 py-4">
@@ -57,7 +65,37 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="space-y-0.5">
-          {menuItems.map(item => <SidebarMenuItem key={item.title}>
+          {menuItems.map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu || isActive(item.url)} onOpenChange={setOpenHistoryMenu} asChild>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
+                      <NavLink to={item.url} className={({
+                  isActive
+                }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
+                        <item.icon className="h-5 w-5 shrink-0" />
+                        {!collapsed && <>
+                            <span className="font-medium text-sm flex-1">{t(item.title)}</span>
+                            <ChevronRight className={`h-4 w-4 transition-transform ${openHistoryMenu || isActive(item.url) ? "rotate-90" : ""}`} />
+                          </>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  {!collapsed && <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.subItems.map(subItem => <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild>
+                              <NavLink to={subItem.url} className={({
+                          isActive
+                        }) => `flex items-center gap-3 rounded-lg px-3 py-2 ml-6 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"}`}>
+                                <subItem.icon className="h-4 w-4 shrink-0" />
+                                <span className="text-sm">{t(subItem.title)}</span>
+                              </NavLink>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>)}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>}
+                </SidebarMenuItem>
+              </Collapsible> : <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
                 <NavLink to={item.url} className={({
               isActive
