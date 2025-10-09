@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Send, Plus } from "lucide-react";
+import { Bot, Send, Plus, Paperclip } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 
 export default function AIStudioChat() {
@@ -64,16 +64,20 @@ export default function AIStudioChat() {
           </ScrollArea>
           <div className="border-t p-4">
             <div className="max-w-3xl mx-auto">
-              <div className="flex items-center gap-2">
-                <Input
+              <div className="flex items-start gap-2 p-3 bg-background border border-border rounded-xl">
+                <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
+                  <Paperclip className="h-4 w-4" />
+                </Button>
+                <Textarea
                   placeholder={placeholder || "Сформулируйте запрос агенту"}
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                  className="flex-1"
+                  className="flex-1 min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                  rows={2}
                 />
-                <Button size="icon" className="flex-shrink-0" onClick={handleSend}>
-                  <Send className="h-5 w-5" />
+                <Button size="icon" className="flex-shrink-0 h-8 w-8 mt-1" onClick={handleSend}>
+                  <Send className="h-4 w-4" />
                 </Button>
               </div>
             </div>

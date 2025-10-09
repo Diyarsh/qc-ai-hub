@@ -72,7 +72,6 @@ export function CreateProjectDialog({
                   onInput={handleTitleInput}
                   onKeyDown={handleTitleKeyDown}
                   className="min-w-[2ch] cursor-text outline-none border-b border-transparent hover:border-muted-foreground/40 focus:border-primary/60 transition-colors"
-                  placeholder="Название проекта"
                 >
                   {projectName || "Название проекта"}
                 </span>
