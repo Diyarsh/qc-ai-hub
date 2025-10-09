@@ -65,9 +65,7 @@ export default function ProjectChat() {
                 <Bot className="h-8 w-8 text-primary" />
               </div>
               <h2 className="text-2xl font-semibold mb-2">Начать беседу</h2>
-              <p className="text-muted-foreground max-w-md">
-                Задавайте вопросы, получайте помощь или обсуждайте ваш проект
-              </p>
+              <p className="text-muted-foreground max-w-md">Задавайте вопросы, получайте помощь или обсуждайте ваш проект</p>
             </div>
           </div>
         </ScrollArea>

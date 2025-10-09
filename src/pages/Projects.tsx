@@ -6,6 +6,7 @@ import { Plus, MoreVertical, Edit, Share2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { CreateProjectDialog } from "@/components/CreateProjectDialog";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +34,7 @@ export default function Projects() {
     t
   } = useLanguage();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const navigate = useNavigate();
   return <div className="flex flex-col h-full">
       <PageHeader title={t('projects.title')} />
 
@@ -58,7 +60,7 @@ export default function Projects() {
 
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map(project => <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]">
+            {projects.map(project => <Card key={project.id} onClick={() => navigate('/project-chat')} className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]">
                 <CardContent className="p-6">
                   <div className="flex flex-col space-y-3">
                     <div className="flex items-start justify-between">
