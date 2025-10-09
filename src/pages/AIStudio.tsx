@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
+import { useNavigate } from "react-router-dom";
 
 export default function AIStudio() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   
   return (
     <div className="flex flex-col h-full">
@@ -47,7 +49,18 @@ export default function AIStudio() {
           {/* Models Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {/* QazLLM-Ultra */}
-            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('QazLLM-Ultra selected')}>
+            <Card
+              className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]"
+              onClick={() =>
+                navigate('/ai-studio-chat', {
+                  state: {
+                    agent: 'QazLLM-Ultra',
+                    instructions: 'Высокоточная многоязычная модель для корпоративных задач. Отвечай кратко, ссылайся на источники, используй деловой стиль.',
+                    placeholder: 'Сформируй краткую сводку по рынку за Q3 2025',
+                  }
+                })
+              }
+            >
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">QazLLM-Ultra</CardTitle>
                 <CardDescription className="text-sm">
@@ -63,7 +76,18 @@ export default function AIStudio() {
             </Card>
 
             {/* Other models would follow similar pattern */}
-            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('QazAssistant Pro selected')}>
+            <Card
+              className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]"
+              onClick={() =>
+                navigate('/ai-studio-chat', {
+                  state: {
+                    agent: 'QazAssistant Pro',
+                    instructions: 'Корпоративный ассистент. Помогай с внутренними процессами, оформляй ответы в виде нумерованных шагов и чек-листов.',
+                    placeholder: 'Составь шаблон онбординга для нового сотрудника',
+                  }
+                })
+              }
+            >
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">QazAssistant Pro</CardTitle>
                 <CardDescription className="text-sm">
@@ -77,7 +101,18 @@ export default function AIStudio() {
               </CardHeader>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('KazDoc AI selected')}>
+            <Card
+              className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]"
+              onClick={() =>
+                navigate('/ai-studio-chat', {
+                  state: {
+                    agent: 'KazDoc AI',
+                    instructions: 'Анализ документов РК. Извлекай ключевые положения, даты, ответственных и ссылки на статьи нормативных актов.',
+                    placeholder: 'Извлеки ключевые требования из прикрепленного договора',
+                  }
+                })
+              }
+            >
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">KazDoc AI</CardTitle>
                 <CardDescription className="text-sm">
@@ -91,7 +126,18 @@ export default function AIStudio() {
               </CardHeader>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]" onClick={() => console.log('KazCode Assistant selected')}>
+            <Card
+              className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]"
+              onClick={() =>
+                navigate('/ai-studio-chat', {
+                  state: {
+                    agent: 'KazCode Assistant',
+                    instructions: 'Инженер-программист. Пиши код с комментариями, предлагай тесты и указывай сложность алгоритмов.',
+                    placeholder: 'Напиши функцию на TypeScript для валидации ИИН',
+                  }
+                })
+              }
+            >
               <CardHeader className="py-4">
                 <CardTitle className="text-lg">KazCode Assistant</CardTitle>
                 <CardDescription className="text-sm">

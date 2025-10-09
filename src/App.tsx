@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import AIStudio from "./pages/AIStudio";
+import AIStudioChat from "./pages/AIStudioChat";
 import History from "./pages/History";
 import Projects from "./pages/Projects";
 import ProjectChat from "./pages/ProjectChat";
@@ -35,6 +36,7 @@ const App = () => (
                     <Routes>
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/ai-studio" element={<AIStudio />} />
+                      <Route path="/ai-studio-chat" element={<AIStudioChat />} />
                       <Route path="/history" element={<History />} />
                       <Route path="/projects" element={<Projects />} />
                       <Route path="/project-chat" element={<ProjectChat />} />

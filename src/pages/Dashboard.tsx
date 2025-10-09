@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Paperclip, FileText, Bot, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   useEffect(() => {
@@ -21,52 +22,71 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-5xl">
           <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
           
           {/* Message Input */}
           <div className="relative mb-8">
-            <Textarea placeholder={examplePrompts[currentPrompt]} className="min-h-[120px] pr-20 text-lg bg-muted border-border resize-none placeholder:text-sm" />
-            <div className="absolute right-2 bottom-2 flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Paperclip className="h-4 w-4" />
-              </Button>
-              <Button size="icon" className="h-8 w-8 bg-primary">
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+            <Input
+              placeholder={examplePrompts[currentPrompt]}
+              className="h-14 pl-10 pr-12 text-sm bg-muted border-border rounded-xl placeholder:text-muted-foreground"
+            />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <Paperclip className="h-4 w-4" />
+            </span>
+            <Button size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 bg-primary">
+              <Send className="h-4 w-4" />
+            </Button>
           </div>
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full mx-auto">
-            <Card className="bg-card border-border">
-              <CardHeader className="text-center py-2 px-3">
-                <FileText className="h-5 w-5 text-primary mx-auto mb-1" />
-                <CardTitle className="text-sm font-medium">{t('dashboard.documents.title')}</CardTitle>
-                <CardDescription className="text-xs">
-                  {t('dashboard.documents.desc')}
-                </CardDescription>
-              </CardHeader>
+            <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazDoc AI', placeholder: 'Задайте вопрос по документам' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50">
+              <CardContent className="py-3 px-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-md bg-primary/10 text-primary">
+                    <FileText className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-sm font-medium text-left">{t('dashboard.documents.title')}</CardTitle>
+                    <CardDescription className="text-xs text-left">
+                      {t('dashboard.documents.desc')}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="bg-card border-border">
-              <CardHeader className="text-center py-2 px-3">
-                <Bot className="h-5 w-5 text-primary mx-auto mb-1" />
-                <CardTitle className="text-sm font-medium">{t('dashboard.bots.title')}</CardTitle>
-                <CardDescription className="text-xs">
-                  {t('dashboard.bots.desc')}
-                </CardDescription>
-              </CardHeader>
+            <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'QazAssistant Pro', placeholder: 'Опишите задачу для чат-бота' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50">
+              <CardContent className="py-3 px-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-md bg-primary/10 text-primary">
+                    <Bot className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-sm font-medium text-left">{t('dashboard.bots.title')}</CardTitle>
+                    <CardDescription className="text-xs text-left">
+                      {t('dashboard.bots.desc')}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="bg-card border-border">
-              <CardHeader className="text-center py-2 px-3">
-                <Settings className="h-5 w-5 text-primary mx-auto mb-1" />
-                <CardTitle className="text-sm font-medium">{t('dashboard.developers.title')}</CardTitle>
-                <CardDescription className="text-xs">
-                  {t('dashboard.developers.desc')}
-                </CardDescription>
-              </CardHeader>
+            <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazCode Assistant', placeholder: 'Что требуется разработать?' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50">
+              <CardContent className="py-3 px-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-md bg-primary/10 text-primary">
+                    <Settings className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-sm font-medium text-left">{t('dashboard.developers.title')}</CardTitle>
+                    <CardDescription className="text-xs text-left">
+                      {t('dashboard.developers.desc')}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
