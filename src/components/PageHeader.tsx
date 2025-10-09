@@ -19,17 +19,20 @@ export function PageHeader({ title, subtitle, showDevMode = true, actions }: Pag
   const { isDeveloperMode, toggleDeveloperMode } = useDeveloperMode();
 
   return (
-    <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-background px-4 sm:px-6 py-4">
+    <header className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-background px-4 sm:px-6 py-4 min-h-[68px]">
       <div className="flex items-center gap-3 w-full sm:w-auto">
         <SidebarTrigger className="h-9 w-9 flex-shrink-0" />
-        {(title || subtitle) && (
-          <div className="min-w-0 flex-1">
-            {title && <h1 className="text-xl sm:text-2xl font-bold truncate">{title}</h1>}
-            {subtitle && <p className="text-xs sm:text-sm text-muted-foreground truncate">{subtitle}</p>}
-          </div>
-        )}
+        <div className="min-w-0 flex-1">
+          {title && <h1 className="text-xl sm:text-2xl font-bold truncate">{title}</h1>}
+          {/* Reserve space for subtitle to avoid layout jump */}
+          {subtitle ? (
+            <p className="text-xs sm:text-sm text-muted-foreground truncate">{subtitle}</p>
+          ) : (
+            <p className="text-xs sm:text-sm opacity-0 select-none">&nbsp;</p>
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end flex-wrap">
+      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end flex-nowrap">
         {actions}
         <LanguageSelector />
         

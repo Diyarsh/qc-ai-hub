@@ -36,7 +36,7 @@ export default function Projects() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const navigate = useNavigate();
   return <div className="flex flex-col h-full">
-      <PageHeader title={t('projects.title')} />
+      <PageHeader title={t('projects.my')} subtitle={t('projects.subtitle')} />
 
       {/* Main Content */}
       <main className="flex-1 p-6">
