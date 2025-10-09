@@ -110,6 +110,10 @@ const translations = {
     
     // Projects
     'projects.title': 'Жобалар',
+    'projects.subtitle': 'AI жобаларыңызды басқару',
+    // Lab
+    'lab.title': 'Зертхана',
+    'lab.subtitle': 'AI агенттері мен модельдерін құру және басқару',
     'projects.create': 'Жоба құру',
     'projects.my': 'Менің жобаларым',
     'projects.shared': 'Менімен бөлісілген',
@@ -253,6 +257,10 @@ const translations = {
     
     // Projects
     'projects.title': 'Проекты',
+    'projects.subtitle': 'Управление вашими AI проектами',
+    // Lab
+    'lab.title': 'Лаборатория',
+    'lab.subtitle': 'Создание и управление AI агентами и моделями',
     'projects.create': 'Создать проект',
     'projects.my': 'Мои проекты',
     'projects.shared': 'Поделились со мной',
@@ -397,6 +405,10 @@ const translations = {
     
     // Projects
     'projects.title': 'Projects',
+    'projects.subtitle': 'Manage your AI projects',
+    // Lab
+    'lab.title': 'Laboratory',
+    'lab.subtitle': 'Build and manage AI agents and models',
     'projects.create': 'Create project',
     'projects.my': 'My Projects',
     'projects.shared': 'Shared with me',

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Settings, Paperclip, Send, FolderOpen, Bot, Menu } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
+import { ChatComposer } from "@/components/ChatComposer";
 
 export default function ProjectChat() {
   const [message, setMessage] = useState("");
@@ -15,13 +15,13 @@ export default function ProjectChat() {
       <div className="w-72 border-r bg-card flex flex-col">
         <button 
           onClick={() => setSettingsOpen(true)}
-          className="mx-4 mt-4 mb-1 p-4 border rounded-lg text-left hover:bg-accent hover:border-primary/50 transition-all duration-200"
+          className="mx-4 mt-3 mb-2 p-3 border rounded-md text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
         >
-          <div className="flex items-center gap-2 mb-3">
-            <Settings className="h-5 w-5 text-muted-foreground" />
-            <h2 className="font-semibold">Инструкции</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <Settings className="h-4 w-4 text-muted-foreground" />
+            <h2 className="font-medium text-sm">Инструкции</h2>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground leading-snug">
             Настройте инструкции для AI-HUB в этом проекте
           </p>
         </button>
@@ -71,23 +71,19 @@ export default function ProjectChat() {
         </ScrollArea>
 
         {/* Chat Input */}
-        <div className="border-t p-4">
+        <div className="p-4">
           <div className="max-w-3xl mx-auto">
-            <div className="flex items-start gap-2 p-3 bg-background border border-border rounded-xl">
-              <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
-                <Paperclip className="h-4 w-4" />
-              </Button>
-              <Textarea
-                placeholder="Начните беседу в этом проекте"
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-                className="flex-1 min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
-                rows={2}
-              />
-              <Button size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+            <ChatComposer
+              value={message}
+              onChange={setMessage}
+              onSend={() => setMessage("")}
+              examples={[
+                "Задайте вопрос по файлам проекта",
+                "Попросите сгенерировать сводку по документам",
+                "Уточните статус задач и рисков"
+              ]}
+              className="mb-3"
+            />
           </div>
         </div>
       </div>

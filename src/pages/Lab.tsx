@@ -213,7 +213,7 @@ export default function Lab() {
     }]
   }];
   return <div className="flex flex-col h-full">
-      <PageHeader title={t('sidebar.lab')} subtitle="Создание и управление AI агентами и моделями" />
+      <PageHeader title={t('lab.title')} subtitle={t('lab.subtitle')} />
 
       {/* Main Content */}
       <main className="flex-1 p-6">

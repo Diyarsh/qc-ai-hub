@@ -1,17 +1,25 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Send, Plus, Paperclip } from "lucide-react";
+import { Bot, Plus } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { ChatComposer } from "@/components/ChatComposer";
 
 export default function AIStudioChat() {
+  const { t } = useLanguage();
   const location = useLocation();
   const agent = (location.state as any)?.agent as string | undefined;
   const placeholder = (location.state as any)?.placeholder as string | undefined;
   const [message, setMessage] = useState("");
   const [queries, setQueries] = useState<string[]>([]);
+  const examplePrompts = [
+    "Сформируй краткую сводку по рынку за Q3 2025",
+    "Подготовь анализ конкурентов в сфере e-commerce",
+    "Предложи 3 риск-фактора для проекта AI",
+    "Составь план внедрения чата-бота в службу поддержки"
+  ];
 
   const handleSend = () => {
     const text = message.trim();
@@ -22,7 +30,7 @@ export default function AIStudioChat() {
 
   return (
     <div className="flex flex-col h-full">
-      <PageHeader title="AI-Studio" />
+      <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
       <main className="flex-1 flex min-w-0 overflow-hidden">
         {/* Sidebar */}
         <div className="w-72 border-r bg-card flex flex-col">
@@ -58,24 +66,16 @@ export default function AIStudioChat() {
               </div>
             </div>
           </ScrollArea>
-          <div className="border-t p-4">
+          <div className="p-4">
             <div className="max-w-3xl mx-auto">
-              <div className="flex items-start gap-2 p-3 bg-background border border-border rounded-xl">
-                <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
-                  <Paperclip className="h-4 w-4" />
-                </Button>
-                <Textarea
-                  placeholder={placeholder || "Сформулируйте запрос агенту"}
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                  className="flex-1 min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
-                  rows={2}
-                />
-                <Button size="icon" className="flex-shrink-0 h-8 w-8 mt-1" onClick={handleSend}>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
+              <ChatComposer
+                value={message}
+                placeholder={placeholder}
+                examples={examplePrompts}
+                onChange={setMessage}
+                onSend={() => handleSend()}
+                className="mb-3"
+              />
             </div>
           </div>
         </div>
