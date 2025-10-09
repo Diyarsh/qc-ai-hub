@@ -75,14 +75,19 @@ export function AppSidebar() {
         <SidebarMenu className="space-y-0.5">
           {menuItems.map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
                 <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={collapsed ? t(item.title) : undefined} className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive(item.url) ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
-                      {openHistoryMenu ? <ChevronRight className="h-5 w-5 shrink-0 transition-transform rotate-90" /> : <item.icon className="h-5 w-5 shrink-0" />}
-                      {!collapsed && <>
-                          <span className="font-medium text-sm flex-1">{t(item.title)}</span>
-                        </>}
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
+                  <SidebarMenuButton tooltip={collapsed ? t(item.title) : undefined} className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive(item.url) ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
+                    <NavLink to={item.url} className="flex items-center gap-3 flex-1">
+                      <item.icon className="h-5 w-5 shrink-0" />
+                      {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
+                    </NavLink>
+                    {!collapsed && (
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 p-0 hover:bg-transparent" onClick={(e) => e.stopPropagation()}>
+                          <ChevronRight className={`h-4 w-4 transition-transform ${openHistoryMenu ? "rotate-90" : ""}`} />
+                        </Button>
+                      </CollapsibleTrigger>
+                    )}
+                  </SidebarMenuButton>
                   {!collapsed && <CollapsibleContent className="animate-accordion-down">
                       <div className="ml-3 mt-1 space-y-3">
                         {item.subItems.map((subGroup: any, idx: number) => <div key={idx} className="space-y-1">
