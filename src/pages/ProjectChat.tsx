@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Settings, Paperclip, Send, FolderOpen, Bot, Menu } from "lucide-react";
@@ -73,13 +73,19 @@ export default function ProjectChat() {
         {/* Chat Input */}
         <div className="border-t p-4">
           <div className="max-w-3xl mx-auto">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="flex-shrink-0">
-                <Paperclip className="h-5 w-5" />
+            <div className="flex items-start gap-2 p-3 bg-background border border-border rounded-xl">
+              <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
+                <Paperclip className="h-4 w-4" />
               </Button>
-              <Input placeholder="Начните беседу в этом проекте" value={message} onChange={e => setMessage(e.target.value)} className="flex-1" />
-              <Button size="icon" className="flex-shrink-0">
-                <Send className="h-5 w-5" />
+              <Textarea
+                placeholder="Начните беседу в этом проекте"
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                className="flex-1 min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                rows={2}
+              />
+              <Button size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
+                <Send className="h-4 w-4" />
               </Button>
             </div>
           </div>
