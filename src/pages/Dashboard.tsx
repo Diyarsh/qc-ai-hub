@@ -21,12 +21,12 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-4xl">
           <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
           
           {/* Message Input */}
           <div className="relative mb-8">
-            <Textarea placeholder={examplePrompts[currentPrompt]} className="min-h-[120px] pr-20 text-sm bg-muted border-border resize-none" />
+            <Textarea placeholder={examplePrompts[currentPrompt]} className="min-h-[120px] pr-20 text-lg bg-muted border-border resize-none placeholder:text-sm" />
             <div className="absolute right-2 bottom-2 flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <Paperclip className="h-4 w-4" />
@@ -38,7 +38,7 @@ export default function Dashboard() {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full mx-auto">
             <Card className="bg-card border-border">
               <CardHeader className="text-center py-2 px-3">
                 <FileText className="h-5 w-5 text-primary mx-auto mb-1" />
