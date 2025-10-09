@@ -27,16 +27,16 @@ export default function Dashboard() {
           
           {/* Message Input */}
           <div className="relative mb-8">
-            <div className="flex items-start gap-2 p-3 bg-background border border-border rounded-xl">
-              <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
+            <div className="flex items-end gap-2 p-2 bg-background border border-border rounded-xl max-w-xl mx-auto">
+              <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8">
                 <Paperclip className="h-4 w-4" />
               </Button>
               <Textarea
                 placeholder={examplePrompts[currentPrompt]}
-                className="flex-1 min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
-                rows={2}
+                className="flex-1 min-h-[40px] max-h-[120px] resize-none border-0 bg-transparent px-2 py-1 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                rows={1}
               />
-              <Button size="icon" className="flex-shrink-0 h-8 w-8 mt-1">
+              <Button size="icon" className="flex-shrink-0 h-8 w-8">
                 <Send className="h-4 w-4" />
               </Button>
             </div>
