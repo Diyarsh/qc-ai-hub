@@ -26,10 +26,6 @@ export default function AIStudioChat() {
       <main className="flex-1 flex min-w-0 overflow-hidden">
         {/* Sidebar */}
         <div className="w-72 border-r bg-card flex flex-col">
-          <div className="mx-3 mt-3 mb-2 p-3 border rounded-md">
-            <div className="text-xs text-muted-foreground mb-1">Агент</div>
-            <div className="text-sm font-semibold truncate">{agent || '—'}</div>
-          </div>
           <div className="p-3">
             <Button variant="default" className="w-full justify-center gap-2 mb-3">
               <Plus className="h-4 w-4" />
