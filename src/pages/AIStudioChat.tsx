@@ -22,7 +22,7 @@ export default function AIStudioChat() {
 
   return (
     <div className="flex flex-col h-full">
-      <PageHeader title={agent ? `AI Studio · ${agent}` : 'AI Studio Chat'} />
+      <PageHeader title="AI Studio" />
       <main className="flex-1 flex min-w-0 overflow-hidden">
         {/* Sidebar */}
         <div className="w-72 border-r bg-card flex flex-col">
