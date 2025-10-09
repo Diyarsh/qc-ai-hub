@@ -23,7 +23,7 @@ export function PageHeader({ title, subtitle, showDevMode = true, actions }: Pag
       <div className="flex items-center gap-3 w-full sm:w-auto">
         <SidebarTrigger className="h-9 w-9 flex-shrink-0" />
         <div className="min-w-0 flex-1">
-          {title && <h1 className="text-xl sm:text-2xl font-bold truncate">{title}</h1>}
+          {title && <h1 className="text-xl sm:text-2xl font-bold leading-tight truncate">{title}</h1>}
           {/* Reserve space for subtitle to avoid layout jump */}
           {subtitle ? (
             <p className="text-xs sm:text-sm text-muted-foreground truncate">{subtitle}</p>
