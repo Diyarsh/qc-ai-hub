@@ -21,12 +21,12 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
-        <div className="w-full max-w-3xl">
+        <div className="w-full max-w-2xl">
           <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
           
           {/* Message Input */}
           <div className="relative mb-8">
-            <Textarea placeholder={examplePrompts[currentPrompt]} className="min-h-[120px] pr-20 text-lg bg-muted border-border resize-none" />
+            <Textarea placeholder={examplePrompts[currentPrompt]} className="min-h-[120px] pr-20 text-sm bg-muted border-border resize-none" />
             <div className="absolute right-2 bottom-2 flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <Paperclip className="h-4 w-4" />
