@@ -12,6 +12,7 @@ export default function AIStudioChat() {
   const location = useLocation();
   const agent = (location.state as any)?.agent as string | undefined;
   const placeholder = (location.state as any)?.placeholder as string | undefined;
+  const initialMessage = (location.state as any)?.initialMessage as string | undefined;
   const [message, setMessage] = useState("");
   const [queries, setQueries] = useState<string[]>([]);
   const examplePrompts = [
@@ -21,12 +22,18 @@ export default function AIStudioChat() {
     "Составь план внедрения чата-бота в службу поддержки"
   ];
 
-  const handleSend = () => {
-    const text = message.trim();
+  const handleSend = (textOverride?: string) => {
+    const text = (textOverride ?? message).trim();
     if (!text) return;
     setQueries(prev => [text, ...prev]);
     setMessage("");
   };
+
+  // preload initial message from navigation (e.g., Dashboard)
+  if (initialMessage && queries.length === 0 && message === "") {
+    // push once on first render
+    setTimeout(() => handleSend(initialMessage), 0);
+  }
 
   return (
     <div className="flex flex-col h-full">

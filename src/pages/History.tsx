@@ -5,8 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-const historyItems = [{
+import { useEffect, useMemo, useState } from "react";
+const staticHistory = [{
   text: "Analyze quantum computing algorithms",
   time: "17 hours ago",
   type: "chat",
@@ -93,7 +93,16 @@ export default function History() {
     return 0;
   };
   
-  const sortedItems = [...historyItems].sort((a, b) => {
+  const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
+  useEffect(() => {
+    try {
+      const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+      setDynamicHistory(ls);
+    } catch {}
+  }, []);
+
+  const merged = useMemo(() => [...dynamicHistory.map(i => ({...i, time: 'hours ago'})), ...staticHistory], [dynamicHistory]);
+  const sortedItems = [...merged].sort((a, b) => {
     const timeA = parseTime(a.time);
     const timeB = parseTime(b.time);
     return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
@@ -119,7 +128,7 @@ export default function History() {
           </div>
 
           {/* Table */}
-          <div className="rounded-lg overflow-hidden border-y">
+          <div className="rounded-lg overflow-hidden border">
             <div className="overflow-auto h-[calc(100vh-200px)]">
               <table className="w-full relative">
                 <thead className="bg-background sticky top-0 z-10 shadow-sm">
