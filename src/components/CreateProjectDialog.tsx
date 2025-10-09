@@ -19,6 +19,16 @@ export function CreateProjectDialog({
   const [projectInstructions, setProjectInstructions] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
+  const handleTitleInput = (e: React.FormEvent<HTMLSpanElement>) => {
+    const value = e.currentTarget.textContent ?? "";
+    setProjectName(value);
+  };
+  const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).blur();
+    }
+  };
   const handleNext = () => {
     if (step === 1 && projectName.trim()) {
       setStep(2);
@@ -55,22 +65,24 @@ export function CreateProjectDialog({
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                Название проекта
+                <span
+                  contentEditable
+                  suppressContentEditableWarning
+                  role="textbox"
+                  onInput={handleTitleInput}
+                  onKeyDown={handleTitleKeyDown}
+                  className="min-w-[2ch] cursor-text outline-none border-b border-transparent hover:border-muted-foreground/40 focus:border-primary/60 transition-colors"
+                  placeholder="Название проекта"
+                >
+                  {projectName || "Название проекта"}
+                </span>
               </DialogTitle>
               <DialogDescription className="sr-only">
                 Создайте новый проект с названием и инструкциями
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="projectName">Название проекта</Label>
-                <Input 
-                  id="projectName" 
-                  placeholder="Введите название проекта" 
-                  value={projectName} 
-                  onChange={e => setProjectName(e.target.value)} 
-                />
-              </div>
+              {/* Project name is edited inline in the title above */}
               
               <div className="space-y-2">
                 <Label htmlFor="instructions">Инструкции проекта</Label>

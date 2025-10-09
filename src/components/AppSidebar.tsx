@@ -8,8 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useTheme } from "next-themes";
-import logoDark from "@/assets/QC-AI-HUB-Dark.svg";
-import logoLight from "@/assets/QC-AI-HUB-Light.svg";
+import qcLogo from "@/assets/QC-logo.svg";
+import qcLogoLight from "@/assets/QC-logo-light.svg";
 
 const menuItems = [{
   title: "sidebar.chat",
@@ -66,8 +66,14 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="border-b border-border px-3 py-4">
-        <div className={`flex items-center ${collapsed ? "justify-center" : "justify-start"}`}>
-          <img src={theme === "dark" ? logoLight : logoDark} alt="QazCloud AI-HUB" className={collapsed ? "h-8 w-8 object-contain" : "h-10"} />
+        <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-start"}`}>
+          <img src={theme === "dark" ? qcLogoLight : qcLogo} alt="QazCloud AI-HUB" className={collapsed ? "h-6 w-6 object-contain" : "h-8"} />
+          {!collapsed && (
+            <div className="ml-3 flex flex-col justify-center leading-tight">
+              <span className="text-base font-semibold tracking-tight">AI-HUB</span>
+              <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
+            </div>
+          )}
         </div>
       </SidebarHeader>
 
