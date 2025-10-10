@@ -6,9 +6,10 @@ import { Bot, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChatComposer } from "@/components/ChatComposer";
-
 export default function AIStudioChat() {
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const location = useLocation();
   const agent = (location.state as any)?.agent as string | undefined;
   const placeholder = (location.state as any)?.placeholder as string | undefined;
@@ -16,13 +17,7 @@ export default function AIStudioChat() {
   const [message, setMessage] = useState("");
   const [queries, setQueries] = useState<string[]>([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const examplePrompts = [
-    "Сформируй краткую сводку по рынку за Q3 2025",
-    "Подготовь анализ конкурентов в сфере e-commerce",
-    "Предложи 3 риск-фактора для проекта AI",
-    "Составь план внедрения чата-бота в службу поддержки"
-  ];
-
+  const examplePrompts = ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
   const handleSend = (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if (!text) return;
@@ -35,44 +30,27 @@ export default function AIStudioChat() {
     // push once on first render
     setTimeout(() => handleSend(initialMessage), 0);
   }
-
-  return (
-    <div className="flex flex-col h-screen">
+  return <div className="flex flex-col h-screen">
       <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
       <main className="flex-1 flex min-h-0">
         {/* Sidebar */}
         <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-border bg-card flex flex-col h-full transition-all duration-300`}>
           <div className="p-3 flex flex-col h-full">
             <div className="flex items-center justify-between mb-3">
-              {!sidebarCollapsed && (
-                <Button variant="default" className="flex-1 justify-center gap-2">
+              {!sidebarCollapsed && <Button variant="default" className="flex-1 justify-center gap-2">
                   <Plus className="h-4 w-4" />
                   Новый чат
-                </Button>
-              )}
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className={`shrink-0 ${sidebarCollapsed ? 'w-full' : 'ml-2'}`}
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              >
-                {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-              </Button>
+                </Button>}
+              
             </div>
-            {!sidebarCollapsed && (
-              <ScrollArea className="flex-1 pr-1">
+            {!sidebarCollapsed && <ScrollArea className="flex-1 pr-1">
                 <div className="space-y-2">
-                  {queries.length === 0 && (
-                    <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>
-                  )}
-                  {queries.map((q, idx) => (
-                    <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
+                  {queries.length === 0 && <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>}
+                  {queries.map((q, idx) => <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
                       {q}
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
-              </ScrollArea>
-            )}
+              </ScrollArea>}
           </div>
         </div>
         {/* Chat Area */}
@@ -90,20 +68,10 @@ export default function AIStudioChat() {
           </ScrollArea>
           <div className="p-4">
             <div className="max-w-3xl mx-auto">
-              <ChatComposer
-                value={message}
-                placeholder={placeholder}
-                examples={examplePrompts}
-                onChange={setMessage}
-                onSend={() => handleSend()}
-                className="mb-3"
-              />
+              <ChatComposer value={message} placeholder={placeholder} examples={examplePrompts} onChange={setMessage} onSend={() => handleSend()} className="mb-3" />
             </div>
           </div>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
-
-
