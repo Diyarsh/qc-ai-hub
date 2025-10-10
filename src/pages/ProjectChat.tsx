@@ -5,6 +5,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
+import { PageHeader } from "@/components/PageHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime();
@@ -34,6 +36,7 @@ type Conversation = {
 const LS_KEY = "projectChat.conversations";
 
 export default function ProjectChat() {
+  const { t } = useLanguage();
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("files");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -104,7 +107,9 @@ export default function ProjectChat() {
 
   const selected = conversations.find(c => c.id === selectedId) || null;
 
-  return <div className="flex h-full w-full overflow-hidden">
+  return <div className="flex flex-col h-screen">
+      <PageHeader title={t('sidebar.projects')} subtitle="Управление проектными чатами" />
+      <main className="flex-1 flex min-h-0">
       {/* Project Sidebar */}
       <div className="w-72 border-r bg-card flex flex-col">
         <button 
@@ -217,5 +222,6 @@ export default function ProjectChat() {
       </div>
 
       <ProjectSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      </main>
     </div>;
 }
