@@ -113,15 +113,6 @@ export default function ProjectChat() {
       <main className="flex-1 flex min-h-0">
       {/* Project Sidebar */}
       <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-t bg-card flex flex-col transition-all duration-300`}>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className={`m-2 ${sidebarCollapsed ? 'self-center' : 'self-end'}`}
-        >
-          {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
-
         {!sidebarCollapsed && <button
           onClick={() => setSettingsOpen(true)}
           className="mx-4 mt-3 mb-2 p-3 border rounded-md text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
@@ -184,6 +175,15 @@ export default function ProjectChat() {
               )}
             </ScrollArea>}
         </Tabs>}
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className={`m-2 mt-auto ${sidebarCollapsed ? 'self-center' : 'self-end'}`}
+        >
+          {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </Button>
       </div>
 
       {/* Main Chat Area */}
