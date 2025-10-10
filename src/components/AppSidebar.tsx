@@ -81,18 +81,18 @@ export function AppSidebar() {
         <SidebarMenu className="space-y-0.5">
           {menuItems.map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltip={collapsed ? t(item.title) : undefined} className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive(item.url) ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
-                    <NavLink to={item.url} className="flex items-center gap-3 flex-1">
+                  <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
+                    <NavLink to={item.url} className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
                       <item.icon className="h-5 w-5 shrink-0" />
                       {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
+                      {!collapsed && (
+                        <CollapsibleTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-6 w-6 p-0 hover:bg-transparent ml-auto" onClick={(e) => e.stopPropagation()}>
+                            <ChevronRight className={`h-4 w-4 transition-transform ${openHistoryMenu ? "rotate-90" : ""}`} />
+                          </Button>
+                        </CollapsibleTrigger>
+                      )}
                     </NavLink>
-                    {!collapsed && (
-                      <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 p-0 hover:bg-transparent" onClick={(e) => e.stopPropagation()}>
-                          <ChevronRight className={`h-4 w-4 transition-transform ${openHistoryMenu ? "rotate-90" : ""}`} />
-                        </Button>
-                      </CollapsibleTrigger>
-                    )}
                   </SidebarMenuButton>
                   {!collapsed && <CollapsibleContent className="animate-accordion-down">
                       <div className="ml-3 mt-1 space-y-3">

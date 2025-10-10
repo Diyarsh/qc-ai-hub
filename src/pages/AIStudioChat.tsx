@@ -36,17 +36,17 @@ export default function AIStudioChat() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen">
       <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
-      <main className="flex-1 flex min-w-0 overflow-hidden">
+      <main className="flex-1 flex min-h-0">
         {/* Sidebar */}
-        <div className="w-72 border-r bg-card flex flex-col">
-          <div className="p-3">
+        <div className="w-72 border-r border-border bg-card flex flex-col">
+          <div className="p-3 flex flex-col h-full">
             <Button variant="default" className="w-full justify-center gap-2 mb-3">
               <Plus className="h-4 w-4" />
               Новый чат
             </Button>
-            <ScrollArea className="h-[calc(100vh-260px)] pr-1">
+            <ScrollArea className="flex-1 pr-1">
               <div className="space-y-2">
                 {queries.length === 0 && (
                   <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>
