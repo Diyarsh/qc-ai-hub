@@ -34,24 +34,31 @@ export default function AIStudioChat() {
       <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
       <main className="flex-1 flex min-h-0">
         {/* Sidebar */}
-        <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-border bg-card flex flex-col h-full transition-all duration-300`}>
-          <div className="p-3 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-3">
-              {!sidebarCollapsed && <Button variant="default" className="flex-1 justify-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Новый чат
-                </Button>}
-              
+        <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-t bg-card flex flex-col transition-all duration-300`}>
+          {!sidebarCollapsed && <div className="p-3">
+            <Button variant="default" className="w-full justify-center gap-2">
+              <Plus className="h-4 w-4" />
+              Новый чат
+            </Button>
+          </div>}
+
+          {!sidebarCollapsed && <ScrollArea className="flex-1 px-3 pb-3">
+            <div className="space-y-2">
+              {queries.length === 0 && <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>}
+              {queries.map((q, idx) => <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
+                  {q}
+                </div>)}
             </div>
-            {!sidebarCollapsed && <ScrollArea className="flex-1 pr-1">
-                <div className="space-y-2">
-                  {queries.length === 0 && <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>}
-                  {queries.map((q, idx) => <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
-                      {q}
-                    </div>)}
-                </div>
-              </ScrollArea>}
-          </div>
+          </ScrollArea>}
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className={`m-2 mt-auto ${sidebarCollapsed ? 'self-center' : 'self-end'}`}
+          >
+            {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
         </div>
         {/* Chat Area */}
         <div className="flex-1 flex flex-col min-w-0">
