@@ -1,0 +1,61 @@
+/* Hide Spline watermarks and branding */
+.spline-watermark,
+[class*="watermark"],
+[class*="spline-brand"],
+[id*="watermark"],
+[id*="spline-brand"],
+[class*="built-with"],
+[id*="built-with"],
+[class*="powered-by"],
+[id*="powered-by"],
+[class*="spline-logo"],
+[id*="spline-logo"],
+[class*="spline-credit"],
+[id*="spline-credit"],
+[data-testid*="watermark"],
+[aria-label*="spline"],
+[title*="spline"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Hide fixed positioned elements that might be watermarks */
+div[style*="position: fixed"][style*="bottom"],
+div[style*="position: fixed"][style*="right"],
+div[style*="position: absolute"][style*="bottom"],
+div[style*="position: absolute"][style*="right"] {
+  display: none !important;
+}
+
+/* Hide any text containing Spline branding */
+*[class*="spline"]:not([class*="spline-container"]):not([class*="spline-scene"]) {
+  display: none !important;
+}
+
+/* Ensure Spline container doesn't show watermarks */
+.spline-container,
+[class*="spline-container"],
+[class*="spline-scene"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.spline-container::after,
+[class*="spline-container"]::after,
+[class*="spline-scene"]::after {
+  content: none !important;
+}
+
+/* Hide any overlay elements that might contain watermarks */
+div[style*="z-index: 9999"],
+div[style*="z-index: 999"],
+div[style*="z-index: 99"] {
+  display: none !important;
+}
