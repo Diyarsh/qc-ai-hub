@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Plus } from "lucide-react";
+import { Bot, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChatComposer } from "@/components/ChatComposer";
@@ -15,6 +15,7 @@ export default function AIStudioChat() {
   const initialMessage = (location.state as any)?.initialMessage as string | undefined;
   const [message, setMessage] = useState("");
   const [queries, setQueries] = useState<string[]>([]);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const examplePrompts = [
     "Сформируй краткую сводку по рынку за Q3 2025",
     "Подготовь анализ конкурентов в сфере e-commerce",
@@ -40,24 +41,38 @@ export default function AIStudioChat() {
       <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
       <main className="flex-1 flex min-h-0">
         {/* Sidebar */}
-        <div className="w-72 border-r border-border bg-card flex flex-col">
+        <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-border bg-card flex flex-col h-full transition-all duration-300`}>
           <div className="p-3 flex flex-col h-full">
-            <Button variant="default" className="w-full justify-center gap-2 mb-3">
-              <Plus className="h-4 w-4" />
-              Новый чат
-            </Button>
-            <ScrollArea className="flex-1 pr-1">
-              <div className="space-y-2">
-                {queries.length === 0 && (
-                  <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>
-                )}
-                {queries.map((q, idx) => (
-                  <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
-                    {q}
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+            <div className="flex items-center justify-between mb-3">
+              {!sidebarCollapsed && (
+                <Button variant="default" className="flex-1 justify-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Новый чат
+                </Button>
+              )}
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className={`shrink-0 ${sidebarCollapsed ? 'w-full' : 'ml-2'}`}
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              >
+                {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              </Button>
+            </div>
+            {!sidebarCollapsed && (
+              <ScrollArea className="flex-1 pr-1">
+                <div className="space-y-2">
+                  {queries.length === 0 && (
+                    <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>
+                  )}
+                  {queries.map((q, idx) => (
+                    <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
+                      {q}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
           </div>
         </div>
         {/* Chat Area */}
