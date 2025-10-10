@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip, ChevronLeft, ChevronRight } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
@@ -42,6 +42,7 @@ export default function ProjectChat() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // load/save to localStorage
   useEffect(() => {
@@ -111,8 +112,17 @@ export default function ProjectChat() {
       <PageHeader title={t('sidebar.projects')} subtitle="Управление проектными чатами" />
       <main className="flex-1 flex min-h-0">
       {/* Project Sidebar */}
-      <div className="w-72 border-r bg-card flex flex-col">
-        <button 
+      <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-t bg-card flex flex-col transition-all duration-300`}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className={`m-2 ${sidebarCollapsed ? 'self-center' : 'self-end'}`}
+        >
+          {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </Button>
+
+        {!sidebarCollapsed && <button
           onClick={() => setSettingsOpen(true)}
           className="mx-4 mt-3 mb-2 p-3 border rounded-md text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
         >
@@ -123,9 +133,9 @@ export default function ProjectChat() {
           <p className="text-xs text-muted-foreground leading-snug">
             Настройте инструкции для AI-HUB в этом проекте
           </p>
-        </button>
+        </button>}
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+        {!sidebarCollapsed && <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
           <TabsList className="grid grid-cols-2 mx-4 mt-4 mb-2">
             <TabsTrigger value="files" className="text-xs">Файлы</TabsTrigger>
             <TabsTrigger value="conversations" className="text-xs">Чаты</TabsTrigger>
@@ -173,7 +183,7 @@ export default function ProjectChat() {
                 </div>
               )}
             </ScrollArea>}
-        </Tabs>
+        </Tabs>}
       </div>
 
       {/* Main Chat Area */}
