@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spline Scene</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow: hidden;
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        #spline-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: transparent;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        /* Aggressive watermark hiding */
+        .spline-watermark,
+        [class*="watermark"],
+        [class*="spline-brand"],
+        [id*="watermark"],
+        [id*="spline-brand"],
+        [class*="built-with"],
+        [id*="built-with"],
+        [class*="powered-by"],
+        [id*="powered-by"],
+        [class*="spline-logo"],
+        [id*="spline-logo"],
+        [class*="spline-credit"],
+        [id*="spline-credit"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+        
+        /* Hide any text containing Spline branding */
+        * {
+            text-shadow: none !important;
+        }
+        
+        /* Ensure canvas and 3D elements are visible */
+        canvas, iframe, embed, object {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="spline-container">
+        <div id="loading">Loading 3D Scene...</div>
+    </div>
+
+    <script>
+        // Load the Spline scene with watermark removal
+        const container = document.getElementById('spline-container');
+        const loading = document.getElementById('loading');
+        
+        // Create iframe to load the scene
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.background = 'transparent';
+        iframe.allow = 'autoplay; fullscreen';
+        iframe.allowFullscreen = true;
+        
+        // Function to remove watermarks
+        function removeWatermarks() {
+            const watermarkSelectors = [
+                '.spline-watermark',
+                '[class*="watermark"]',
+                '[class*="spline-brand"]',
+                '[id*="watermark"]',
+                '[id*="spline-brand"]',
+                '[class*="built-with"]',
+                '[id*="built-with"]',
+                '[class*="powered-by"]',
+                '[id*="powered-by"]',
+                '[class*="spline-logo"]',
+                '[id*="spline-logo"]',
+                '[class*="spline-credit"]',
+                '[id*="spline-credit"]'
+            ];
+            
+            // Remove from main document
+            watermarkSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    if (el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                });
+            });
+            
+            // Try to remove from iframe (may fail due to CORS)
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                if (iframeDoc) {
+                    watermarkSelectors.forEach(selector => {
+                        const elements = iframeDoc.querySelectorAll(selector);
+                        elements.forEach(el => el.remove());
+                    });
+                }
+            } catch (error) {
+                // CORS restrictions - this is expected
+            }
+        }
+        
+        iframe.onload = function() {
+            loading.style.display = 'none';
+            
+            // Remove watermarks immediately and on interval
+            removeWatermarks();
+            setInterval(removeWatermarks, 500);
+        };
+        
+        container.appendChild(iframe);
+        
+        // Also remove watermarks from the main document periodically
+        setInterval(removeWatermarks, 1000);
+    </script>
+</body>
+</html>
