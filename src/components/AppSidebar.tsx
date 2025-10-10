@@ -65,7 +65,7 @@ export function AppSidebar() {
   const [openHistoryMenu, setOpenHistoryMenu] = useState(false);
   const isActive = (path: string) => currentPath === path;
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
-      <SidebarHeader className="border-b border-border px-3 py-4">
+      <SidebarHeader className="px-3 py-4">
         <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-start"}`}>
           <img src={theme === "dark" ? qcLogoLight : qcLogo} alt="QazCloud AI-HUB" className={collapsed ? "h-6 w-6 object-contain" : "h-8"} />
           {!collapsed && (
