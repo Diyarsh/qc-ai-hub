@@ -38,7 +38,7 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
-        <div className="w-full max-w-5xl">
+        <div className="w-full max-w-3xl">
           <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
 
           {/* Central Input */}
