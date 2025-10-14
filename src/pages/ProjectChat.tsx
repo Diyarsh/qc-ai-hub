@@ -138,7 +138,7 @@ export default function ProjectChat() {
                 Прикрепить
               </Button>
               
-              <div className="flex flex-col items-center justify-center py-6 text-center border border-border rounded-lg">
+              <div className="flex flex-col items-center justify-center py-4 text-center border border-border rounded-lg">
                 <FolderOpen className="h-10 w-10 text-muted-foreground mb-3 opacity-50" />
                 <h3 className="font-medium mb-2 text-sm">Файлов пока нет</h3>
                 <p className="text-xs text-muted-foreground max-w-[200px]">
