@@ -52,14 +52,14 @@ export default function Dashboard() {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full mx-auto">
-              <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazDoc AI', placeholder: 'Задайте вопрос по документам' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50">
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-primary/10 text-primary">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full mx-auto items-stretch">
+              <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazDoc AI', placeholder: 'Задайте вопрос по документам' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50 h-full">
+                <CardContent className="py-3 px-4 h-full">
+                  <div className="flex items-center gap-3 h-full">
+                    <div className="p-2 rounded-md bg-primary/10 text-primary flex-shrink-0">
                       <FileText className="h-4 w-4" />
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <CardTitle className="text-sm font-medium text-left">{t('dashboard.documents.title')}</CardTitle>
                       <CardDescription className="text-xs text-left">
                         {t('dashboard.documents.desc')}
@@ -69,13 +69,13 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'QazAssistant Pro', placeholder: 'Опишите задачу для чат-бота' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50">
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-primary/10 text-primary">
+              <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'QazAssistant Pro', placeholder: 'Опишите задачу для чат-бота' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50 h-full">
+                <CardContent className="py-3 px-4 h-full">
+                  <div className="flex items-center gap-3 h-full">
+                    <div className="p-2 rounded-md bg-primary/10 text-primary flex-shrink-0">
                       <Bot className="h-4 w-4" />
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <CardTitle className="text-sm font-medium text-left">{t('dashboard.bots.title')}</CardTitle>
                       <CardDescription className="text-xs text-left">
                         {t('dashboard.bots.desc')}
@@ -85,13 +85,13 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazCode Assistant', placeholder: 'Что требуется разработать?' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50">
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-primary/10 text-primary">
+              <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazCode Assistant', placeholder: 'Что требуется разработать?' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50 h-full">
+                <CardContent className="py-3 px-4 h-full">
+                  <div className="flex items-center gap-3 h-full">
+                    <div className="p-2 rounded-md bg-primary/10 text-primary flex-shrink-0">
                       <Settings className="h-4 w-4" />
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <CardTitle className="text-sm font-medium text-left">{t('dashboard.developers.title')}</CardTitle>
                       <CardDescription className="text-xs text-left">
                         {t('dashboard.developers.desc')}
