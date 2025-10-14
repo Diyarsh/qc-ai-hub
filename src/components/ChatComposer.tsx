@@ -88,7 +88,7 @@ export function ChatComposer({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="min-h-[68px] resize-none border-0 bg-transparent p-3 pr-12 pl-10 text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="min-h-[68px] resize-none border-0 bg-transparent p-3 pr-12 pl-11 text-sm placeholder:text-left focus-visible:ring-0 focus-visible:ring-offset-0"
         rows={3}
       />
     </div>
