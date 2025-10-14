@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip, ChevronLeft, ChevronRight } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
@@ -147,7 +147,14 @@ export default function ProjectChat() {
               </div>
             </div>}
 
-          {activeTab === "conversations" && <ScrollArea className="flex-1 p-4">
+          {activeTab === "conversations" && <div className="flex flex-col h-full">
+              <div className="p-4 pb-2">
+                <Button variant="default" className="w-full justify-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Новый чат
+                </Button>
+              </div>
+              <ScrollArea className="flex-1 px-4 pb-4">
               {conversations.length === 0 ? (
                 <div className="text-sm text-muted-foreground text-center py-8">Нет активных бесед</div>
               ) : (
@@ -173,7 +180,8 @@ export default function ProjectChat() {
                   ))}
                 </div>
               )}
-            </ScrollArea>}
+            </ScrollArea>
+          </div>}
         </Tabs>}
 
         <Button
