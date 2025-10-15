@@ -229,7 +229,7 @@ export default function Lab() {
                 {/* Monitoring Section for Agents */}
                 <div>
                   <h3 className="text-lg font-semibold mb-4">Мониторинг агентов</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-stretch">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 items-stretch">
                     <Card className="h-full">
                       <CardContent className="p-4 h-full">
                          <div className="flex items-center gap-2">
@@ -249,17 +249,6 @@ export default function Lab() {
                         <div className="text-2xl font-bold mt-2">667ms</div>
                       </CardContent>
                     </Card>
-
-                    <Card className="h-full">
-                      <CardContent className="p-4 h-full">
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="h-5 w-5 text-red-500" />
-                          <span className="font-medium">Общая ошибок %</span>
-                        </div>
-                        <div className="text-2xl font-bold mt-2">34.5%</div>
-                      </CardContent>
-                    </Card>
-
                     <Card className="h-full">
                       <CardContent className="p-4 h-full">
                          <div className="flex items-center gap-2">
