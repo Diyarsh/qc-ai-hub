@@ -250,15 +250,7 @@ export default function Lab() {
                       </CardContent>
                     </Card>
 
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="h-5 w-5 text-red-500" />
-                          <span className="font-medium">Общая ошибок %</span>
-                        </div>
-                        <div className="text-2xl font-bold mt-2">34.5%</div>
-                      </CardContent>
-                    </Card>
+                    
 
                     <Card>
                       <CardContent className="p-4">
@@ -353,12 +345,12 @@ export default function Lab() {
                     <div className="flex-1 relative bg-gradient-to-br from-background to-muted/20">
                       {/* Grid pattern */}
                       <div className="absolute inset-0 opacity-30" style={{
-                      backgroundImage: `
+                        backgroundImage: `
                             linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
                             linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
                           `,
-                      backgroundSize: '20px 20px'
-                    }} />
+                        backgroundSize: '20px 20px'
+                      }} />
                       
                       {/* Empty state */}
                       <div className="absolute inset-0 flex items-center justify-center">
