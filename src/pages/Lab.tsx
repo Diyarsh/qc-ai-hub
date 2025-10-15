@@ -229,9 +229,9 @@ export default function Lab() {
                 {/* Monitoring Section for Agents */}
                 <div>
                   <h3 className="text-lg font-semibold mb-4">Мониторинг агентов</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <Card>
-                      <CardContent className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-stretch">
+                    <Card className="h-full">
+                      <CardContent className="p-4 h-full">
                          <div className="flex items-center gap-2">
                            <Activity className="h-5 w-5 text-primary" />
                            <span className="font-medium">Активные агенты</span>
@@ -240,8 +240,8 @@ export default function Lab() {
                       </CardContent>
                     </Card>
 
-                    <Card>
-                      <CardContent className="p-4">
+                    <Card className="h-full">
+                      <CardContent className="p-4 h-full">
                          <div className="flex items-center gap-2">
                            <Clock className="h-5 w-5 text-primary" />
                            <span className="font-medium">Среднее время ответа</span>
@@ -250,8 +250,8 @@ export default function Lab() {
                       </CardContent>
                     </Card>
 
-                    <Card>
-                      <CardContent className="p-4">
+                    <Card className="h-full">
+                      <CardContent className="p-4 h-full">
                         <div className="flex items-center gap-2">
                           <AlertTriangle className="h-5 w-5 text-red-500" />
                           <span className="font-medium">Общая ошибок %</span>
@@ -260,8 +260,8 @@ export default function Lab() {
                       </CardContent>
                     </Card>
 
-                    <Card>
-                      <CardContent className="p-4">
+                    <Card className="h-full">
+                      <CardContent className="p-4 h-full">
                          <div className="flex items-center gap-2">
                            <Zap className="h-5 w-5 text-primary" />
                            <span className="font-medium">Всего токенов</span>
