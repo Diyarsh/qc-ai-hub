@@ -79,7 +79,7 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="space-y-0.5">
-          {menuItems.map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
+          {menuItems.filter(item => item.url !== "/lab" || isDeveloperMode).map(item => item.subItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
                     <NavLink to={item.url} className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
