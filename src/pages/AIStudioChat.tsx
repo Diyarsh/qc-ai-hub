@@ -15,53 +15,26 @@ export default function AIStudioChat() {
   const placeholder = (location.state as any)?.placeholder as string | undefined;
   const initialMessage = (location.state as any)?.initialMessage as string | undefined;
   const [message, setMessage] = useState("");
-  const [queries, setQueries] = useState<string[]>([]);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const examplePrompts = ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
   const handleSend = (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if (!text) return;
-    setQueries(prev => [text, ...prev]);
     setMessage("");
   };
 
   // preload initial message from navigation (e.g., Dashboard)
-  if (initialMessage && queries.length === 0 && message === "") {
-    // push once on first render
-    setTimeout(() => handleSend(initialMessage), 0);
+  if (initialMessage && !hasInitialized) {
+    setTimeout(() => {
+      handleSend(initialMessage);
+      setHasInitialized(true);
+    }, 0);
   }
   return <div className="flex flex-col h-screen">
       <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
       <main className="flex-1 flex min-h-0">
-        {/* Sidebar */}
-        <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-t bg-card flex flex-col transition-all duration-300`}>
-          {!sidebarCollapsed && <div className="p-3">
-            <Button variant="default" className="w-full justify-center gap-2">
-              <Plus className="h-4 w-4" />
-              Новый чат
-            </Button>
-          </div>}
-
-          {!sidebarCollapsed && <ScrollArea className="flex-1 px-3 pb-3">
-            <div className="space-y-2">
-              {queries.length === 0 && <div className="text-xs text-muted-foreground text-center py-4">История запросов пуста</div>}
-              {queries.map((q, idx) => <div key={idx} className="text-xs p-2 border rounded-md bg-card/50 hover:bg-accent cursor-default line-clamp-2" title={q}>
-                  {q}
-                </div>)}
-            </div>
-          </ScrollArea>}
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className={`m-2 mt-auto ${sidebarCollapsed ? 'self-center' : 'self-end'}`}
-          >
-            {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
-        </div>
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 border-t">
           <ScrollArea className="flex-1 p-6">
             <div className="max-w-3xl mx-auto">
               <div className="flex flex-col items-center justify-center h-full text-center py-20">
