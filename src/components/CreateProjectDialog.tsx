@@ -88,11 +88,19 @@ export function CreateProjectDialog({
               {/* Project name is edited inline in the title above */}
               
               <div className="space-y-2">
+                <Label htmlFor="description">Описание</Label>
+                <Input id="description" placeholder="Добавьте описание проекта" />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="instructions">Инструкции проекта</Label>
-                <p className="text-sm text-muted-foreground">
-                  AI-HUB будет следовать инструкциям во всех разговорах этого проекта
-                </p>
-                <Textarea id="instructions" placeholder="Добавьте инструкции о tone, стиле и персоне, которую должен принять AI" rows={6} value={projectInstructions} onChange={e => setProjectInstructions(e.target.value)} />
+                <Textarea 
+                  id="instructions" 
+                  placeholder="AI-HUB будет следовать инструкциям во всех разговорах этого проекта" 
+                  rows={6} 
+                  value={projectInstructions} 
+                  onChange={e => setProjectInstructions(e.target.value)} 
+                />
               </div>
 
               <div className="space-y-2">
