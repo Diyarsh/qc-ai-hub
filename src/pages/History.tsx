@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { Search, MoreHorizontal, ExternalLink, Edit2, Trash2, ChevronDown, ArrowUpDown } from "lucide-react";
+import { Search, MoreVertical, ExternalLink, Edit2, Trash2, ChevronDown, ArrowUpDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -136,14 +136,11 @@ export default function History() {
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
                       {t('history.name')}
                     </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
-                      {t('history.model')}
-                    </th>
                     <th 
-                      className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background cursor-pointer hover:text-foreground transition-colors"
+                      className="text-right py-3 px-4 text-sm font-medium text-muted-foreground bg-background cursor-pointer hover:text-foreground transition-colors"
                       onClick={toggleSort}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-end gap-2">
                         {t('history.updated')}
                         <ArrowUpDown className="h-3 w-3" />
                       </div>
@@ -158,12 +155,7 @@ export default function History() {
                           {item.text}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
-                        <span className="text-sm text-muted-foreground">
-                          {item.model}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 text-right">
                         <span className="text-sm text-muted-foreground">
                           {formatTime(item.time)}
                         </span>
@@ -172,7 +164,7 @@ export default function History() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
+                              <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
