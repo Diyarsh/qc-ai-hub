@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Sparkles, FolderOpen, Upload } from "lucide-react";
+import { Sparkles, FolderOpen, Upload, Bot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 interface CreateProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -17,6 +18,7 @@ export function CreateProjectDialog({
   const [step, setStep] = useState(1);
   const [projectName, setProjectName] = useState("");
   const [projectInstructions, setProjectInstructions] = useState("");
+  const [model, setModel] = useState("gpt-oss-20b");
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
   const handleTitleInput = (e: React.FormEvent<HTMLSpanElement>) => {
@@ -45,6 +47,7 @@ export function CreateProjectDialog({
     setStep(1);
     setProjectName("");
     setProjectInstructions("");
+    setModel("gpt-oss-20b");
     setFiles([]);
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +60,7 @@ export function CreateProjectDialog({
     setStep(1);
     setProjectName("");
     setProjectInstructions("");
+    setModel("gpt-oss-20b");
     setFiles([]);
   };
   return <Dialog open={open} onOpenChange={onOpenChange}>
@@ -80,12 +84,44 @@ export function CreateProjectDialog({
                 Создайте новый проект с названием и инструкциями
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
+            <div className="space-y-6 py-4">
               {/* Project name is edited inline in the title above */}
               
               <div className="space-y-2">
                 <Label htmlFor="instructions">Инструкции проекта</Label>
+                <p className="text-sm text-muted-foreground">
+                  AI-HUB будет следовать инструкциям во всех разговорах этого проекта
+                </p>
                 <Textarea id="instructions" placeholder="Добавьте инструкции о tone, стиле и персоне, которую должен принять AI" rows={6} value={projectInstructions} onChange={e => setProjectInstructions(e.target.value)} />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Предпочитаемая модель</Label>
+                <Select value={model} onValueChange={setModel}>
+                  <SelectTrigger>
+                    <div className="flex items-center gap-2">
+                      <Bot className="h-4 w-4" />
+                      <SelectValue />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="gpt-oss-20b">
+                      <div>
+                        <div className="font-medium">GPT-OSS-20b</div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="deepseek">
+                      <div>
+                        <div className="font-medium">DeepSeek</div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="grok">
+                      <div>
+                        <div className="font-medium">Grok</div>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div className="flex justify-end gap-3">
