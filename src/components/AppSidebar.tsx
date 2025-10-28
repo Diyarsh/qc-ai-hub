@@ -121,7 +121,7 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border p-2 mt-auto">
+      <SidebarFooter className="p-2 mt-auto">
         <div className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 ${collapsed ? "justify-center" : ""}`}>
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
             <span className="text-primary-foreground text-sm font-semibold">RL</span>
