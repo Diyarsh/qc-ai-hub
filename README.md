@@ -8,7 +8,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-https://github.com/Diyarsh/ai-hub-digital-bridge
+https://github.com/Diyarsh/qc-ai-hub
 
 Changes made via Lovable will be committed automatically to this repo.
 

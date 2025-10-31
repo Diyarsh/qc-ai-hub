@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock, Shield } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useTheme } from "next-themes";
 import qcLogo from "@/assets/QC-logo.svg";
 import qcLogoLight from "@/assets/QC-logo-light.svg";
+import { UserSettingsDialog } from "@/components/UserSettingsDialog";
+import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 
 const menuItems = [{
   title: "sidebar.chat",
@@ -63,7 +65,10 @@ export function AppSidebar() {
     theme
   } = useTheme();
   const [openHistoryMenu, setOpenHistoryMenu] = useState(false);
+  const [userSettingsOpen, setUserSettingsOpen] = useState(false);
+  const { isAdmin, isSuperAdmin } = useAuth();
   const isActive = (path: string) => currentPath === path;
+  // const { user } = useAuth(); // временно убрать
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="px-3 py-4">
         <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-start"}`}>
@@ -118,11 +123,26 @@ export function AppSidebar() {
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>)}
+        {/* Временно всегда показываем для демонстрации админ-панели */}
+        <SidebarMenuItem key="admin">
+          <SidebarMenuButton asChild tooltip={collapsed ? 'Администрирование' : undefined}>
+            <NavLink to="/admin" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
+              <Shield className="h-5 w-5 shrink-0" />
+              {!collapsed && <span className="font-medium text-sm">Администрирование</span>}
+            </NavLink>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
 
       <SidebarFooter className="p-2 mt-auto">
-        <div className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 ${collapsed ? "justify-center" : ""}`}>
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => setUserSettingsOpen(true)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setUserSettingsOpen(true); } }}
+          className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 ${collapsed ? "justify-center" : ""}`}
+        >
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
             <span className="text-primary-foreground text-sm font-semibold">RL</span>
           </div>
@@ -132,5 +152,6 @@ export function AppSidebar() {
           {!collapsed && <Settings className="h-4 w-4 text-muted-foreground shrink-0" />}
         </div>
       </SidebarFooter>
+      <UserSettingsDialog open={userSettingsOpen} onOpenChange={setUserSettingsOpen} />
     </Sidebar>;
 }

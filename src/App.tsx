@@ -2,7 +2,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import AIStudio from "./pages/AIStudio";
@@ -16,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import { Layout } from "./components/Layout";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { DeveloperModeProvider } from "./contexts/DeveloperModeContext";
+import { Routes, Route } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
@@ -26,29 +26,27 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route
-                path="/*"
-                element={
-                  <Layout>
-                    <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/ai-studio" element={<AIStudio />} />
-                      <Route path="/ai-studio-chat" element={<AIStudioChat />} />
-                      <Route path="/history" element={<History />} />
-                      <Route path="/projects" element={<Projects />} />
-                      <Route path="/project-chat" element={<ProjectChat />} />
-                      <Route path="/lab" element={<Lab />} />
-                      <Route path="/developer" element={<Developer />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </Layout>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route
+              path="/*"
+              element={
+                <Layout>
+                  <Routes>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/ai-studio" element={<AIStudio />} />
+                    <Route path="/ai-studio-chat" element={<AIStudioChat />} />
+                    <Route path="/history" element={<History />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/project-chat" element={<ProjectChat />} />
+                    <Route path="/lab" element={<Lab />} />
+                    <Route path="/developer" element={<Developer />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Layout>
+              }
+            />
+          </Routes>
         </TooltipProvider>
       </DeveloperModeProvider>
     </LanguageProvider>
