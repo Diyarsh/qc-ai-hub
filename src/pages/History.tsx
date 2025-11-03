@@ -128,39 +128,46 @@ export default function History() {
           </div>
 
           {/* Table */}
-          <div className="rounded-lg overflow-hidden border">
-            <div className="overflow-auto h-[calc(100vh-200px)]">
-              <table className="w-full relative">
+          <div className="rounded-lg border border-border">
+            <div className="overflow-x-auto overflow-y-auto h-[calc(100vh-200px)] w-full">
+              <table className="w-full border-collapse table-fixed" style={{ width: '100%' }}>
+                <colgroup>
+                  <col style={{ width: '50%', maxWidth: '500px' }} />
+                  <col style={{ width: '200px' }} />
+                  <col style={{ width: '60px' }} />
+                </colgroup>
                 <thead className="bg-background sticky top-0 z-10 shadow-sm">
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background" style={{ maxWidth: '500px' }}>
                       {t('history.name')}
                     </th>
                     <th 
-                      className="text-right py-3 px-4 text-sm font-medium text-muted-foreground bg-background cursor-pointer hover:text-foreground transition-colors"
+                      className="text-right py-3 px-4 text-sm font-medium text-muted-foreground bg-background cursor-pointer hover:text-foreground transition-colors whitespace-nowrap"
                       onClick={toggleSort}
+                      style={{ width: '200px' }}
                     >
                       <div className="flex items-center justify-end gap-2">
                         {t('history.updated')}
                         <ArrowUpDown className="h-3 w-3" />
                       </div>
                     </th>
-                    <th className="w-12 bg-background"></th>
+                    <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground bg-background" style={{ width: '60px' }}>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedItems.map((item, index) => <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
-                      <td className="py-3 px-4">
-                        <span className="text-sm">
+                      <td className="py-3 px-4" style={{ maxWidth: '500px', overflow: 'hidden' }}>
+                        <span className="text-sm truncate block">
                           {item.text}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right">
+                      <td className="py-3 px-4 text-right whitespace-nowrap" style={{ width: '200px' }}>
                         <span className="text-sm text-muted-foreground">
                           {formatTime(item.time)}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 text-center" style={{ width: '60px' }}>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
