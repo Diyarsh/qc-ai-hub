@@ -19,9 +19,9 @@
     --popover: 220 25% 6%;
     --popover-foreground: 210 40% 98%;
 
-    /* Clean blue brand colors */
-    --primary: 223 67% 42%;
-    --primary-foreground: 210 40% 98%;
+    /* Clean blue brand colors - #B0CAE6 */
+    --primary: 211 51% 79%;
+    --primary-foreground: 220 30% 4%;
 
     --secondary: 220 20% 12%;
     --secondary-foreground: 210 40% 98%;
@@ -29,26 +29,26 @@
     --muted: 220 15% 8%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 223 67% 42%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 211 51% 79%;
+    --accent-foreground: 220 30% 4%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 220 15% 15%;
     --input: 220 15% 15%;
-    --ring: 223 67% 42%;
+    --ring: 211 51% 79%;
 
     --radius: 0.5rem;
 
     --sidebar-background: 220 25% 6%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 223 67% 42%;
-    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-primary: 211 51% 79%;
+    --sidebar-primary-foreground: 220 30% 4%;
     --sidebar-accent: 220 20% 12%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 220 15% 15%;
-    --sidebar-ring: 223 67% 42%;
+    --sidebar-ring: 211 51% 79%;
   }
 
   /* Light theme colors */
