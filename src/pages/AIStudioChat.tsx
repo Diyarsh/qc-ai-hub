@@ -9,7 +9,7 @@ import { ChatComposer } from "@/components/ChatComposer";
 import { Modal } from "@/shared/components/Modal";
 import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { Badge } from "@/shared/components/Badge";
-import { sendChatMessage } from "@/shared/services/ai.service";
+import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 export default function AIStudioChat() {
   const {
