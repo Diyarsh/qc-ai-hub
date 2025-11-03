@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatComposer } from "@/components/ChatComposer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { sendChatMessage } from "@/shared/services/ai.service";
+import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 export default function Dashboard() {
   const { t } = useLanguage();
