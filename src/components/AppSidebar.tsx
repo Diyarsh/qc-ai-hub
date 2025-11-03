@@ -213,38 +213,36 @@ export function AppSidebar() {
                     )}
                   </div>
                   {!collapsed && <CollapsibleContent className="animate-accordion-down">
-                      <div className="ml-3 mt-1 space-y-3">
+                      <div className="ml-3 mt-1 space-y-1">
                         {historyItems.thisWeek.length > 0 && (
-                          <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground px-3 py-1 font-medium">{t('history.this-week')}</p>
+                          <>
                             {historyItems.thisWeek.map((historyItem, itemIdx) => (
                               <NavLink 
                                 key={itemIdx} 
                                 to={historyItem.url} 
-                                className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
+                                className="block px-3 py-1.5 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
                               >
                                 {historyItem.title}
                               </NavLink>
                             ))}
-                          </div>
+                          </>
                         )}
                         {historyItems.older.length > 0 && (
-                          <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground px-3 py-1 font-medium">{t('history.older')}</p>
+                          <>
                             {historyItems.older.map((historyItem, itemIdx) => (
                               <NavLink 
                                 key={itemIdx} 
                                 to={historyItem.url} 
-                                className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
+                                className="block px-3 py-1.5 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
                               >
                                 {historyItem.title}
                               </NavLink>
                             ))}
-                          </div>
+                          </>
                         )}
                         <NavLink 
                           to="/history" 
-                          className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                          className="block px-3 py-1.5 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                         >
                           {t('history.see-all')}
                         </NavLink>
