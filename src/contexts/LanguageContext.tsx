@@ -81,6 +81,7 @@ const translations = {
     'sidebar.history': 'Тарих',
     'sidebar.recent-prompts': 'Соңғы сұраулар',
     'sidebar.lab': 'Зертхана',
+    'sidebar.lab2': 'Laboratory2.0',
     'sidebar.developer': 'Әзірлеуші режимі',
     
     // Dashboard
@@ -229,6 +230,7 @@ const translations = {
     'sidebar.history': 'История',
     'sidebar.recent-prompts': 'Недавние запросы',
     'sidebar.lab': 'Лаборатория',
+    'sidebar.lab2': 'Laboratory2.0',
     'sidebar.developer': 'Режим разработчика',
     
     // Dashboard
@@ -378,6 +380,7 @@ const translations = {
     'sidebar.history': 'History',
     'sidebar.recent-prompts': 'Recent Prompts',
     'sidebar.lab': 'Laboratory',
+    'sidebar.lab2': 'Laboratory2.0',
     'sidebar.developer': 'Developer Mode',
     
     // Dashboard
@@ -458,7 +461,21 @@ const translations = {
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('ru');
+  const [language, setLanguageState] = useState<Language>(() => {
+    // Load from localStorage on mount
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('language') as Language;
+      return saved && ['kk', 'ru', 'en'].includes(saved) ? saved : 'ru';
+    }
+    return 'ru';
+  });
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', lang);
+    }
+  };
 
   const t = (key: string): string => {
     return translations[language][key] || key;

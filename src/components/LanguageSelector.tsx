@@ -22,18 +22,22 @@ export function LanguageSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1">
+        <Button variant="ghost" size="sm" className="gap-1 relative z-30 pointer-events-auto">
           <span className="text-sm font-medium">
             {currentLang?.label.split(' ')[0]}
           </span>
           <ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
+      <DropdownMenuContent align="end" className="w-40 z-50">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => setLanguage(lang.code)}
+            onClick={() => {
+              if (setLanguage) {
+                setLanguage(lang.code);
+              }
+            }}
             className={language === lang.code ? "bg-muted" : ""}
           >
             {lang.label}
