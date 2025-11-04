@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import AIStudio from "./pages/AIStudio";
 import AIStudioChat from "./pages/AIStudioChat";
 import History from "./pages/History";
+import HistoryChat from "./pages/HistoryChat";
 import Projects from "./pages/Projects";
 import ProjectChat from "./pages/ProjectChat";
 import Lab from "./pages/Lab";
@@ -26,27 +27,28 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route
-              path="/*"
-              element={
-                <Layout>
-                  <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/ai-studio" element={<AIStudio />} />
-                    <Route path="/ai-studio-chat" element={<AIStudioChat />} />
-                    <Route path="/history" element={<History />} />
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/project-chat" element={<ProjectChat />} />
-                    <Route path="/lab" element={<Lab />} />
-                    <Route path="/developer" element={<Developer />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Layout>
-              }
-            />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route
+                path="/*"
+                element={
+                  <Layout>
+                    <Routes>
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/ai-studio" element={<AIStudio />} />
+                      <Route path="/ai-studio-chat" element={<AIStudioChat />} />
+                      <Route path="/history" element={<History />} />
+                      <Route path="/history-chat/:id" element={<HistoryChat />} />
+                      <Route path="/projects" element={<Projects />} />
+                      <Route path="/project-chat" element={<ProjectChat />} />
+                      <Route path="/lab" element={<Lab />} />
+                      <Route path="/developer" element={<Developer />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Layout>
+                }
+              />
+            </Routes>
         </TooltipProvider>
       </DeveloperModeProvider>
     </LanguageProvider>

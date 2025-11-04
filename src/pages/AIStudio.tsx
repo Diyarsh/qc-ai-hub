@@ -71,6 +71,7 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Русский</Badge>
                   <Badge variant="outline" className="text-xs">Английский</Badge>
                   <Badge variant="outline" className="text-xs">+1</Badge>
+                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Облако</Badge>
                 </div>
               </CardHeader>
             </Card>
@@ -97,6 +98,7 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">HR</Badge>
                   <Badge variant="outline" className="text-xs">Документооборот</Badge>
                   <Badge variant="outline" className="text-xs">Планирование</Badge>
+                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Локально</Badge>
                 </div>
               </CardHeader>
             </Card>
@@ -122,6 +124,7 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Госдокументы</Badge>
                   <Badge variant="outline" className="text-xs">Правовые акты</Badge>
                   <Badge variant="outline" className="text-xs">OCR</Badge>
+                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Облако</Badge>
                 </div>
               </CardHeader>
             </Card>
@@ -147,6 +150,7 @@ export default function AIStudio() {
                   <Badge variant="outline" className="text-xs">Python</Badge>
                   <Badge variant="outline" className="text-xs">JavaScript</Badge>
                   <Badge variant="outline" className="text-xs">Код-ревью</Badge>
+                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Локально</Badge>
                 </div>
               </CardHeader>
             </Card>

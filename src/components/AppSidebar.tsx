@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock, Shield } from "lucide-react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock, Shield, LogOut, Palette, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton, SidebarHeader, useSidebar } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import qcLogo from "@/assets/QC-logo.svg";
 import qcLogoLight from "@/assets/QC-logo-light.svg";
@@ -118,6 +119,7 @@ export function AppSidebar() {
   const [openHistoryMenu, setOpenHistoryMenu] = useState(true);
   const [userSettingsOpen, setUserSettingsOpen] = useState(false);
   const { isAdmin, isSuperAdmin } = useAuth();
+  const navigate = useNavigate();
   const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
 
   // Load history data from localStorage (same as History.tsx)
@@ -220,7 +222,7 @@ export function AppSidebar() {
                               <NavLink 
                                 key={itemIdx} 
                                 to={historyItem.url} 
-                                className="block px-3 py-1.5 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
+                                className="block px-3 py-1.5 text-sm font-light text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
                               >
                                 {historyItem.title}
                               </NavLink>
@@ -233,7 +235,7 @@ export function AppSidebar() {
                               <NavLink 
                                 key={itemIdx} 
                                 to={historyItem.url} 
-                                className="block px-3 py-1.5 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
+                                className="block px-3 py-1.5 text-sm font-light text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors truncate"
                               >
                                 {historyItem.title}
                               </NavLink>
@@ -242,7 +244,7 @@ export function AppSidebar() {
                         )}
                         <NavLink 
                           to="/history" 
-                          className="block px-3 py-1.5 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                          className="block px-3 py-1.5 text-sm font-light text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                         >
                           {t('history.see-all')}
                         </NavLink>
@@ -259,34 +261,59 @@ export function AppSidebar() {
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>)}
-        {/* Временно всегда показываем для демонстрации админ-панели */}
-        <SidebarMenuItem key="admin">
-          <SidebarMenuButton asChild tooltip={collapsed ? 'Администрирование' : undefined}>
-            <NavLink to="/admin" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
-              <Shield className="h-5 w-5 shrink-0" />
-              {!collapsed && <span className="font-medium text-sm">Администрирование</span>}
-            </NavLink>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
 
       <SidebarFooter className="p-2 mt-auto">
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => setUserSettingsOpen(true)}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setUserSettingsOpen(true); } }}
-          className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 ${collapsed ? "justify-center" : ""}`}
-        >
-          <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-            <span className="text-primary-foreground text-sm font-semibold">RL</span>
-          </div>
-          {!collapsed && <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">Личный кабинет</p>
-            </div>}
-          {!collapsed && <Settings className="h-4 w-4 text-muted-foreground shrink-0" />}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div
+              role="button"
+              tabIndex={0}
+              className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 w-full ${collapsed ? "justify-center" : ""}`}
+            >
+              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+                <span className="text-primary-foreground text-sm font-semibold">RL</span>
+              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">Roman Lefarov</p>
+                </div>
+              )}
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">Roman Lefarov</p>
+                <p className="text-xs leading-none text-muted-foreground">roman.lefarov@example.com</p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setUserSettingsOpen(true)}>
+              <Palette className="mr-2 h-4 w-4" />
+              <span>Персонализация</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setUserSettingsOpen(true)}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Настройки</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate('/admin')}>
+              <Shield className="mr-2 h-4 w-4" />
+              <span>Администрирование</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <HelpCircle className="mr-2 h-4 w-4" />
+              <span>Справка</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Выйти</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
       <UserSettingsDialog open={userSettingsOpen} onOpenChange={setUserSettingsOpen} />
     </Sidebar>;
