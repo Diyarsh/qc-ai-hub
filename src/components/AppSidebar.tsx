@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock, Shield, LogOut, Palette, HelpCircle } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock, Shield, LogOut, Palette, HelpCircle, Workflow } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -94,6 +94,10 @@ const menuItems = [{
   url: "/lab",
   icon: Terminal
 }, {
+  title: "sidebar.lab2",
+  url: "/laboratory2",
+  icon: Workflow
+}, {
   title: "sidebar.history",
   url: "/history",
   icon: History,
@@ -114,7 +118,8 @@ export function AppSidebar() {
     toggleDeveloperMode
   } = useDeveloperMode();
   const {
-    theme
+    theme,
+    setTheme
   } = useTheme();
   const [openHistoryMenu, setOpenHistoryMenu] = useState(true);
   const [userSettingsOpen, setUserSettingsOpen] = useState(false);
@@ -185,7 +190,13 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="space-y-0.5">
-          {menuItems.filter(item => item.url !== "/lab" || isDeveloperMode).map(item => item.hasSubItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
+          {menuItems.filter(item => {
+            // Show Lab and Laboratory2.0 only when Dev Mode is enabled
+            if ((item.url === "/lab" || item.url === "/laboratory2") && !isDeveloperMode) {
+              return false;
+            }
+            return true;
+          }).map(item => item.hasSubItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
                 <SidebarMenuItem>
                   <div className="flex items-center gap-1">
                     <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
@@ -299,7 +310,7 @@ export function AppSidebar() {
               <span>Настройки</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/admin')}>
+            <DropdownMenuItem onClick={() => navigate('/admin/dashboard')}>
               <Shield className="mr-2 h-4 w-4" />
               <span>Администрирование</span>
             </DropdownMenuItem>

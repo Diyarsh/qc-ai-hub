@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./main/webapp/app/shared/hooks/useAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { DeveloperModeProvider } from "@/contexts/DeveloperModeContext";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -49,14 +50,16 @@ createRoot(rootElement).render(
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
-              <ToastProvider>
-                <Toaster />
-                <BrowserRouter>
-                  <MainRoutes />
-                </BrowserRouter>
-              </ToastProvider>
-            </TooltipProvider>
+            <DeveloperModeProvider>
+              <TooltipProvider>
+                <ToastProvider>
+                  <Toaster />
+                  <BrowserRouter>
+                    <MainRoutes />
+                  </BrowserRouter>
+                </ToastProvider>
+              </TooltipProvider>
+            </DeveloperModeProvider>
           </QueryClientProvider>
         </AuthProvider>
       </ThemeProvider>
