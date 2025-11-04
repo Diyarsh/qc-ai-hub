@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Modal } from "@/shared/components/Modal";
+import { FileUpload } from "@/shared/components/Forms/FileUpload";
+import { Badge } from "@/shared/components/Badge";
 
 function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime();
@@ -43,6 +46,8 @@ export default function ProjectChat() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
 
   // load/save to localStorage
   useEffect(() => {
@@ -77,19 +82,28 @@ export default function ProjectChat() {
 
   const appendMessage = (text: string) => {
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed && attachedFiles.length === 0) return;
+    
+    const fileInfo = attachedFiles.length > 0 
+      ? `\n\n📎 Прикреплено файлов: ${attachedFiles.length}\n${attachedFiles.map(f => `- ${f.name} (${(f.size / 1024).toFixed(1)} KB)`).join('\n')}`
+      : '';
+    
+    const fullContent = trimmed + fileInfo;
+    
     // if no conversation selected, create one
     if (!selectedId) {
-      createConversation(trimmed);
+      createConversation(fullContent);
+      setAttachedFiles([]);
       return;
     }
     setConversations(prev => prev.map(c => {
       if (c.id !== selectedId) return c;
       const nowIso = new Date().toISOString();
-      const userMsg: Message = { id: Math.random().toString(36).slice(2), role: "user", content: trimmed, createdAt: nowIso };
-      const assistantMsg: Message = { id: Math.random().toString(36).slice(2), role: "assistant", content: "OK — зафиксировал. Продолжайте.", createdAt: nowIso };
+      const userMsg: Message = { id: Math.random().toString(36).slice(2), role: "user", content: fullContent, createdAt: nowIso };
+      const assistantMsg: Message = { id: Math.random().toString(36).slice(2), role: "assistant", content: attachedFiles.length > 0 ? "Получил сообщение с файлами. Обрабатываю..." : "OK — зафиксировал. Продолжайте.", createdAt: nowIso };
       return { ...c, messages: [...c.messages, userMsg, assistantMsg], updatedAt: nowIso, title: c.title || trimmed.slice(0, 60) };
     }));
+    setAttachedFiles([]);
   };
 
   const renameConversation = (id: string) => {
@@ -223,11 +237,33 @@ export default function ProjectChat() {
 
         {/* Chat Input */}
         <div className="p-4">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto space-y-2">
+            {/* Отображение прикрепленных файлов */}
+            {attachedFiles.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {attachedFiles.map((file, index) => (
+                  <Badge key={index} variant="default" className="flex items-center gap-2 px-2 py-1">
+                    <File className="h-3 w-3" />
+                    <span className="text-xs max-w-[150px] truncate">{file.name}</span>
+                    <button
+                      onClick={() => setAttachedFiles(prev => prev.filter((_, i) => i !== index))}
+                      className="ml-1 hover:opacity-70"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+            
             <ChatComposer
               value={message}
               onChange={setMessage}
-              onSend={(text) => { selected ? appendMessage(text) : createConversation(text); setMessage(""); }}
+              onSend={(text) => { 
+                selected ? appendMessage(text) : createConversation(text); 
+                setMessage(""); 
+              }}
+              onAttachClick={() => setIsAttachModalOpen(true)}
               examples={[
                 "Задайте вопрос по файлам проекта",
                 "Попросите сгенерировать сводку по документам",
@@ -240,6 +276,24 @@ export default function ProjectChat() {
       </div>
 
       <ProjectSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      
+      {/* Modal для прикрепления файлов */}
+      <Modal
+        isOpen={isAttachModalOpen}
+        onClose={() => setIsAttachModalOpen(false)}
+        title="Прикрепить файлы"
+        size="md"
+      >
+        <FileUpload
+          onFilesSelected={(files) => {
+            setAttachedFiles(prev => [...prev, ...files]);
+            setIsAttachModalOpen(false);
+          }}
+          acceptedTypes={[".pdf", ".docx", ".doc", ".txt", ".md", ".csv", ".xlsx", ".xls", ".png", ".jpg", ".jpeg"]}
+          multiple={true}
+          maxSizeMB={50}
+        />
+      </Modal>
       </main>
     </div>;
 }

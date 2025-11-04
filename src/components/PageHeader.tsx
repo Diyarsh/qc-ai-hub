@@ -3,20 +3,16 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Sun, Moon, Code } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { Switch } from "@/components/ui/switch";
 
 interface PageHeaderProps {
   title?: string;
   subtitle?: string;
-  showDevMode?: boolean;
   actions?: React.ReactNode;
 }
 
-export function PageHeader({ title, subtitle, showDevMode = true, actions }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
   const { theme, setTheme } = useTheme();
-  const { isDeveloperMode, toggleDeveloperMode } = useDeveloperMode();
 
   return (
     <header className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-background px-4 sm:px-6 py-4 min-h-[68px]">
@@ -39,13 +35,6 @@ export function PageHeader({ title, subtitle, showDevMode = true, actions }: Pag
         <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
-
-        {showDevMode && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs sm:text-sm font-medium hidden sm:inline">Dev Mode</span>
-            <Switch checked={isDeveloperMode} onCheckedChange={toggleDeveloperMode} />
-          </div>
-        )}
       </div>
     </header>
   );

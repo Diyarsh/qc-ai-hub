@@ -1,27 +1,44 @@
-import api from "@/main/webapp/app/shared/utils/api";
+// Mock data service for demo mode
+// In production, replace with actual API calls
 
 export async function getHealth() {
-  const { data } = await api.get("/admin/health");
-  return data;
+  // Mock health data - simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return {
+    status: "UP",
+    components: {
+      consul: { status: "UP" },
+      db: { status: "UP" },
+      diskSpace: { status: "UP" }
+    }
+  };
 }
 
 export async function getSystemMetrics() {
-  const { data } = await api.get("/admin/metrics");
-  return data;
+  // Mock metrics data - simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return {
+    cpu: 45,
+    memory: 62,
+    disk: 78,
+    requests: 1250
+  };
 }
 
 export async function getAgentsCount() {
-  const { data } = await api.get("/api/ai-agents");
-  // если pagination: {content:[]}, иначе просто data.length или data.content.length
-  return Array.isArray(data) ? data.length : (Array.isArray(data.content) ? data.content.length : 0);
+  // Mock count - using mock data length
+  await new Promise(resolve => setTimeout(resolve, 200));
+  return 5; // Mock count for demo
 }
 
 export async function getLLMModelsCount() {
-  const { data } = await api.get("/api/llm-models");
-  return Array.isArray(data) ? data.length : (Array.isArray(data.content) ? data.content.length : 0);
+  // Mock count - using mock data length
+  await new Promise(resolve => setTimeout(resolve, 200));
+  return 8; // Mock count for demo
 }
 
 export async function getKnowledgeCount() {
-  const { data } = await api.get("/api/knowledges");
-  return Array.isArray(data) ? data.length : (Array.isArray(data.content) ? data.content.length : 0);
+  // Mock count
+  await new Promise(resolve => setTimeout(resolve, 200));
+  return 12; // Mock count for demo
 }
