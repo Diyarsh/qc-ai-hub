@@ -82,6 +82,7 @@ const translations = {
     'sidebar.recent-prompts': 'Соңғы сұраулар',
     'sidebar.lab': 'Зертхана',
     'sidebar.lab2': 'Laboratory2.0',
+    'sidebar.lab3': 'Laboratory3.0',
     'sidebar.developer': 'Әзірлеуші режимі',
     
     // Dashboard
@@ -231,6 +232,7 @@ const translations = {
     'sidebar.recent-prompts': 'Недавние запросы',
     'sidebar.lab': 'Лаборатория',
     'sidebar.lab2': 'Laboratory2.0',
+    'sidebar.lab3': 'Laboratory3.0',
     'sidebar.developer': 'Режим разработчика',
     
     // Dashboard
@@ -381,6 +383,7 @@ const translations = {
     'sidebar.recent-prompts': 'Recent Prompts',
     'sidebar.lab': 'Laboratory',
     'sidebar.lab2': 'Laboratory2.0',
+    'sidebar.lab3': 'Laboratory3.0',
     'sidebar.developer': 'Developer Mode',
     
     // Dashboard

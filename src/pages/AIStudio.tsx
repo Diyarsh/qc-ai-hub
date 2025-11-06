@@ -48,13 +48,13 @@ export default function AIStudio() {
 
           {/* Models Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {/* QazLLM-Ultra */}
+            {/* LLM-Ultra */}
             <Card
               className="hover:shadow-lg transition-all cursor-pointer hover:scale-[1.02]"
               onClick={() =>
                 navigate('/ai-studio-chat', {
                   state: {
-                    agent: 'QazLLM-Ultra',
+                    agent: 'LLM-Ultra',
                     instructions: 'Высокоточная многоязычная модель для корпоративных задач. Отвечай кратко, ссылайся на источники, используй деловой стиль.',
                     placeholder: 'Сформируй краткую сводку по рынку за Q3 2025',
                   }
@@ -62,16 +62,16 @@ export default function AIStudio() {
               }
             >
               <CardHeader className="py-4">
-                <CardTitle className="text-lg">QazLLM-Ultra</CardTitle>
+                <CardTitle className="text-lg">LLM-Ultra</CardTitle>
                 <CardDescription className="text-sm">
-                  Суверенная казахская модель для корпоративного сектора Казахстана
+                  Суверенная модель для корпоративного сектора
                 </CardDescription>
                 <div className="flex flex-wrap gap-1 mt-2">
                   <Badge variant="outline" className="text-xs">Казахский</Badge>
                   <Badge variant="outline" className="text-xs">Русский</Badge>
                   <Badge variant="outline" className="text-xs">Английский</Badge>
                   <Badge variant="outline" className="text-xs">+1</Badge>
-                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Облако</Badge>
+                  <Badge variant="outline" className="text-xs bg-green-500/20 dark:bg-green-500/30 text-green-700 dark:text-green-300 border-green-400/50 dark:border-green-500/50">Локальный</Badge>
                 </div>
               </CardHeader>
             </Card>
@@ -82,7 +82,7 @@ export default function AIStudio() {
               onClick={() =>
                 navigate('/ai-studio-chat', {
                   state: {
-                    agent: 'QazAssistant Pro',
+                    agent: 'Assistant Pro',
                     instructions: 'Корпоративный ассистент. Помогай с внутренними процессами, оформляй ответы в виде нумерованных шагов и чек-листов.',
                     placeholder: 'Составь шаблон онбординга для нового сотрудника',
                   }
@@ -90,15 +90,15 @@ export default function AIStudio() {
               }
             >
               <CardHeader className="py-4">
-                <CardTitle className="text-lg">QazAssistant Pro</CardTitle>
+                <CardTitle className="text-lg">Assistant Pro</CardTitle>
                 <CardDescription className="text-sm">
-                  Корпоративный ассистент для казахстанских предприятий
+                  Корпоративный ассистент для предприятий
                 </CardDescription>
                 <div className="flex flex-wrap gap-1 mt-2">
                   <Badge variant="outline" className="text-xs">HR</Badge>
                   <Badge variant="outline" className="text-xs">Документооборот</Badge>
                   <Badge variant="outline" className="text-xs">Планирование</Badge>
-                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Локально</Badge>
+                  <Badge variant="outline" className="text-xs bg-green-500/20 dark:bg-green-500/30 text-green-700 dark:text-green-300 border-green-400/50 dark:border-green-500/50">Локальный</Badge>
                 </div>
               </CardHeader>
             </Card>
@@ -108,7 +108,7 @@ export default function AIStudio() {
               onClick={() =>
                 navigate('/ai-studio-chat', {
                   state: {
-                    agent: 'KazDoc AI',
+                    agent: 'Doc AI',
                     instructions: 'Анализ документов РК. Извлекай ключевые положения, даты, ответственных и ссылки на статьи нормативных актов.',
                     placeholder: 'Извлеки ключевые требования из прикрепленного договора',
                   }
@@ -116,15 +116,15 @@ export default function AIStudio() {
               }
             >
               <CardHeader className="py-4">
-                <CardTitle className="text-lg">KazDoc AI</CardTitle>
+                <CardTitle className="text-lg">Doc AI</CardTitle>
                 <CardDescription className="text-sm">
-                  Специализированный анализ казахстанской документации
+                  Специализированный анализ документации
                 </CardDescription>
                 <div className="flex flex-wrap gap-1 mt-2">
                   <Badge variant="outline" className="text-xs">Госдокументы</Badge>
                   <Badge variant="outline" className="text-xs">Правовые акты</Badge>
                   <Badge variant="outline" className="text-xs">OCR</Badge>
-                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Облако</Badge>
+                  <Badge variant="outline" className="text-xs bg-green-500/20 dark:bg-green-500/30 text-green-700 dark:text-green-300 border-green-400/50 dark:border-green-500/50">Локальный</Badge>
                 </div>
               </CardHeader>
             </Card>
@@ -134,7 +134,7 @@ export default function AIStudio() {
               onClick={() =>
                 navigate('/ai-studio-chat', {
                   state: {
-                    agent: 'KazCode Assistant',
+                    agent: 'Code Assistant',
                     instructions: 'Инженер-программист. Пиши код с комментариями, предлагай тесты и указывай сложность алгоритмов.',
                     placeholder: 'Напиши функцию на TypeScript для валидации ИИН',
                   }
@@ -142,15 +142,15 @@ export default function AIStudio() {
               }
             >
               <CardHeader className="py-4">
-                <CardTitle className="text-lg">KazCode Assistant</CardTitle>
+                <CardTitle className="text-lg">Code Assistant</CardTitle>
                 <CardDescription className="text-sm">
-                  Помощник программиста для разработки в Казахстане
+                  Помощник программиста для разработки
                 </CardDescription>
                 <div className="flex flex-wrap gap-1 mt-2">
                   <Badge variant="outline" className="text-xs">Python</Badge>
                   <Badge variant="outline" className="text-xs">JavaScript</Badge>
                   <Badge variant="outline" className="text-xs">Код-ревью</Badge>
-                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Локально</Badge>
+                  <Badge variant="outline" className="text-xs bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50">Внешний</Badge>
                 </div>
               </CardHeader>
             </Card>

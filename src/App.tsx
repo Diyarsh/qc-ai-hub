@@ -12,6 +12,7 @@ import Projects from "./pages/Projects";
 import ProjectChat from "./pages/ProjectChat";
 import Lab from "./pages/Lab";
 import Laboratory2 from "./pages/Laboratory2";
+import Laboratory3 from "./pages/Laboratory3";
 import Developer from "./pages/Developer";
 import NotFound from "./pages/NotFound";
 import { Layout } from "./components/Layout";
@@ -42,6 +43,7 @@ const App = () => (
                     <Route path="/project-chat" element={<ProjectChat />} />
                     <Route path="/lab" element={<Lab />} />
                     <Route path="/laboratory2" element={<Laboratory2 />} />
+                    <Route path="/laboratory3" element={<Laboratory3 />} />
                     <Route path="/developer" element={<Developer />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
