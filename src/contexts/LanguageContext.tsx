@@ -159,7 +159,7 @@ const translations = {
     'auth.registerButton': 'Тіркелу',
     'auth.forgotPassword': 'Құпия сөзді ұмыттыңыз ба?',
     'auth.backToLogin': '« Кіруге оралу',
-    'auth.loginPlaceholder': 'admin'
+    'auth.loginPlaceholder': ''
   },
   ru: {
     // Navigation
@@ -309,7 +309,7 @@ const translations = {
     'auth.registerButton': 'Зарегистрироваться',
     'auth.forgotPassword': 'Забыли пароль?',
     'auth.backToLogin': '« Назад к входу',
-    'auth.loginPlaceholder': 'admin'
+    'auth.loginPlaceholder': ''
   },
   en: {
     // Navigation
@@ -459,7 +459,7 @@ const translations = {
     'auth.registerButton': 'Register',
     'auth.forgotPassword': 'Forgot password?',
     'auth.backToLogin': '« Back to Login',
-    'auth.loginPlaceholder': 'admin'
+    'auth.loginPlaceholder': ''
   }
 };
 

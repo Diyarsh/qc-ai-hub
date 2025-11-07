@@ -86,7 +86,6 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   <Input
                     id="login-email"
                     type="text"
-                    placeholder={t('auth.loginPlaceholder')}
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     required
