@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { X, CheckCircle2, AlertCircle, AlertTriangle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,10 +16,15 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
+// Глобальная функция для использования в ErrorHandler
+export let showToast: (message: string, type?: ToastType) => void = () => {
+  console.warn("Toast not initialized");
+};
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string, type: ToastType = "info") => {
+  const showToastImpl = useCallback((message: string, type: ToastType = "info") => {
     const id = Math.random().toString(36).substring(7);
     setToasts((prev) => [...prev, { id, message, type }]);
 
@@ -28,12 +33,17 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     }, 5000);
   }, []);
 
+  // Устанавливаем глобальную функцию
+  React.useEffect(() => {
+    showToast = showToastImpl;
+  }, [showToastImpl]);
+
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast: showToastImpl }}>
       {children}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
         {toasts.map((toast) => (
@@ -53,10 +63,10 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
   };
 
   const styles = {
-    success: "bg-green-600 text-white border-green-700",
-    error: "bg-red-600 text-white border-red-700",
-    warning: "bg-orange-500 text-white border-orange-600",
-    info: "bg-blue-600 text-white border-blue-700",
+    success: "bg-green-600 text-white border-green-700 dark:bg-green-700 dark:border-green-800",
+    error: "bg-red-600 text-white border-red-700 dark:bg-red-700 dark:border-red-800",
+    warning: "bg-orange-500 text-white border-orange-600 dark:bg-orange-600 dark:border-orange-700",
+    info: "bg-blue-600 text-white border-blue-700 dark:bg-blue-700 dark:border-blue-800",
   };
 
   const Icon = icons[toast.type];
@@ -88,4 +98,5 @@ export function useToast() {
   }
   return context;
 }
+
 

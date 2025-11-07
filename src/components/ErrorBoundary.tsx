@@ -1,15 +1,21 @@
 import React from "react";
+import { ErrorFallback } from "./alerts/ErrorFallback";
 
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
 }
 
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: React.ComponentType<{ error: Error; onRetry?: () => void; onReport?: () => void }>;
+}
+
 export class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
+  ErrorBoundaryProps,
   ErrorBoundaryState
 > {
-  constructor(props: { children: React.ReactNode }) {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
@@ -20,25 +26,28 @@ export class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Error caught by boundary:", error, errorInfo);
+    // TODO: Отправка в систему мониторинга
   }
 
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null });
+    window.location.reload();
+  };
+
+  handleReport = () => {
+    // TODO: Открыть форму отправки отчета об ошибке
+    console.log("Report error:", this.state.error);
+  };
+
   render() {
-    if (this.state.hasError) {
+    if (this.state.hasError && this.state.error) {
+      const FallbackComponent = this.props.fallback || ErrorFallback;
       return (
-        <div className="flex items-center justify-center min-h-screen bg-background p-4">
-          <div className="text-center space-y-4 max-w-md">
-            <h1 className="text-2xl font-bold text-foreground">Произошла ошибка</h1>
-            <p className="text-muted-foreground">
-              {this.state.error?.message || "Неизвестная ошибка"}
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Перезагрузить страницу
-            </button>
-          </div>
-        </div>
+        <FallbackComponent
+          error={this.state.error}
+          onRetry={this.handleRetry}
+          onReport={this.handleReport}
+        />
       );
     }
 

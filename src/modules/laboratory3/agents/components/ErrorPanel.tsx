@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, X, RefreshCw } from "lucide-react";
+import { AlertCircle, X, RefreshCw, ExternalLink } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ErrorPanelProps {
   error: string;
@@ -42,14 +43,13 @@ export function ErrorPanel({ error, onClose, onAddNode }: ErrorPanelProps) {
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
-          <Card className="border-destructive">
-            <CardHeader>
-              <CardTitle className="text-sm text-destructive">Error Details</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{error}</p>
-            </CardContent>
-          </Card>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle className="text-sm">Детали ошибки</AlertTitle>
+            <AlertDescription className="text-sm mt-2 font-mono break-all">
+              {error}
+            </AlertDescription>
+          </Alert>
 
           <div>
             <h4 className="text-sm font-medium mb-3">Suggested Solutions</h4>
