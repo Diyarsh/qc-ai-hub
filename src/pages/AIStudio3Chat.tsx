@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,7 +11,11 @@ import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { Badge } from "@/shared/components/Badge";
 import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
-export default function AIStudioChat() {
+import { AgentHistorySidebar } from "@/components/AgentHistorySidebar";
+import { AgentChatService } from "@/services/agent-chat.service";
+import { AgentChatMessage } from "@/types/agent-chat";
+
+export default function AIStudio3Chat() {
   const {
     t
   } = useLanguage();
@@ -27,17 +31,110 @@ export default function AIStudioChat() {
   const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   const examplePrompts = ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
+  
+  const loadSession = useCallback((sessionId: string) => {
+    const savedMessages = AgentChatService.getMessages(sessionId);
+    if (savedMessages.length > 0) {
+      const convertedMessages = savedMessages.map(m => ({
+        id: m.id,
+        role: m.role,
+        text: m.text,
+        files: m.files?.map(f => {
+          // Create a File-like object (we can't fully restore File objects from localStorage)
+          const blob = new Blob([], { type: 'application/octet-stream' });
+          const file = new File([blob], f.name);
+          Object.defineProperty(file, 'size', { value: f.size });
+          return file;
+        }) || [],
+        isLoading: false,
+      }));
+      setMessages(convertedMessages);
+      setCurrentSessionId(sessionId);
+    }
+  }, []);
+
+  // Load sessions and messages on mount or when agent changes
+  useEffect(() => {
+    if (!agent) return;
+
+    // Load sessions for this agent
+    const sessions = AgentChatService.getSessions(agent);
+    if (sessions.length === 0) {
+      // Generate mock data if empty
+      AgentChatService.generateMockSessions(agent);
+    }
+
+    // If there's a session in URL state, load it
+    const sessionIdFromState = (location.state as any)?.sessionId;
+    if (sessionIdFromState) {
+      loadSession(sessionIdFromState);
+    }
+  }, [agent, location.state, loadSession]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Save messages to localStorage when they change (debounced)
+  useEffect(() => {
+    if (!currentSessionId || messages.length === 0) return;
+
+    const timeoutId = setTimeout(() => {
+      const messagesToSave: AgentChatMessage[] = messages
+        .filter(m => !m.isLoading)
+        .map(m => ({
+          id: m.id,
+          role: m.role,
+          text: m.text,
+          files: m.files?.map(f => ({ name: f.name, size: f.size })),
+          createdAt: new Date().toISOString(),
+        }));
+
+      AgentChatService.saveMessages(currentSessionId, messagesToSave);
+
+      // Update session metadata
+      if (agent) {
+        const lastUserMessage = messages.filter(m => m.role === 'user' && !m.isLoading).pop();
+        if (lastUserMessage) {
+          AgentChatService.updateSession(currentSessionId, agent, {
+            lastMessage: lastUserMessage.text.slice(0, 100),
+            messageCount: messagesToSave.length,
+          });
+        }
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [messages, currentSessionId, agent]);
+
+  const handleNewSession = () => {
+    if (!agent) return;
+    const newSession = AgentChatService.createSession(agent);
+    setCurrentSessionId(newSession.id);
+    setMessages([]);
+  };
+
+  const handleSessionSelect = (sessionId: string) => {
+    loadSession(sessionId);
+  };
   
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if ((!text && attachedFiles.length === 0) || isLoading) return;
+    
+    // Create or get current session
+    if (!currentSessionId && agent) {
+      // Создаем сессию с названием из первого сообщения (сокращаем до 35 символов)
+      const firstMessage = text || `Прикреплено ${attachedFiles.length} файл(ов)`;
+      const title = firstMessage.slice(0, 35).trim();
+      const newSession = AgentChatService.createSession(agent, title || 'Новый чат');
+      setCurrentSessionId(newSession.id);
+    }
     
     setIsLoading(true);
     
@@ -90,6 +187,18 @@ export default function AIStudioChat() {
           ? { id: loadingMsgId, role: 'assistant' as const, text: response.content }
           : msg
       ));
+
+      // Update session title if this is the first message
+      // Обновляем название сессии из первого сообщения, если оно еще "Новый чат"
+      if (currentSessionId && agent) {
+        const session = AgentChatService.getSession(currentSessionId, agent);
+        if (session && (session.title === 'Новый чат' || !session.title || session.title.trim() === '')) {
+          const title = text.slice(0, 35).trim();
+          if (title) {
+            AgentChatService.updateSession(currentSessionId, agent, { title });
+          }
+        }
+      }
       
     } catch (error: any) {
       console.error('Error sending message:', error);
@@ -115,7 +224,7 @@ export default function AIStudioChat() {
     }, 0);
   }
   return <div className="flex flex-col h-screen">
-      <PageHeader title={t('ai-studio.title')} subtitle={t('ai-studio.subtitle')} />
+      <PageHeader title="AI-Studio 3" subtitle="Вариант с сайдбаром справа" />
       <main className="flex-1 flex min-h-0">
         {/* Chat Area */}
         <div className="flex-1 flex flex-col min-w-0 border-t">
@@ -201,6 +310,19 @@ export default function AIStudioChat() {
             </div>
           </div>
         </div>
+
+        {/* Agent History Sidebar - справа, только если выбран агент */}
+        {agent && (
+          <AgentHistorySidebar
+            agentId={agent}
+            activeSessionId={currentSessionId || undefined}
+            onSessionSelect={handleSessionSelect}
+            onNewSession={handleNewSession}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            position="right"
+          />
+        )}
       </main>
 
       {/* Modal для прикрепления файлов */}
@@ -222,3 +344,4 @@ export default function AIStudioChat() {
       </Modal>
     </div>;
 }
+

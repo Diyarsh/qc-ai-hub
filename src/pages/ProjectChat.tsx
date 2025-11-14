@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Bot, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
@@ -163,8 +163,8 @@ export default function ProjectChat() {
 
           {activeTab === "conversations" && <div className="flex flex-col h-full">
               <div className="p-4 pb-2">
-                <Button variant="default" className="w-full justify-center gap-2">
-                  <Plus className="h-4 w-4" />
+                <Button variant="outline" className="w-full justify-start gap-2 text-xs h-8">
+                  <Plus className="h-3.5 w-3.5" />
                   Новый чат
                 </Button>
               </div>
@@ -225,9 +225,6 @@ export default function ProjectChat() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <Bot className="h-8 w-8 text-primary" />
-                </div>
                 <h2 className="text-2xl font-semibold mb-2">Начать беседу</h2>
                 <p className="text-muted-foreground max-w-md">Задавайте вопросы, получайте помощь или обсуждайте ваш проект</p>
               </div>

@@ -123,45 +123,13 @@ export function Laboratory2Data() {
 
   return (
     <div className="flex flex-col h-full">
-      <Tabs defaultValue="datasets" className="flex-1 flex flex-col overflow-hidden">
+      <Tabs defaultValue="prep" className="flex-1 flex flex-col overflow-hidden">
         <TabsList className="mx-4 mt-4">
-          <TabsTrigger value="datasets">Datasets</TabsTrigger>
           <TabsTrigger value="prep">Data Prep</TabsTrigger>
           <TabsTrigger value="features">Features</TabsTrigger>
           <TabsTrigger value="automl">AutoML</TabsTrigger>
           <TabsTrigger value="serve">Model Serve</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="datasets" className="flex-1 overflow-hidden">
-          <div className="flex h-full">
-            <div className="w-80 border-r border-border">
-              <DatasetManager
-                datasets={datasets}
-                onSelectDataset={handleSelectDataset}
-                onAddDataset={handleAddDataset}
-              />
-            </div>
-            <div className="flex-1 p-4">
-              {selectedDataset ? (
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">{selectedDataset.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Source: {selectedDataset.source}
-                  </p>
-                  {selectedDataset.rows && (
-                    <p className="text-sm text-muted-foreground">
-                      Rows: {selectedDataset.rows.toLocaleString()}
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <div className="text-center text-muted-foreground py-8">
-                  Select a dataset to view details
-                </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
 
         <TabsContent value="prep" className="flex-1 overflow-hidden">
           <DataPrep

@@ -14,18 +14,24 @@ import {
   Eye,
   BarChart3,
   AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Filter,
+  TrendingUp,
+  Settings,
+  Download
 } from "lucide-react";
 
 export interface Dataset {
   id: string;
   name: string;
-  source: "sql" | "csv" | "parquet" | "excel" | "s3";
+  source: "sql" | "csv" | "parquet" | "excel" | "s3" | "postgresql" | "json" | "text";
   connection?: string;
   path?: string;
   size?: number;
   rows?: number;
   columns?: number;
+  owner?: string;
+  status?: "active" | "processing" | "inactive";
   profiling?: {
     types: Record<string, string>;
     missing: Record<string, number>;
@@ -56,15 +62,76 @@ export function DatasetManager({
   const getSourceIcon = (source: Dataset["source"]) => {
     switch (source) {
       case "sql":
+      case "postgresql":
         return Database;
       case "csv":
       case "parquet":
       case "excel":
         return FileText;
+      case "json":
+      case "text":
+        return FileText;
       case "s3":
         return Cloud;
       default:
         return Database;
+    }
+  };
+
+  const getSourceTypeLabel = (source: Dataset["source"]) => {
+    switch (source) {
+      case "sql":
+        return "SQL";
+      case "postgresql":
+        return "PostgreSQL";
+      case "csv":
+        return "CSV";
+      case "parquet":
+        return "Parquet";
+      case "excel":
+        return "Excel";
+      case "json":
+        return "JSON";
+      case "text":
+        return "Text";
+      case "s3":
+        return "S3";
+      default:
+        return source.toUpperCase();
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(date);
+  };
+
+  const getStatusLabel = (status?: string) => {
+    switch (status) {
+      case "active":
+        return "Активен";
+      case "processing":
+        return "Обработка";
+      case "inactive":
+        return "Неактивен";
+      default:
+        return "Активен";
+    }
+  };
+
+  const getStatusColor = (status?: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "processing":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      case "inactive":
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+      default:
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
     }
   };
 
@@ -87,36 +154,35 @@ export function DatasetManager({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-border flex items-center justify-between">
-        <div>
-          <h3 className="font-semibold text-sm">Datasets</h3>
-          <p className="text-xs text-muted-foreground">
-            Manage your data sources
-          </p>
-        </div>
-        <Button size="sm" onClick={onAddDataset}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Dataset
-        </Button>
-      </div>
-
+      {/* Search and Actions */}
       <div className="p-4 border-b border-border">
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search datasets..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 h-8 text-xs"
-          />
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Поиск датасетов..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Button variant="outline" size="sm">
+            <Filter className="h-4 w-4 mr-2" />
+            Фильтр
+          </Button>
+          <Button variant="outline" size="sm">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Аналитика
+          </Button>
         </div>
       </div>
 
+      {/* Dataset List */}
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-2">
+        <div className="p-4 space-y-3">
           {filteredDatasets.length === 0 ? (
             <div className="text-center text-sm text-muted-foreground py-8">
-              No datasets found
+              Датасеты не найдены
             </div>
           ) : (
             filteredDatasets.map((dataset) => {
@@ -127,43 +193,90 @@ export function DatasetManager({
                   className="cursor-pointer hover:border-primary transition-colors"
                   onClick={() => onSelectDataset(dataset)}
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`p-2 rounded-lg ${getSourceColor(dataset.source)}`}
-                        >
-                          <SourceIcon className="h-4 w-4 text-white" />
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      {/* Left: Icon and Title */}
+                      <div className="flex items-start gap-4 flex-1 min-w-0">
+                        <div className={`p-3 rounded-lg ${getSourceColor(dataset.source)} flex-shrink-0`}>
+                          <SourceIcon className="h-5 w-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <CardTitle className="text-sm">{dataset.name}</CardTitle>
-                          <CardDescription className="text-xs mt-1">
-                            {dataset.source.toUpperCase()}
-                            {dataset.path && ` • ${dataset.path}`}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="text-xs">
-                        {dataset.rows?.toLocaleString() || "N/A"} rows
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  {dataset.profiling && (
-                    <CardContent className="pt-0">
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <BarChart3 className="h-3 w-3" />
-                          {dataset.columns || "N/A"} columns
-                        </div>
-                        {dataset.profiling.anomalies.length > 0 && (
-                          <div className="flex items-center gap-1 text-yellow-600">
-                            <AlertCircle className="h-3 w-3" />
-                            {dataset.profiling.anomalies.length} anomalies
+                          <h3 className="font-semibold text-base mb-3">{dataset.name}</h3>
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                            <div>
+                              <span className="text-muted-foreground">Тип: </span>
+                              <span className="font-medium">{getSourceTypeLabel(dataset.source)}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Строк: </span>
+                              <span className="font-medium">{dataset.rows?.toLocaleString() || "N/A"}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Владелец: </span>
+                              <span className="font-medium">{dataset.owner || "N/A"}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Обновлен: </span>
+                              <span className="font-medium">{formatDate(dataset.updatedAt)}</span>
+                            </div>
                           </div>
-                        )}
+                        </div>
                       </div>
-                    </CardContent>
-                  )}
+
+                      {/* Right: Status and Actions */}
+                      <div className="flex items-start gap-3 flex-shrink-0">
+                        <Badge className={`${getStatusColor(dataset.status)} text-xs`}>
+                          {getStatusLabel(dataset.status)}
+                        </Badge>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle analytics
+                            }}
+                          >
+                            <BarChart3 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectDataset(dataset);
+                            }}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle settings
+                            }}
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle download
+                            }}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
                 </Card>
               );
             })

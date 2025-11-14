@@ -11,6 +11,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DatasetManager, Dataset } from "@/modules/laboratory2/data/components/DatasetManager";
+import { DatasetService } from "@/modules/laboratory2/data/services/dataset.service";
 export default function Lab() {
   const {
     t
@@ -19,7 +21,9 @@ export default function Lab() {
     isDeveloperMode
   } = useDeveloperMode();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("agents");
+  const [activeTab, setActiveTab] = useState("datasets");
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     triggers: true,
@@ -47,6 +51,102 @@ export default function Lab() {
       [category]: !prev[category]
     }));
   };
+
+  const handleSelectDataset = (dataset: Dataset) => {
+    setSelectedDataset(dataset);
+  };
+
+  const handleAddDataset = () => {
+    const newDataset: Dataset = {
+      id: `dataset-${Date.now()}`,
+      name: "New Dataset",
+      source: "csv",
+      rows: 0,
+      columns: 0,
+      owner: "User",
+      status: "active",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    DatasetService.save(newDataset);
+    setDatasets([...datasets, newDataset]);
+  };
+
+  // Initialize datasets on mount
+  useEffect(() => {
+    const storedDatasets = DatasetService.getAll();
+    
+    // Check if we have example datasets or need to initialize
+    const hasExampleDatasets = storedDatasets.some(ds => 
+      ds.id === "dataset-1" || ds.id === "dataset-2" || ds.id === "dataset-3" || ds.id === "dataset-4"
+    );
+    
+    if (storedDatasets.length === 0 || !hasExampleDatasets) {
+      const exampleDatasets: Dataset[] = [
+        {
+          id: "dataset-1",
+          name: "Продажи 2024",
+          source: "csv",
+          rows: 50000,
+          columns: 15,
+          owner: "Аналитик",
+          status: "active",
+          createdAt: new Date("2024-01-10"),
+          updatedAt: new Date("2024-01-15"),
+        },
+        {
+          id: "dataset-2",
+          name: "Клиентская база",
+          source: "postgresql",
+          rows: 120000,
+          columns: 20,
+          owner: "ML Team",
+          status: "active",
+          createdAt: new Date("2024-01-08"),
+          updatedAt: new Date("2024-01-14"),
+        },
+        {
+          id: "dataset-3",
+          name: "Веб-логи",
+          source: "json",
+          rows: 1500000,
+          columns: 8,
+          owner: "DevOps",
+          status: "processing",
+          createdAt: new Date("2024-01-12"),
+          updatedAt: new Date("2024-01-13"),
+        },
+        {
+          id: "dataset-4",
+          name: "Отзывы клиентов",
+          source: "text",
+          rows: 25000,
+          columns: 3,
+          owner: "Маркетинг",
+          status: "active",
+          createdAt: new Date("2024-01-05"),
+          updatedAt: new Date("2024-01-12"),
+        },
+      ];
+      
+      // Save example datasets
+      exampleDatasets.forEach(ds => DatasetService.save(ds));
+      
+      // Merge with existing datasets (excluding old "New Dataset" entries)
+      const existingValidDatasets = storedDatasets.filter(ds => 
+        ds.id !== "dataset-1" && ds.id !== "dataset-2" && ds.id !== "dataset-3" && ds.id !== "dataset-4" &&
+        !(ds.name === "New Dataset" && ds.rows === 0)
+      );
+      
+      setDatasets([...exampleDatasets, ...existingValidDatasets]);
+    } else {
+      // Filter out "New Dataset" entries with 0 rows
+      const validDatasets = storedDatasets.filter(ds => 
+        !(ds.name === "New Dataset" && ds.rows === 0)
+      );
+      setDatasets(validDatasets.length > 0 ? validDatasets : storedDatasets);
+    }
+  }, []);
   const nodeCategories = [{
     key: 'triggers',
     title: 'ТРИГГЕРЫ',
@@ -219,10 +319,19 @@ export default function Lab() {
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="datasets">Датасеты</TabsTrigger>
               <TabsTrigger value="agents">Agents-Studio</TabsTrigger>
               <TabsTrigger value="data">ML-Studio</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="datasets" className="mt-6">
+              <DatasetManager 
+                datasets={datasets}
+                onSelectDataset={handleSelectDataset}
+                onAddDataset={handleAddDataset}
+              />
+            </TabsContent>
 
             <TabsContent value="agents" className="mt-6">
               <div className="space-y-6">

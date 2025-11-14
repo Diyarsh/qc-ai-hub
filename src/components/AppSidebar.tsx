@@ -82,8 +82,16 @@ const menuItems = [{
   url: "/dashboard",
   icon: MessageCircle
 }, {
-  title: "sidebar.ai-studio",
+  title: "AI-Studio",
   url: "/ai-studio",
+  icon: Sparkles
+}, {
+  title: "AI-Studio-2",
+  url: "/ai-studio-2",
+  icon: Sparkles
+}, {
+  title: "AI-Studio-3",
+  url: "/ai-studio-3",
   icon: Sparkles
 }, {
   title: "sidebar.projects",
@@ -267,12 +275,12 @@ export function AppSidebar() {
                     </CollapsibleContent>}
                 </SidebarMenuItem>
               </Collapsible> : <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
+              <SidebarMenuButton asChild tooltip={collapsed ? (item.title.startsWith("sidebar.") ? t(item.title) : item.title) : undefined}>
                 <NavLink to={item.url} className={({
               isActive
             }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
                   <item.icon className="h-5 w-5 shrink-0" />
-                  {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
+                  {!collapsed && <span className="font-medium text-sm">{item.title.startsWith("sidebar.") ? t(item.title) : item.title}</span>}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>)}
