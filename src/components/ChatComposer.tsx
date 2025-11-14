@@ -121,6 +121,7 @@ export function ChatComposer({
       {/* Send (bottom-right) */}
       <Button
         type="button"
+        variant="default"
         size="icon"
         className="absolute bottom-2 right-2 h-8 w-8"
         onClick={handleClickSend}
