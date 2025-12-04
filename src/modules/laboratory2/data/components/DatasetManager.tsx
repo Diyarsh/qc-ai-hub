@@ -97,7 +97,7 @@ export function DatasetManager({
       case "s3":
         return "S3";
       default:
-        return source.toUpperCase();
+        return String(source).toUpperCase();
     }
   };
 
