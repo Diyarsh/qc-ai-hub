@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File, Check, Star } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
@@ -48,6 +49,37 @@ export default function ProjectChat() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
+  const [projectName, setProjectName] = useState("My project");
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editingNameValue, setEditingNameValue] = useState("");
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditingName && nameInputRef.current) {
+      nameInputRef.current.focus();
+      nameInputRef.current.select();
+    }
+  }, [isEditingName]);
+
+  const startEditingName = () => {
+    setEditingNameValue(projectName);
+    setIsEditingName(true);
+  };
+
+  const confirmNameEdit = () => {
+    if (editingNameValue.trim()) {
+      setProjectName(editingNameValue.trim());
+    }
+    setIsEditingName(false);
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      confirmNameEdit();
+    } else if (e.key === "Escape") {
+      setIsEditingName(false);
+    }
+  };
 
   // load/save to localStorage
   useEffect(() => {
@@ -127,9 +159,45 @@ export default function ProjectChat() {
       <main className="flex-1 flex min-h-0">
       {/* Project Sidebar */}
       <div className={`${sidebarCollapsed ? 'w-14' : 'w-72'} border-r border-t bg-card flex flex-col transition-all duration-300`}>
+        {/* Project Name - Editable */}
+        {!sidebarCollapsed && (
+          <div className="mx-4 mt-3 mb-2">
+            {isEditingName ? (
+              <div className="flex items-center gap-2">
+                <Star className="h-4 w-4 text-green-500 shrink-0" />
+                <Input
+                  ref={nameInputRef}
+                  value={editingNameValue}
+                  onChange={(e) => setEditingNameValue(e.target.value)}
+                  onKeyDown={handleNameKeyDown}
+                  onBlur={confirmNameEdit}
+                  className="h-8 text-sm font-medium bg-accent"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 shrink-0"
+                  onClick={confirmNameEdit}
+                >
+                  <Check className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div 
+                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={startEditingName}
+              >
+                <Star className="h-4 w-4 text-green-500 shrink-0" />
+                <span className="font-medium text-sm truncate">{projectName}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Instructions Button */}
         {!sidebarCollapsed && <button
           onClick={() => setSettingsOpen(true)}
-          className="mx-4 mt-3 mb-2 p-3 border rounded-md text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
+          className="mx-4 mb-2 p-3 border rounded-md text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
         >
           <div className="flex items-center gap-2 mb-2">
             <Settings className="h-4 w-4 text-muted-foreground" />
