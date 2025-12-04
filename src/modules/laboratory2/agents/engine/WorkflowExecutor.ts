@@ -41,7 +41,7 @@ export class WorkflowExecutor {
     this.logs = [];
 
     try {
-      this.addLog("info", "Starting workflow execution", undefined, {
+      this.addLog("info", "Starting workflow execution", undefined, undefined, {
         nodeCount: nodes.length,
         connectionCount: connections.length,
       });
@@ -61,6 +61,7 @@ export class WorkflowExecutor {
       this.addLog(
         "info",
         `Found ${triggerNodes.length} trigger node(s)`,
+        undefined,
         undefined,
         { triggers: triggerNodes.map((n) => n.data.label) }
       );
@@ -83,7 +84,7 @@ export class WorkflowExecutor {
       }
 
       const output = results.length === 1 ? results[0] : results;
-      this.addLog("success", "Workflow execution completed", undefined, {
+      this.addLog("success", "Workflow execution completed", undefined, undefined, {
         output,
       });
 
@@ -96,6 +97,7 @@ export class WorkflowExecutor {
       this.addLog(
         "error",
         `Workflow execution failed: ${error.message}`,
+        undefined,
         undefined,
         { error: error.toString() }
       );

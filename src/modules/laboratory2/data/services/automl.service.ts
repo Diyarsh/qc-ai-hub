@@ -10,7 +10,6 @@ export class AutoMLService {
     if (existingIndex >= 0) {
       tasks[existingIndex] = {
         ...task,
-        updatedAt: new Date(),
       };
     } else {
       tasks.push({
