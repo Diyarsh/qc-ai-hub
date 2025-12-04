@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +12,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Modal } from "@/shared/components/Modal";
 import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { Badge } from "@/shared/components/Badge";
-
 function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -41,6 +41,8 @@ const LS_KEY = "projectChat.conversations";
 
 export default function ProjectChat() {
   const { t } = useLanguage();
+  const location = useLocation();
+  const passedProjectName = (location.state as { projectName?: string })?.projectName;
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("files");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -49,7 +51,7 @@ export default function ProjectChat() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
-  const [projectName, setProjectName] = useState("My project");
+  const [projectName, setProjectName] = useState(passedProjectName || "My project");
   const [isEditingName, setIsEditingName] = useState(false);
   const [editingNameValue, setEditingNameValue] = useState("");
   const nameInputRef = useRef<HTMLInputElement>(null);

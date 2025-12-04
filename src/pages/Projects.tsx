@@ -99,7 +99,7 @@ export default function Projects() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map(project => <Card 
                 key={project.id} 
-                onClick={() => editingId !== project.id && navigate('/project-chat')} 
+                onClick={() => editingId !== project.id && navigate('/project-chat', { state: { projectName: project.name } })} 
                 className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               >
                 <CardContent className="p-6">
