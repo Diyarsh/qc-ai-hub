@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File, Check, Star } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File, Check } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
@@ -164,7 +164,6 @@ export default function ProjectChat() {
           <div className="mx-4 mt-3 mb-2">
             {isEditingName ? (
               <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-green-500 shrink-0" />
                 <Input
                   ref={nameInputRef}
                   value={editingNameValue}
@@ -187,7 +186,6 @@ export default function ProjectChat() {
                 className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={startEditingName}
               >
-                <Star className="h-4 w-4 text-green-500 shrink-0" />
                 <span className="font-medium text-sm truncate">{projectName}</span>
               </div>
             )}
