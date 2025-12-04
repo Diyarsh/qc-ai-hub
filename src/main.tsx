@@ -15,22 +15,9 @@ const queryClient = new QueryClient({
 			retry: false, // Disable automatic retries for demo mode
 			refetchOnWindowFocus: false, // Don't refetch on window focus for demo
 			refetchOnReconnect: false, // Don't refetch on reconnect for demo
-			// Suppress errors for demo mode since we're using mock data
-			onError: (error: any) => {
-				// Only log if it's not a network error (expected in demo mode)
-				if (error.response || (error.code && !['ERR_NETWORK', 'ECONNABORTED'].includes(error.code))) {
-					console.error('Query error:', error);
-				}
-			},
 		},
 		mutations: {
 			retry: false, // Disable automatic retries for demo mode
-			onError: (error: any) => {
-				// Only log if it's not a network error (expected in demo mode)
-				if (error.response || (error.code && !['ERR_NETWORK', 'ECONNABORTED'].includes(error.code))) {
-					console.error('Mutation error:', error);
-				}
-			},
 		},
 	},
 });

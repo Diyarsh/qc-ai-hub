@@ -251,18 +251,16 @@ export default function HistoryChat() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader 
-        title={
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/history')}
-              className="h-8 w-8"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <span>{conversation.title}</span>
-          </div>
+        title={conversation.title}
+        actions={
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/history')}
+            className="h-8 w-8"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
         }
       />
 

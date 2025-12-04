@@ -48,9 +48,9 @@ export default function Dashboard() {
     
     try {
       // Convert messages to format expected by AI service
-      const chatMessages = [
+      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
         ...messages.filter(m => !m.isLoading).map(m => ({
-          role: m.role === 'user' ? 'user' : 'assistant',
+          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: m.text,
         })),
         { role: 'user' as const, content: prompt },

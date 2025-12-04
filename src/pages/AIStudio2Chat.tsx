@@ -43,13 +43,7 @@ export default function AIStudio2Chat() {
         id: m.id,
         role: m.role,
         text: m.text,
-        files: m.files?.map(f => {
-          // Create a File-like object (we can't fully restore File objects from localStorage)
-          const blob = new Blob([], { type: 'application/octet-stream' });
-          const file = new File([blob], f.name);
-          Object.defineProperty(file, 'size', { value: f.size });
-          return file;
-        }) || [],
+        files: [], // Cannot restore File objects from localStorage
         isLoading: false,
       }));
       setMessages(convertedMessages);
@@ -165,9 +159,9 @@ export default function AIStudio2Chat() {
         : 'Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform. Отвечай на русском языке профессионально и дружелюбно.';
       
       // Convert messages to format expected by AI service
-      const chatMessages = [
+      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
         ...messages.filter(m => !m.isLoading).map(m => ({
-          role: m.role === 'user' ? 'user' : 'assistant',
+          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: m.text + (m.files && m.files.length > 0 ? `\n\nПрикреплено файлов: ${m.files.map(f => f.name).join(', ')}` : ''),
         })),
         { role: 'user' as const, content: text || `Прикреплено ${attachedFiles.length} файл(ов)` },

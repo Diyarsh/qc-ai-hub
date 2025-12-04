@@ -68,9 +68,9 @@ export default function AIStudioChat() {
         : 'Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform. Отвечай на русском языке профессионально и дружелюбно.';
       
       // Convert messages to format expected by AI service
-      const chatMessages = [
+      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
         ...messages.filter(m => !m.isLoading).map(m => ({
-          role: m.role === 'user' ? 'user' : 'assistant',
+          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: m.text + (m.files && m.files.length > 0 ? `\n\nПрикреплено файлов: ${m.files.map(f => f.name).join(', ')}` : ''),
         })),
         { role: 'user' as const, content: text || `Прикреплено ${attachedFiles.length} файл(ов)` },

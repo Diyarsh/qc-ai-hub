@@ -193,12 +193,15 @@ export default function AIAgents() {
             defaultValue={editingAgent?.name}
             required
           />
-          <Textarea
-            label="Описание"
-            name="description"
-            defaultValue={editingAgent?.description}
-            rows={2}
-          />
+          <div>
+            <Label htmlFor="description">Описание</Label>
+            <Textarea
+              id="description"
+              name="description"
+              defaultValue={editingAgent?.description}
+              rows={2}
+            />
+          </div>
           <div>
             <Label>Тип *</Label>
             <div className="flex gap-4 mt-2">
@@ -216,13 +219,16 @@ export default function AIAgents() {
               ))}
             </div>
           </div>
-          <Textarea
-            label="System Prompt *"
-            name="systemPrompt"
-            defaultValue={editingAgent?.systemPrompt}
-            rows={6}
-            required
-          />
+          <div>
+            <Label htmlFor="systemPrompt">System Prompt *</Label>
+            <Textarea
+              id="systemPrompt"
+              name="systemPrompt"
+              defaultValue={editingAgent?.systemPrompt}
+              rows={6}
+              required
+            />
+          </div>
           <Select
             label="LLM Модель *"
             name="llmModelId"

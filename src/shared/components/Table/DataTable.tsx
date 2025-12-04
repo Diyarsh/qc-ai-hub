@@ -27,7 +27,7 @@ interface DataTableProps<T> {
   emptyMessage?: string;
 }
 
-export function DataTable<T extends { id?: number | string }>({
+export function DataTable<T extends Record<string, any>>({
   columns,
   data,
   loading = false,
@@ -148,4 +148,3 @@ export function DataTable<T extends { id?: number | string }>({
     </div>
   );
 }
-
