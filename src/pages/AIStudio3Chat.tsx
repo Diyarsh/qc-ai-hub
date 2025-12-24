@@ -218,7 +218,7 @@ export default function AIStudio3Chat() {
     }, 0);
   }
   return <div className="flex flex-col h-screen">
-      <PageHeader title="AI-Studio 3" subtitle="Вариант с сайдбаром справа" />
+      <PageHeader title="AI-Studio" subtitle="Вариант с сайдбаром справа" />
       <main className="flex-1 flex min-h-0">
         {/* Chat Area */}
         <div className="flex-1 flex flex-col min-w-0 border-t">
