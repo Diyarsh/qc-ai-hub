@@ -14,7 +14,7 @@ export default function AIStudio3() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader 
-        title="AI-Studio 3"
+        title="AI-Studio"
         subtitle="Вариант с сайдбаром справа"
       />
 
