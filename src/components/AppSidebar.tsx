@@ -83,14 +83,6 @@ const menuItems = [{
   icon: MessageCircle
 }, {
   title: "AI-Studio",
-  url: "/ai-studio",
-  icon: Sparkles
-}, {
-  title: "AI-Studio-2",
-  url: "/ai-studio-2",
-  icon: Sparkles
-}, {
-  title: "AI-Studio-3",
   url: "/ai-studio-3",
   icon: Sparkles
 }, {

@@ -4,10 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import AIStudio from "./pages/AIStudio";
-import AIStudioChat from "./pages/AIStudioChat";
-import AIStudio2 from "./pages/AIStudio2";
-import AIStudio2Chat from "./pages/AIStudio2Chat";
 import AIStudio3 from "./pages/AIStudio3";
 import AIStudio3Chat from "./pages/AIStudio3Chat";
 import History from "./pages/History";
@@ -39,10 +35,6 @@ const App = () => (
                 <Layout>
                   <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/ai-studio" element={<AIStudio />} />
-                    <Route path="/ai-studio-chat" element={<AIStudioChat />} />
-                    <Route path="/ai-studio-2" element={<AIStudio2 />} />
-                    <Route path="/ai-studio-2-chat" element={<AIStudio2Chat />} />
                     <Route path="/ai-studio-3" element={<AIStudio3 />} />
                     <Route path="/ai-studio-3-chat" element={<AIStudio3Chat />} />
                     <Route path="/history" element={<History />} />
