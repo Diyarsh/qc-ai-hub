@@ -14,6 +14,7 @@ import { useToast } from "@/shared/components/Toast";
 import { AgentHistorySidebar } from "@/components/AgentHistorySidebar";
 import { AgentChatService } from "@/services/agent-chat.service";
 import { AgentChatMessage } from "@/types/agent-chat";
+import { MessageBubble } from "@/components/chat/MessageBubble";
 
 export default function AIStudio3Chat() {
   const {
@@ -236,35 +237,17 @@ export default function AIStudio3Chat() {
                       key={msg.id}
                       className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div
-                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm border ${
-                          msg.role === 'user'
-                            ? 'bg-primary text-primary-foreground border-primary/60'
-                            : 'bg-card border-border'
-                        }`}
-                      >
-                        {msg.isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" />
-                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-75" />
-                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-150" />
-                          </div>
-                        ) : (
-                          <>
-                            <div className="break-words whitespace-pre-wrap">{msg.text}</div>
-                            {msg.files && msg.files.length > 0 && (
-                              <div className="mt-2 pt-2 border-t border-primary/20 flex flex-wrap gap-2">
-                                {msg.files.map((file, idx) => (
-                                  <Badge key={idx} variant="default" className="text-xs">
-                                    <File className="h-3 w-3 mr-1" />
-                                    {file.name} ({(file.size / 1024).toFixed(1)} KB)
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
+                      <MessageBubble
+                        text={msg.text}
+                        role={msg.role}
+                        messageId={msg.id}
+                        isLoading={msg.isLoading}
+                        files={msg.files?.map(f => ({ name: f.name, type: f.type }))}
+                        onCopy={(text) => {
+                          navigator.clipboard.writeText(text);
+                          showToast('Скопировано в буфер обмена', 'success');
+                        }}
+                      />
                     </div>
                   ))}
                   <div ref={messagesEndRef} />
