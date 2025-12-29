@@ -9,6 +9,7 @@ import { ChatComposer } from "@/components/ChatComposer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
+import { MessageBubble } from "@/components/chat/MessageBubble";
 export default function Dashboard() {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -182,23 +183,16 @@ export default function Dashboard() {
                         key={msg.id}
                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                       >
-                        <div
-                          className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm border ${
-                            msg.role === 'user'
-                              ? 'bg-primary text-primary-foreground border-primary/60'
-                              : 'bg-card border-border'
-                          }`}
-                        >
-                          {msg.isLoading ? (
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" />
-                              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-75" />
-                              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-150" />
-                            </div>
-                          ) : (
-                            msg.text
-                          )}
-                        </div>
+                        <MessageBubble
+                          text={msg.text}
+                          role={msg.role}
+                          messageId={msg.id}
+                          isLoading={msg.isLoading}
+                          onCopy={(text) => {
+                            navigator.clipboard.writeText(text);
+                            showToast('Скопировано в буфер обмена', 'success');
+                          }}
+                        />
                       </div>
                     ))}
                     <div ref={messagesEndRef} />

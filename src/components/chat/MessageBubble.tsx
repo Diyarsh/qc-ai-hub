@@ -4,10 +4,12 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ClipboardCopyIcon, RefreshCw, Edit2, Trash2 } from "lucide-react";
+import { MessageEvaluationComponent } from "./MessageEvaluation";
 
 interface MessageBubbleProps {
   text: string;
   role: 'user' | 'assistant';
+  messageId?: string;
   isLoading?: boolean;
   streaming?: boolean;
   onRegenerate?: () => void;
@@ -20,6 +22,7 @@ interface MessageBubbleProps {
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
   text,
   role,
+  messageId,
   isLoading,
   streaming,
   onRegenerate,
@@ -80,6 +83,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             </div>
           ))}
         </div>
+      )}
+      {/* Evaluation for assistant messages */}
+      {role === 'assistant' && !isLoading && messageId && (
+        <MessageEvaluationComponent messageId={messageId} compact={true} />
       )}
     </div>
   );
