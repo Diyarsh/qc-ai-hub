@@ -59,7 +59,7 @@ export function Modal({
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         className={cn(
-          "relative bg-card rounded-lg shadow-xl border border-border w-full",
+          "relative bg-card rounded-2xl shadow-xl border border-border w-full",
           sizeClasses[size],
           "animate-in fade-in-0 zoom-in-95 duration-200"
         )}

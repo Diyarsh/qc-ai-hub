@@ -68,7 +68,7 @@ export function FileUpload({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
+          "border-2 border-dashed rounded-2xl p-8 text-center transition-colors",
           isDragging ? "border-blue-500 bg-blue-50/10" : "border-border bg-muted/30"
         )}
       >
@@ -100,7 +100,7 @@ export function FileUpload({
           {selectedFiles.map((file, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 p-3 bg-card border border-border rounded-md"
+              className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl"
             >
               <File className="h-5 w-5 text-muted-foreground" />
               <div className="flex-1 min-w-0">

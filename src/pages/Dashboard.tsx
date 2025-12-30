@@ -1,15 +1,67 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Bot, Settings } from "lucide-react";
+import { Brain, FileText, Languages, Code, Briefcase, BarChart3, Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatComposer } from "@/components/ChatComposer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
+
+// Quick access agents from AI Studio
+const quickAgents = [
+  {
+    id: "LLM-Ultra",
+    name: "LLM-Ultra",
+    description: "Суверенная модель для корпоративного сектора",
+    icon: Brain,
+    instructions: "Высокоточная многоязычная модель для корпоративных задач.",
+    placeholder: "Сформируй краткую сводку по рынку",
+  },
+  {
+    id: "Doc AI",
+    name: "Doc AI",
+    description: "Анализ и извлечение данных из документов",
+    icon: FileText,
+    instructions: "Анализ документов РК. Извлекай ключевые положения.",
+    placeholder: "Извлеки ключевые требования из договора",
+  },
+  {
+    id: "Translation Master",
+    name: "Translation Master",
+    description: "Профессиональный переводчик",
+    icon: Languages,
+    instructions: "Профессиональный переводчик с множеством языков.",
+    placeholder: "Переведи текст на казахский",
+  },
+  {
+    id: "Code Assistant",
+    name: "Code Assistant",
+    description: "Помощник программиста",
+    icon: Code,
+    instructions: "Инженер-программист. Пиши код с комментариями.",
+    placeholder: "Напиши функцию на TypeScript",
+  },
+  {
+    id: "Data Analyst",
+    name: "Data Analyst",
+    description: "Анализ данных и бизнес-метрик",
+    icon: BarChart3,
+    instructions: "Аналитик данных. Анализируй и визуализируй.",
+    placeholder: "Проанализируй продажи за квартал",
+  },
+  {
+    id: "Assistant Pro",
+    name: "Assistant Pro",
+    description: "Корпоративный ассистент",
+    icon: Briefcase,
+    instructions: "Корпоративный ассистент для предприятий.",
+    placeholder: "Составь шаблон онбординга",
+  },
+];
 export default function Dashboard() {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -17,7 +69,7 @@ export default function Dashboard() {
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'like' | 'dislike' }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -33,9 +85,42 @@ export default function Dashboard() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleNewChat = useCallback(() => {
+    // Save current chat to history if there are messages
+    if (messages.length > 0) {
+      const firstUserMessage = messages.find(m => m.role === 'user');
+      if (firstUserMessage) {
+        try {
+          const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+          ls.unshift({ text: firstUserMessage.text, time: '2 часа назад', type: 'chat', model: 'AI' });
+          localStorage.setItem('dashboard.history', JSON.stringify(ls.slice(0, 100)));
+          window.dispatchEvent(new CustomEvent('dashboard.history.updated'));
+        } catch {}
+      }
+    }
+    // Clear current chat
+    setMessages([]);
+    setInput("");
+  }, [messages]);
+
+  // Listen for new chat event from sidebar
+  useEffect(() => {
+    const handleNewChatEvent = () => {
+      handleNewChat();
+    };
+
+    window.addEventListener('dashboard.new-chat', handleNewChatEvent);
+    return () => {
+      window.removeEventListener('dashboard.new-chat', handleNewChatEvent);
+    };
+  }, [handleNewChat]);
+
   const handleSend = async (text: string) => {
     const prompt = text.trim();
     if (!prompt || isLoading) return;
+    
+    // Check if this is a new chat (no messages yet)
+    const isNewChat = messages.length === 0;
     
     setIsLoading(true);
     
@@ -46,6 +131,16 @@ export default function Dashboard() {
     
     setMessages(prev => [...prev, userMsg, loadingMsg]);
     setInput("");
+    
+    // Save to history immediately when first message is sent in a new chat
+    if (isNewChat) {
+      try {
+        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+        ls.unshift({ text: prompt, time: '2 часа назад', type: 'chat', model: 'AI' });
+        localStorage.setItem('dashboard.history', JSON.stringify(ls.slice(0, 100)));
+        window.dispatchEvent(new CustomEvent('dashboard.history.updated'));
+      } catch {}
+    }
     
     try {
       // Convert messages to format expected by AI service
@@ -72,13 +167,6 @@ export default function Dashboard() {
           : msg
       ));
       
-      // Save to history
-      try {
-        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-        ls.unshift({ text: prompt, time: new Date().toISOString(), type: 'chat', model: response.model || 'AI' });
-        localStorage.setItem('dashboard.history', JSON.stringify(ls.slice(0, 100)));
-      } catch {}
-      
     } catch (error: any) {
       console.error('Error sending message:', error);
       
@@ -94,6 +182,7 @@ export default function Dashboard() {
       setIsLoading(false);
     }
   };
+
   return <div className="flex flex-col h-full">
       <PageHeader />
 
@@ -103,7 +192,7 @@ export default function Dashboard() {
           // Начальное состояние: контент по центру вертикально
           <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-8 -mt-16">
             <div className="w-full max-w-3xl">
-              <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
+              <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
 
               {/* Central Input - по центру страницы */}
               <div className="relative mb-8">
@@ -116,55 +205,55 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Feature Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full mx-auto items-stretch">
-                <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazDoc AI', placeholder: 'Задайте вопрос по документам' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50 h-full">
-                  <CardContent className="py-3 px-4 h-full">
-                    <div className="flex items-center gap-3 h-full">
-                      <div className="p-2 rounded-md bg-primary/10 text-primary flex-shrink-0">
-                        <FileText className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-sm font-medium text-left">{t('dashboard.documents.title')}</CardTitle>
-                        <CardDescription className="text-xs text-left">
-                          {t('dashboard.documents.desc')}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* Quick Access Agent Cards - Marquee */}
+              <div className="relative w-full overflow-hidden">
+                <div className="flex animate-marquee gap-3">
+                  {[...quickAgents, ...quickAgents].map((agent, index) => {
+                    const Icon = agent.icon;
+                    return (
+                      <Card 
+                        key={`${agent.id}-${index}`}
+                        onClick={() => navigate('/ai-studio-3-chat', { 
+                          state: { 
+                            agent: agent.name, 
+                            instructions: agent.instructions,
+                            placeholder: agent.placeholder 
+                          } 
+                        })} 
+                        className="card-glow bg-card border-border cursor-pointer transition-all hover:bg-muted/50 hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px]"
+                        style={{ borderRadius: '16px' }}
+                      >
+                        <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
+                          <div 
+                            className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
+                            style={{ borderRadius: '10px' }}
+                          >
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0 w-full overflow-hidden">
+                            <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate">{agent.name}</CardTitle>
+                            <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate">
+                              {agent.description}
+                            </CardDescription>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
 
-                <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'QazAssistant Pro', placeholder: 'Опишите задачу для чат-бота' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50 h-full">
-                  <CardContent className="py-3 px-4 h-full">
-                    <div className="flex items-center gap-3 h-full">
-                      <div className="p-2 rounded-md bg-primary/10 text-primary flex-shrink-0">
-                        <Bot className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-sm font-medium text-left">{t('dashboard.bots.title')}</CardTitle>
-                        <CardDescription className="text-xs text-left">
-                          {t('dashboard.bots.desc')}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card onClick={() => navigate('/ai-studio-chat', { state: { agent: 'KazCode Assistant', placeholder: 'Что требуется разработать?' } })} className="bg-card border-border cursor-pointer transition hover:bg-muted/50 h-full">
-                  <CardContent className="py-3 px-4 h-full">
-                    <div className="flex items-center gap-3 h-full">
-                      <div className="p-2 rounded-md bg-primary/10 text-primary flex-shrink-0">
-                        <Settings className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-sm font-medium text-left">{t('dashboard.developers.title')}</CardTitle>
-                        <CardDescription className="text-xs text-left">
-                          {t('dashboard.developers.desc')}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* View all agents link */}
+              <div className="text-center mt-4">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => navigate('/ai-studio-3')}
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Все агенты AI Studio
+                </Button>
               </div>
             </div>
           </div>
@@ -174,7 +263,7 @@ export default function Dashboard() {
             <div className="flex-1 overflow-hidden">
               <ScrollArea className="h-full p-6">
                 <div className="w-full max-w-3xl mx-auto">
-                  <h2 className="text-4xl font-bold text-center mb-8">{t('dashboard.title')}</h2>
+                  <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
 
                   {/* Messages Display */}
                   <div className="space-y-4 mb-8">
@@ -188,9 +277,12 @@ export default function Dashboard() {
                           role={msg.role}
                           messageId={msg.id}
                           isLoading={msg.isLoading}
-                          onCopy={(text) => {
-                            navigator.clipboard.writeText(text);
-                            showToast('Скопировано в буфер обмена', 'success');
+                          feedback={msg.feedback}
+                          onFeedbackChange={(value) => {
+                            if (msg.role !== 'assistant') return;
+                            setMessages(prev => prev.map(m => 
+                              m.id === msg.id ? { ...m, feedback: value || undefined } : m
+                            ));
                           }}
                         />
                       </div>
