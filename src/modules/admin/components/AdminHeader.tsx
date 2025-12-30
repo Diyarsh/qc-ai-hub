@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 
 export function AdminHeader() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   return (
     <header className="h-16 bg-card border-b border-border flex items-center px-8 justify-between">
@@ -12,7 +14,10 @@ export function AdminHeader() {
         <Button variant="ghost" size="sm" onClick={() => navigate('/admin/settings')}>
           Настройки
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
+        <Button variant="ghost" size="sm" onClick={() => {
+          logout();
+          navigate('/');
+        }}>
           Выйти
         </Button>
       </div>

@@ -3,8 +3,8 @@ import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
-import logoDark from "@/assets/QC-AI-HUB-Dark.svg";
-import logoLight from "@/assets/QC-AI-HUB-Light.svg";
+import logoDark from "@/assets/QC_Black_icon.svg";
+import logoLight from "@/assets/QC_White_icon.svg";
 import { useEffect, useState } from "react";
 
 interface NavigationProps {
@@ -34,7 +34,8 @@ export const Navigation = ({ onLoginClick }: NavigationProps) => {
         <img 
           src={currentTheme === "dark" ? logoLight : logoDark} 
           alt="QazCloud AI-HUB" 
-          className="h-8"
+          className="h-10"
+          style={{ transform: 'rotate(-90deg)' }}
         />
         <div className="flex items-center gap-2">
           <LanguageSelector />

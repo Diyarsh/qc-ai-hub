@@ -9,8 +9,8 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupConte
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
-import qcLogo from "@/assets/QC-logo.svg";
-import qcLogoLight from "@/assets/QC-logo-light.svg";
+import qcLogo from "@/assets/QC_Black_icon.svg";
+import qcLogoLight from "@/assets/QC_White_icon.svg";
 import { UserSettingsDialog } from "@/components/UserSettingsDialog";
 import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 
@@ -127,7 +127,7 @@ export function AppSidebar() {
   } = useTheme();
   const [openHistoryMenu, setOpenHistoryMenu] = useState(true);
   const [userSettingsOpen, setUserSettingsOpen] = useState(false);
-  const { isAdmin, isSuperAdmin } = useAuth();
+  const { isAdmin, isSuperAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
 
@@ -216,10 +216,17 @@ export function AppSidebar() {
   // const { user } = useAuth(); // временно убрать
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="px-3 py-4">
-        <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-start"}`}>
-          <img src={theme === "dark" ? qcLogoLight : qcLogo} alt="QazCloud AI-HUB" className={collapsed ? "h-6 w-6 object-contain" : "h-8"} />
+        <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center gap-3"}`}>
+          <div className={collapsed ? "w-8 h-8 flex items-center justify-center" : "w-7 h-7 flex items-center justify-center flex-shrink-0"}>
+            <img 
+              src={theme === "dark" ? qcLogoLight : qcLogo} 
+              alt="QazCloud AI-HUB" 
+              className="h-full w-auto object-contain"
+              style={{ transform: 'rotate(-90deg)' }} 
+            />
+          </div>
           {!collapsed && (
-            <div className="ml-3 flex flex-col justify-center leading-tight">
+            <div className="flex flex-col justify-center leading-tight">
               <span className="text-base font-semibold tracking-tight">AI-HUB</span>
               <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
             </div>
@@ -387,7 +394,10 @@ export function AppSidebar() {
               <span>Справка</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => {
+              logout();
+              navigate('/');
+            }}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Выйти</span>
             </DropdownMenuItem>
