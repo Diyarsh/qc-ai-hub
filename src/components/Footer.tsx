@@ -1,4 +1,3 @@
-import { Github, Twitter, Linkedin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Footer = () => {
@@ -32,24 +31,6 @@ export const Footer = () => {
               <li><a href="#" className="hover:text-foreground transition-colors">{t('footer.company.docs')}</a></li>
               <li><a href="#" className="hover:text-foreground transition-colors">{t('footer.company.support')}</a></li>
             </ul>
-          </div>
-        </div>
-        
-        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            {t('footer.copyright')}
-          </p>
-          
-          <div className="flex gap-4">
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-              <Github className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-              <Linkedin className="w-5 h-5" />
-            </a>
           </div>
         </div>
       </div>
