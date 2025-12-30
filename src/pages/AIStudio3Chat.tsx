@@ -29,7 +29,7 @@ export default function AIStudio3Chat() {
   const [hasInitialized, setHasInitialized] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean; durationMs?: number; feedback?: 'like' | 'dislike'; feedbackReasons?: string[]; feedbackDetails?: string }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
@@ -46,6 +46,8 @@ export default function AIStudio3Chat() {
         text: m.text,
         files: [], // Cannot restore File objects from localStorage
         isLoading: false,
+        durationMs: m.durationMs,
+        feedback: m.feedback,
       }));
       setMessages(convertedMessages);
       setCurrentSessionId(sessionId);
@@ -88,6 +90,8 @@ export default function AIStudio3Chat() {
           text: m.text,
           files: m.files?.map(f => ({ name: f.name, size: f.size })),
           createdAt: new Date().toISOString(),
+          durationMs: m.durationMs,
+          feedback: m.feedback,
         }));
 
       AgentChatService.saveMessages(currentSessionId, messagesToSave);
@@ -154,10 +158,30 @@ export default function AIStudio3Chat() {
     setAttachedFiles([]);
     
     try {
-      // Build system prompt based on agent
+      const startedAt = performance.now();
+      // Build detailed system prompt based on agent
       const systemPrompt = agent 
-        ? `Ты ${agent} - эксперт AI ассистент. Отвечай на русском языке профессионально и подробно.`
-        : 'Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform. Отвечай на русском языке профессионально и дружелюбно.';
+        ? `Ты ${agent} - профессиональный эксперт AI ассистент высокого уровня. 
+
+ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
+
+Требования к ответам:
+- Структурируй информацию с заголовками и подзаголовками (используй ** для выделения)
+- Используй маркированные и нумерованные списки для лучшей читаемости
+- Приводи конкретные примеры и практические рекомендации
+- Объясняй концепции подробно, как эксперт в своей области
+- Отвечай на русском языке профессионально и информативно
+- Если вопрос короткий или простой, всё равно дай полный, развёрнутый ответ с контекстом и деталями`
+        : `Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform.
+
+ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
+
+Требования к ответам:
+- Структурируй информацию с заголовками и подзаголовками
+- Используй маркированные и нумерованные списки
+- Приводи конкретные примеры и рекомендации
+- Отвечай на русском языке профессионально и дружелюбно
+- Даже на простые вопросы давай полные, информативные ответы`;
       
       // Convert messages to format expected by AI service
       const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
@@ -168,18 +192,19 @@ export default function AIStudio3Chat() {
         { role: 'user' as const, content: text || `Прикреплено ${attachedFiles.length} файл(ов)` },
       ];
       
-      // Call AI service
+      // Call AI service with higher token limit for detailed responses
       const response = await sendChatMessage(chatMessages, {
         model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 1500,
+        temperature: 0.8,
+        maxTokens: 2000,
         systemPrompt,
       });
+      const durationMs = performance.now() - startedAt;
       
       // Replace loading message with actual response
       setMessages(prev => prev.map(msg => 
         msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: response.content }
+          ? { id: loadingMsgId, role: 'assistant' as const, text: response.content, durationMs }
           : msg
       ));
 
@@ -221,6 +246,19 @@ export default function AIStudio3Chat() {
   return <div className="flex flex-col h-screen">
       <PageHeader title="AI-Studio" subtitle="Вариант с сайдбаром справа" />
       <main className="flex-1 flex min-h-0">
+        {/* Agent History Sidebar - слева */}
+        {agent && (
+          <AgentHistorySidebar
+            agentId={agent}
+            activeSessionId={currentSessionId || undefined}
+            onSessionSelect={handleSessionSelect}
+            onNewSession={handleNewSession}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            position="left"
+          />
+        )}
+
         {/* Chat Area */}
         <div className="flex-1 flex flex-col min-w-0 border-t">
           <ScrollArea className="flex-1 p-6">
@@ -243,9 +281,20 @@ export default function AIStudio3Chat() {
                         messageId={msg.id}
                         isLoading={msg.isLoading}
                         files={msg.files?.map(f => ({ name: f.name, type: f.type }))}
-                        onCopy={(text) => {
-                          navigator.clipboard.writeText(text);
-                          showToast('Скопировано в буфер обмена', 'success');
+                        durationMs={msg.durationMs}
+                        feedback={msg.feedback}
+                        onFeedbackChange={(value, reasons, details) => {
+                          if (msg.role !== 'assistant') return;
+                          setMessages(prev => prev.map(m => 
+                            m.id === msg.id 
+                              ? { 
+                                  ...m, 
+                                  feedback: value || undefined,
+                                  feedbackReasons: reasons,
+                                  feedbackDetails: details,
+                                } 
+                              : m
+                          ));
                         }}
                       />
                     </div>
@@ -287,19 +336,6 @@ export default function AIStudio3Chat() {
             </div>
           </div>
         </div>
-
-        {/* Agent History Sidebar - справа, только если выбран агент */}
-        {agent && (
-          <AgentHistorySidebar
-            agentId={agent}
-            activeSessionId={currentSessionId || undefined}
-            onSessionSelect={handleSessionSelect}
-            onNewSession={handleNewSession}
-            collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-            position="right"
-          />
-        )}
       </main>
 
       {/* Modal для прикрепления файлов */}

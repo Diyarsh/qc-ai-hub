@@ -104,15 +104,55 @@ export function ChatComposer({
     }
   }, [onSend, value, disabled, minHeight]);
 
+  // Auto-focus on mount
+  useEffect(() => {
+    if (textareaRef.current && !disabled) {
+      textareaRef.current.focus();
+    }
+  }, [disabled]);
+
   return (
-    <div className={`relative border border-border rounded-xl bg-background ${className || ''}`}>
+    <div 
+      className={`relative border border-border rounded-2xl bg-background ${className || ''}`}
+      onClick={(e) => {
+        // If click is on the container (not on buttons), focus textarea
+        if (e.target === e.currentTarget || (e.target as HTMLElement).tagName === 'DIV') {
+          textareaRef.current?.focus();
+        }
+      }}
+    >
+      {/* Textarea with padding so icons don't overlap content */}
+      <Textarea
+        ref={textareaRef}
+        placeholder={dynamicPlaceholder}
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onFocus={(e) => {
+          // Ensure textarea is focused
+          e.currentTarget.focus();
+        }}
+        onClick={(e) => {
+          // Stop propagation to prevent container click handler
+          e.stopPropagation();
+          e.currentTarget.focus();
+        }}
+        disabled={disabled}
+        className="resize-none border-0 bg-transparent p-3 pr-12 pl-11 text-sm placeholder:text-left focus-visible:ring-0 focus-visible:ring-offset-0 relative z-10 w-full"
+        style={{ minHeight: `${minHeight}px`, maxHeight: `${maxHeight}px` }}
+        autoFocus={!disabled}
+      />
+
       {/* Attach (bottom-left) */}
       <Button
         type="button"
         variant="ghost"
         size="icon"
-        className="absolute bottom-2 left-3 h-8 w-8"
-        onClick={onAttachClick}
+        className="absolute bottom-2 left-3 h-8 w-8 z-20"
+        onClick={(e) => {
+          e.stopPropagation();
+          onAttachClick?.();
+        }}
         disabled={disabled}
       >
         <Paperclip className="h-4 w-4" />
@@ -123,23 +163,15 @@ export function ChatComposer({
         type="button"
         variant="default"
         size="icon"
-        className="absolute bottom-2 right-2 h-8 w-8"
-        onClick={handleClickSend}
+        className="absolute bottom-2 right-2 h-8 w-8 z-20"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleClickSend();
+        }}
         disabled={disabled}
       >
         <Send className="h-4 w-4" />
       </Button>
-
-      {/* Textarea with padding so icons don't overlap content */}
-      <Textarea
-        ref={textareaRef}
-        placeholder={dynamicPlaceholder}
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        className="resize-none border-0 bg-transparent p-3 pr-12 pl-11 text-sm placeholder:text-left focus-visible:ring-0 focus-visible:ring-offset-0"
-        style={{ minHeight: `${minHeight}px`, maxHeight: `${maxHeight}px` }}
-      />
     </div>
   );
 }

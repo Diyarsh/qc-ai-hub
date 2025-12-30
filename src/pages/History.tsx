@@ -7,65 +7,65 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 const staticHistory = [{
-  text: "Analyze quantum computing algorithms",
-  time: "17 hours ago",
+  text: "Проанализировать GDPR требования для корпоративного сектора",
+  time: "2 часа назад",
   type: "chat",
-  model: "GPT-4"
+  model: "LLM-Ultra"
 }, {
-  text: "Create AI-powered data visualization",
-  time: "1 week ago",
+  text: "Создать шаблон онбординга для новых сотрудников",
+  time: "5 часов назад",
   type: "chat",
-  model: "Claude 3"
+  model: "Assistant Pro"
 }, {
-  text: "Generate video from text description",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Optimize database query performance",
-  time: "1 week ago",
+  text: "Извлечь ключевые требования из договора поставки",
+  time: "1 день назад",
   type: "chat",
-  model: "GPT-4"
+  model: "Doc AI"
 }, {
-  text: "Build machine learning model pipeline",
-  time: "1 week ago",
+  text: "Перевести техническую документацию на казахский",
+  time: "1 день назад",
   type: "chat",
-  model: "Gemini Pro"
+  model: "Translation Master"
 }, {
-  text: "Generate product demo video",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Implement natural language processing",
-  time: "1 week ago",
+  text: "Написать функцию валидации ИИН на TypeScript",
+  time: "2 дня назад",
   type: "chat",
-  model: "Claude 3"
+  model: "Code Assistant"
 }, {
-  text: "Create animated explainer video",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Develop recommendation system",
-  time: "1 week ago",
+  text: "Проанализировать продажи за Q3 2025 и выявить тренды",
+  time: "3 дня назад",
   type: "chat",
-  model: "GPT-4"
+  model: "Data Analyst"
 }, {
-  text: "Generate marketing campaign video",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Design distributed system architecture",
-  time: "2 weeks ago",
+  text: "Проанализировать договор на соответствие законодательству РК",
+  time: "4 дня назад",
   type: "chat",
-  model: "Gemini Pro"
+  model: "Legal Advisor"
 }, {
-  text: "Implement real-time data streaming",
-  time: "2 weeks ago",
+  text: "Написать пост для LinkedIn о новых возможностях AI",
+  time: "5 дней назад",
   type: "chat",
-  model: "Claude 3"
+  model: "Content Creator"
+}, {
+  text: "Проанализировать финансовую отчетность компании за год",
+  time: "1 неделю назад",
+  type: "chat",
+  model: "Financial Advisor"
+}, {
+  text: "Клиент спрашивает о возврате товара, как помочь?",
+  time: "1 неделю назад",
+  type: "chat",
+  model: "Customer Support"
+}, {
+  text: "Подготовить обзор современных методов машинного обучения",
+  time: "2 недели назад",
+  type: "chat",
+  model: "Research Assistant"
+}, {
+  text: "Проверить код на уязвимости безопасности",
+  time: "2 недели назад",
+  type: "chat",
+  model: "Security Auditor"
 }];
 export default function History() {
   const {
@@ -73,6 +73,9 @@ export default function History() {
   } = useLanguage();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const formatTime = (time: string) => {
+    // If already in Russian, return as is
+    if (time.includes('назад')) return time;
+    // English to Russian conversion
     if (time.includes('hours ago')) return time.replace('hours ago', t('history.hours-ago'));
     if (time.includes('week ago')) return time.replace('week ago', t('history.week-ago'));
     if (time.includes('weeks ago')) return time.replace('weeks ago', t('history.weeks-ago'));
@@ -84,27 +87,59 @@ export default function History() {
   };
   
   const parseTime = (time: string) => {
-    const hoursMatch = time.match(/(\d+)\s*hours?\s*ago/);
+    // Russian time parsing
+    const hoursMatch = time.match(/(\d+)\s*час(?:а|ов)?\s*назад/);
     if (hoursMatch) return parseInt(hoursMatch[1]);
-    const weeksMatch = time.match(/(\d+)\s*weeks?\s*ago/);
-    if (weeksMatch) return parseInt(weeksMatch[1]) * 7 * 24;
-    const daysMatch = time.match(/(\d+)\s*days?\s*ago/);
+    const daysMatch = time.match(/(\d+)\s*дн(?:я|ей|ень)?\s*назад/);
     if (daysMatch) return parseInt(daysMatch[1]) * 24;
+    const weeksMatch = time.match(/(\d+)\s*недел(?:и|ь|ю|ей)?\s*назад/);
+    if (weeksMatch) return parseInt(weeksMatch[1]) * 7 * 24;
+    // English fallback
+    const hoursMatchEn = time.match(/(\d+)\s*hours?\s*ago/);
+    if (hoursMatchEn) return parseInt(hoursMatchEn[1]);
+    const weeksMatchEn = time.match(/(\d+)\s*weeks?\s*ago/);
+    if (weeksMatchEn) return parseInt(weeksMatchEn[1]) * 7 * 24;
+    const daysMatchEn = time.match(/(\d+)\s*days?\s*ago/);
+    if (daysMatchEn) return parseInt(daysMatchEn[1]) * 24;
     return 0;
   };
   
   const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
   useEffect(() => {
-    try {
-      const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-      setDynamicHistory(ls);
-    } catch {}
+    const loadHistory = () => {
+      try {
+        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+        setDynamicHistory(ls);
+      } catch {}
+    };
+
+    loadHistory();
+
+    // Listen for storage changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'dashboard.history') {
+        loadHistory();
+      }
+    };
+
+    const handleCustomStorage = () => {
+      loadHistory();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('dashboard.history.updated', handleCustomStorage);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('dashboard.history.updated', handleCustomStorage);
+    };
   }, []);
 
-  const merged = useMemo(() => [...dynamicHistory.map(i => ({...i, time: 'hours ago'})), ...staticHistory], [dynamicHistory]);
+  const merged = useMemo(() => [...dynamicHistory.map(i => ({...i, time: '2 часа назад'})), ...staticHistory], [dynamicHistory]);
   const sortedItems = [...merged].sort((a, b) => {
     const timeA = parseTime(a.time);
     const timeB = parseTime(b.time);
+    // Default: desc (newest first)
     return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
   });
   

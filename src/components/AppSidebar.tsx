@@ -14,67 +14,67 @@ import qcLogoLight from "@/assets/QC-logo-light.svg";
 import { UserSettingsDialog } from "@/components/UserSettingsDialog";
 import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 
-// Static history data (same as History.tsx)
+// Static history data (same as History.tsx) - B2B Enterprise Platform examples
 const staticHistory = [{
-  text: "Analyze quantum computing algorithms",
-  time: "17 hours ago",
+  text: "Проанализировать GDPR требования для корпоративного сектора",
+  time: "2 часа назад",
   type: "chat",
-  model: "GPT-4"
+  model: "LLM-Ultra"
 }, {
-  text: "Create AI-powered data visualization",
-  time: "1 week ago",
+  text: "Создать шаблон онбординга для новых сотрудников",
+  time: "5 часов назад",
   type: "chat",
-  model: "Claude 3"
+  model: "Assistant Pro"
 }, {
-  text: "Generate video from text description",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Optimize database query performance",
-  time: "1 week ago",
+  text: "Извлечь ключевые требования из договора поставки",
+  time: "1 день назад",
   type: "chat",
-  model: "GPT-4"
+  model: "Doc AI"
 }, {
-  text: "Build machine learning model pipeline",
-  time: "1 week ago",
+  text: "Перевести техническую документацию на казахский",
+  time: "1 день назад",
   type: "chat",
-  model: "Gemini Pro"
+  model: "Translation Master"
 }, {
-  text: "Generate product demo video",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Implement natural language processing",
-  time: "1 week ago",
+  text: "Написать функцию валидации ИИН на TypeScript",
+  time: "2 дня назад",
   type: "chat",
-  model: "Claude 3"
+  model: "Code Assistant"
 }, {
-  text: "Create animated explainer video",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Develop recommendation system",
-  time: "1 week ago",
+  text: "Проанализировать продажи за Q3 2025 и выявить тренды",
+  time: "3 дня назад",
   type: "chat",
-  model: "GPT-4"
+  model: "Data Analyst"
 }, {
-  text: "Generate marketing campaign video",
-  time: "1 week ago",
-  type: "veo",
-  model: "Veo 2"
-}, {
-  text: "Design distributed system architecture",
-  time: "2 weeks ago",
+  text: "Проанализировать договор на соответствие законодательству РК",
+  time: "4 дня назад",
   type: "chat",
-  model: "Gemini Pro"
+  model: "Legal Advisor"
 }, {
-  text: "Implement real-time data streaming",
-  time: "2 weeks ago",
+  text: "Написать пост для LinkedIn о новых возможностях AI",
+  time: "5 дней назад",
   type: "chat",
-  model: "Claude 3"
+  model: "Content Creator"
+}, {
+  text: "Проанализировать финансовую отчетность компании за год",
+  time: "1 неделю назад",
+  type: "chat",
+  model: "Financial Advisor"
+}, {
+  text: "Клиент спрашивает о возврате товара, как помочь?",
+  time: "1 неделю назад",
+  type: "chat",
+  model: "Customer Support"
+}, {
+  text: "Подготовить обзор современных методов машинного обучения",
+  time: "2 недели назад",
+  type: "chat",
+  model: "Research Assistant"
+}, {
+  text: "Проверить код на уязвимости безопасности",
+  time: "2 недели назад",
+  type: "chat",
+  model: "Security Auditor"
 }];
 
 const menuItems = [{
@@ -131,27 +131,60 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
 
-  // Load history data from localStorage (same as History.tsx)
+  // Load history data from localStorage and listen for changes
   useEffect(() => {
-    try {
-      const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-      setDynamicHistory(ls);
-    } catch {}
+    const loadHistory = () => {
+      try {
+        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+        setDynamicHistory(ls);
+      } catch {}
+    };
+
+    loadHistory();
+
+    // Listen for storage changes (from other tabs/windows or same tab)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'dashboard.history') {
+        loadHistory();
+      }
+    };
+
+    // Listen for custom storage events (from same tab)
+    const handleCustomStorage = () => {
+      loadHistory();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('dashboard.history.updated', handleCustomStorage);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('dashboard.history.updated', handleCustomStorage);
+    };
   }, []);
 
   // Merge static and dynamic history, then group by time
   const historyItems = useMemo(() => {
-    const merged = [...dynamicHistory.map(i => ({...i, time: 'hours ago'})), ...staticHistory];
+    const merged = [...dynamicHistory.map(i => ({...i, time: '2 часа назад'})), ...staticHistory];
     const sorted = [...merged].sort((a, b) => {
       const parseTime = (time: string) => {
-        const hoursMatch = time.match(/(\d+)\s*hours?\s*ago/);
+        // Russian time parsing
+        const hoursMatch = time.match(/(\d+)\s*час(?:а|ов)?\s*назад/);
         if (hoursMatch) return parseInt(hoursMatch[1]);
-        const weeksMatch = time.match(/(\d+)\s*weeks?\s*ago/);
-        if (weeksMatch) return parseInt(weeksMatch[1]) * 7 * 24;
-        const daysMatch = time.match(/(\d+)\s*days?\s*ago/);
+        const daysMatch = time.match(/(\d+)\s*дн(?:я|ей|ень)?\s*назад/);
         if (daysMatch) return parseInt(daysMatch[1]) * 24;
+        const weeksMatch = time.match(/(\d+)\s*недел(?:и|ь|ю|ей)?\s*назад/);
+        if (weeksMatch) return parseInt(weeksMatch[1]) * 7 * 24;
+        // English fallback
+        const hoursMatchEn = time.match(/(\d+)\s*hours?\s*ago/);
+        if (hoursMatchEn) return parseInt(hoursMatchEn[1]);
+        const weeksMatchEn = time.match(/(\d+)\s*weeks?\s*ago/);
+        if (weeksMatchEn) return parseInt(weeksMatchEn[1]) * 7 * 24;
+        const daysMatchEn = time.match(/(\d+)\s*days?\s*ago/);
+        if (daysMatchEn) return parseInt(daysMatchEn[1]) * 24;
         return 0;
       };
+      // Sort from newest to oldest (desc)
       return parseTime(b.time) - parseTime(a.time);
     });
 
@@ -164,7 +197,9 @@ export function AppSidebar() {
         title: item.text.length > 35 ? item.text.substring(0, 35) + '...' : item.text,
         url: `/history-chat/${idx}`
       };
-      if (item.time.includes('hours ago') || item.time.includes('week ago')) {
+      // Group by time period (Russian and English)
+      if (item.time.includes('час') || item.time.includes('день') || item.time.includes('недел') || 
+          item.time.includes('hours ago') || item.time.includes('week ago') || item.time.includes('day ago')) {
         thisWeek.push(historyItem);
       } else {
         older.push(historyItem);
@@ -200,7 +235,32 @@ export function AppSidebar() {
               return false;
             }
             return true;
-          }).map(item => item.hasSubItems ? <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
+          }).map(item => {
+            // Special handling for "Новый чат" (New chat)
+            if (item.url === "/dashboard" && item.title === "sidebar.chat") {
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
+                    <NavLink 
+                      to={item.url} 
+                      onClick={(e) => {
+                        // If already on dashboard, trigger new chat event
+                        if (currentPath === "/dashboard") {
+                          e.preventDefault();
+                          window.dispatchEvent(new CustomEvent('dashboard.new-chat'));
+                        }
+                      }}
+                      className={({ isActive }) => `flex items-center gap-3 flex-1 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}
+                    >
+                      <item.icon className="h-5 w-5 shrink-0" />
+                      {!collapsed && <span className="font-medium text-sm">{t(item.title)}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            }
+            return item.hasSubItems ? (
+              <Collapsible key={item.title} open={openHistoryMenu} onOpenChange={setOpenHistoryMenu} asChild>
                 <SidebarMenuItem>
                   <div className="flex items-center gap-1">
                     <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
@@ -266,16 +326,20 @@ export function AppSidebar() {
                       </div>
                     </CollapsibleContent>}
                 </SidebarMenuItem>
-              </Collapsible> : <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild tooltip={collapsed ? (item.title.startsWith("sidebar.") ? t(item.title) : item.title) : undefined}>
-                <NavLink to={item.url} className={({
-              isActive
-            }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
-                  <item.icon className="h-5 w-5 shrink-0" />
-                  {!collapsed && <span className="font-medium text-sm">{item.title.startsWith("sidebar.") ? t(item.title) : item.title}</span>}
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>)}
+              </Collapsible>
+            ) : (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild tooltip={collapsed ? (item.title.startsWith("sidebar.") ? t(item.title) : item.title) : undefined}>
+                  <NavLink to={item.url} className={({
+                    isActive
+                  }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
+                    <item.icon className="h-5 w-5 shrink-0" />
+                    {!collapsed && <span className="font-medium text-sm">{item.title.startsWith("sidebar.") ? t(item.title) : item.title}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
 

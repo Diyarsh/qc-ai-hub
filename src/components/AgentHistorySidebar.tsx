@@ -93,12 +93,12 @@ function SidebarContent({
     <div className="flex flex-col h-full" style={{ width: '100%', minWidth: 0, overflow: 'hidden' }}>
       {/* Header */}
       <div className="px-3 py-3 border-b border-border" style={{ minWidth: 0, overflow: 'hidden' }}>
-        <h3 className="text-xs font-medium text-muted-foreground mb-2">История с агентом</h3>
+        <h3 className="text-[11px] font-medium text-muted-foreground mb-2">История с агентом</h3>
         <Button
           onClick={onNewSession}
           size="sm"
           variant="outline"
-          className="w-full justify-start text-xs h-8"
+          className="w-full justify-start text-[11px] h-8"
         >
           <Plus className="h-3.5 w-3.5 mr-1.5" />
           Новый чат
@@ -109,7 +109,7 @@ function SidebarContent({
       <ScrollArea className="flex-1">
         <div className="px-2 py-2 space-y-1">
           {sessions.filter(s => s.title !== 'Новый чат' && s.title.trim() !== '').length === 0 ? (
-            <div className="px-3 py-8 text-center text-sm text-muted-foreground">
+            <div className="px-3 py-8 text-center text-xs text-muted-foreground">
               <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p>Нет сохраненных чатов</p>
             </div>
@@ -138,7 +138,7 @@ function SidebarContent({
                 <div className="flex items-start gap-2 min-w-0 w-full">
                   <div className="flex-1 min-w-0 overflow-hidden pr-1" style={{ maxWidth: 'calc(100% - 28px)' }}>
                     <div 
-                      className="text-xs font-medium text-foreground" 
+                      className="text-[11px] font-medium text-foreground" 
                       title={session.title}
                       style={{ 
                         overflow: 'hidden',
@@ -203,35 +203,28 @@ export function AgentHistorySidebar({
               className="h-8 w-8"
             >
               {isLeft ? (
-                <ChevronLeft className="h-4 w-4" />
-              ) : (
                 <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
               )}
             </Button>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              {isLeft && onToggleCollapse ? (
+              <div className="flex-1" />
+              {onToggleCollapse && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={onToggleCollapse}
                   className="h-7 w-7"
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-              ) : (
-                <div className="flex-1" />
-              )}
-              {!isLeft && onToggleCollapse && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onToggleCollapse}
-                  className="h-7 w-7"
-                >
-                  <ChevronRight className="h-4 w-4" />
+                  {isLeft ? (
+                    <ChevronLeft className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
                 </Button>
               )}
             </div>
