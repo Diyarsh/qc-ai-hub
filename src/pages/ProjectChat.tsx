@@ -187,88 +187,88 @@ export default function ProjectChat() {
               </Button>
             </div>
 
-            {/* Project Name - Editable */}
+        {/* Project Name - Editable */}
             <div className="px-3 py-3 border-b border-border">
-              {isEditingName ? (
-                <div className="flex items-center gap-2">
-                  <Input
-                    ref={nameInputRef}
-                    value={editingNameValue}
-                    onChange={(e) => setEditingNameValue(e.target.value)}
-                    onKeyDown={handleNameKeyDown}
-                    onBlur={confirmNameEdit}
-                    className="h-8 text-sm font-medium bg-accent"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0"
-                    onClick={confirmNameEdit}
-                  >
-                    <Check className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div 
-                  className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={startEditingName}
+            {isEditingName ? (
+              <div className="flex items-center gap-2">
+                <Input
+                  ref={nameInputRef}
+                  value={editingNameValue}
+                  onChange={(e) => setEditingNameValue(e.target.value)}
+                  onKeyDown={handleNameKeyDown}
+                  onBlur={confirmNameEdit}
+                  className="h-8 text-sm font-medium bg-accent"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 shrink-0"
+                  onClick={confirmNameEdit}
                 >
-                  <span className="font-medium text-sm truncate">{projectName}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Instructions Button */}
-            <button
-              onClick={() => setSettingsOpen(true)}
-              className="mx-3 my-2 p-3 border rounded-xl text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Settings className="h-4 w-4 text-muted-foreground" />
-                <h2 className="font-medium text-sm">Инструкции</h2>
+                  <Check className="h-4 w-4" />
+                </Button>
               </div>
-              <p className="text-xs text-muted-foreground leading-snug">
-                Настройте инструкции для AI-HUB в этом проекте
-              </p>
+            ) : (
+              <div 
+                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={startEditingName}
+              >
+                <span className="font-medium text-sm truncate">{projectName}</span>
+              </div>
+            )}
+          </div>
+
+        {/* Instructions Button */}
+            <button
+          onClick={() => setSettingsOpen(true)}
+              className="mx-3 my-2 p-3 border rounded-xl text-left hover:bg-accent/40 hover:border-primary/40 transition-all duration-200"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <Settings className="h-4 w-4 text-muted-foreground" />
+            <h2 className="font-medium text-sm">Инструкции</h2>
+          </div>
+          <p className="text-xs text-muted-foreground leading-snug">
+            Настройте инструкции для AI-HUB в этом проекте
+          </p>
             </button>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
               <TabsList className="grid grid-cols-2 mx-3 mt-2 mb-2">
-                <TabsTrigger value="files" className="text-xs">Файлы</TabsTrigger>
-                <TabsTrigger value="conversations" className="text-xs">Чаты</TabsTrigger>
-              </TabsList>
+            <TabsTrigger value="files" className="text-xs">Файлы</TabsTrigger>
+            <TabsTrigger value="conversations" className="text-xs">Чаты</TabsTrigger>
+          </TabsList>
 
               {activeTab === "files" && <div className="flex-1 p-3">
                   <Button variant="outline" className="w-full justify-center gap-2 mb-4 h-8 text-xs">
                     <Paperclip className="h-3.5 w-3.5" />
-                    Прикрепить
-                  </Button>
-                  
+                Прикрепить
+              </Button>
+              
                   <div className="flex flex-col items-center justify-center py-4 text-center border border-border rounded-xl">
                     <FolderOpen className="h-8 w-8 text-muted-foreground mb-2 opacity-50" />
                     <h3 className="font-medium mb-1 text-xs">Файлов пока нет</h3>
                     <p className="text-[10px] text-muted-foreground max-w-[180px]">
                       Прикрепите файлы к проекту
-                    </p>
-                  </div>
-                </div>}
+                </p>
+              </div>
+            </div>}
 
-              {activeTab === "conversations" && <div className="flex flex-col h-full">
+          {activeTab === "conversations" && <div className="flex flex-col h-full">
                   <div className="px-3 pb-2">
                     <Button variant="outline" className="w-full justify-start gap-2 text-[11px] h-8">
-                      <Plus className="h-3.5 w-3.5" />
-                      Новый чат
-                    </Button>
-                  </div>
+                  <Plus className="h-3.5 w-3.5" />
+                  Новый чат
+                </Button>
+              </div>
                   <ScrollArea className="flex-1 px-2 pb-2">
-                  {conversations.length === 0 ? (
+              {conversations.length === 0 ? (
                     <div className="px-3 py-8 text-center text-xs text-muted-foreground">
                       <Menu className="h-8 w-8 mx-auto mb-2 opacity-50" />
                       <p>Нет сохраненных чатов</p>
                     </div>
-                  ) : (
+              ) : (
                     <div className="space-y-1">
-                      {conversations.map(conv => (
+                  {conversations.map(conv => (
                         <button 
                           key={conv.id} 
                           className={`w-full text-left px-3 py-2.5 rounded-xl transition-colors group hover:bg-muted/50 ${selectedId === conv.id ? "bg-muted border border-border" : "bg-transparent"}`} 
@@ -277,21 +277,21 @@ export default function ProjectChat() {
                           <div className="flex items-start gap-2 min-w-0 w-full">
                             <div className="flex-1 min-w-0 overflow-hidden pr-1">
                               <div className="text-[11px] font-medium text-foreground truncate">{conv.title || "Без названия"}</div>
-                            </div>
+                      </div>
                             <button
                               onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
                               className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-destructive/10 rounded"
                               title="Удалить"
                             >
                               <Trash2 className="h-3 w-3 text-muted-foreground hover:text-destructive" />
-                            </button>
+                        </button>
                           </div>
                         </button>
-                      ))}
-                    </div>
-                  )}
-                </ScrollArea>
-              </div>}
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </div>}
             </Tabs>
           </>
         )}

@@ -159,7 +159,12 @@ const translations = {
     'auth.registerButton': 'Тіркелу',
     'auth.forgotPassword': 'Құпия сөзді ұмыттыңыз ба?',
     'auth.backToLogin': '« Кіруге оралу',
-    'auth.loginPlaceholder': ''
+    'auth.loginPlaceholder': '',
+    'auth.resetPassword.title': 'Құпия сөзді қалпына келтіру',
+    'auth.resetPassword.description': 'Құпия сөзді қалпына келтіру үшін email немесе пайдаланушы атын енгізіңіз',
+    'auth.resetPassword.emailOrUsername': 'Email немесе пайдаланушы аты',
+    'auth.resetPassword.submit': 'Қалпына келтіруге өту',
+    'auth.resetPassword.goBack': 'Артқа'
   },
   ru: {
     // Navigation
@@ -309,7 +314,12 @@ const translations = {
     'auth.registerButton': 'Зарегистрироваться',
     'auth.forgotPassword': 'Забыли пароль?',
     'auth.backToLogin': '« Назад к входу',
-    'auth.loginPlaceholder': ''
+    'auth.loginPlaceholder': '',
+    'auth.resetPassword.title': 'Восстановление пароля',
+    'auth.resetPassword.description': 'Введите ваш email или имя пользователя для восстановления пароля',
+    'auth.resetPassword.emailOrUsername': 'Email или имя пользователя',
+    'auth.resetPassword.submit': 'Перейти к сбросу пароля',
+    'auth.resetPassword.goBack': 'Назад'
   },
   en: {
     // Navigation
@@ -459,7 +469,12 @@ const translations = {
     'auth.registerButton': 'Register',
     'auth.forgotPassword': 'Forgot password?',
     'auth.backToLogin': '« Back to Login',
-    'auth.loginPlaceholder': ''
+    'auth.loginPlaceholder': '',
+    'auth.resetPassword.title': 'Password Recovery',
+    'auth.resetPassword.description': 'Enter your email or username to recover your password',
+    'auth.resetPassword.emailOrUsername': 'Email or username',
+    'auth.resetPassword.submit': 'Go to password reset',
+    'auth.resetPassword.goBack': 'Go back'
   }
 };
 

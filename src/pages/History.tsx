@@ -107,10 +107,10 @@ export default function History() {
   const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
   useEffect(() => {
     const loadHistory = () => {
-      try {
-        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-        setDynamicHistory(ls);
-      } catch {}
+    try {
+      const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+      setDynamicHistory(ls);
+    } catch {}
     };
 
     loadHistory();

@@ -134,10 +134,10 @@ export function AppSidebar() {
   // Load history data from localStorage and listen for changes
   useEffect(() => {
     const loadHistory = () => {
-      try {
-        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-        setDynamicHistory(ls);
-      } catch {}
+    try {
+      const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
+      setDynamicHistory(ls);
+    } catch {}
     };
 
     loadHistory();
@@ -336,14 +336,14 @@ export function AppSidebar() {
               </Collapsible>
             ) : (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild tooltip={collapsed ? (item.title.startsWith("sidebar.") ? t(item.title) : item.title) : undefined}>
-                  <NavLink to={item.url} className={({
-                    isActive
-                  }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
-                    <item.icon className="h-5 w-5 shrink-0" />
-                    {!collapsed && <span className="font-medium text-sm">{item.title.startsWith("sidebar.") ? t(item.title) : item.title}</span>}
-                  </NavLink>
-                </SidebarMenuButton>
+              <SidebarMenuButton asChild tooltip={collapsed ? (item.title.startsWith("sidebar.") ? t(item.title) : item.title) : undefined}>
+                <NavLink to={item.url} className={({
+              isActive
+            }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}>
+                  <item.icon className="h-5 w-5 shrink-0" />
+                  {!collapsed && <span className="font-medium text-sm">{item.title.startsWith("sidebar.") ? t(item.title) : item.title}</span>}
+                </NavLink>
+              </SidebarMenuButton>
               </SidebarMenuItem>
             );
           })}

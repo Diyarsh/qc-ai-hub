@@ -45,11 +45,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     }`}>
       {/* Message Actions - only for user messages */}
       {role === 'user' && (onRegenerate || onEdit || onDelete) && (
-        <div className="flex gap-2 mb-1 justify-end text-muted-foreground">
-          {onRegenerate && <button title="Regenerate" onClick={onRegenerate} className="hover:text-primary"><RefreshCw size={16} /></button>}
-          {onEdit && <button title="Edit" onClick={onEdit} className="hover:text-primary"><Edit2 size={16} /></button>}
-          {onDelete && <button title="Delete" onClick={onDelete} className="hover:text-destructive"><Trash2 size={16} /></button>}
-        </div>
+      <div className="flex gap-2 mb-1 justify-end text-muted-foreground">
+        {onRegenerate && <button title="Regenerate" onClick={onRegenerate} className="hover:text-primary"><RefreshCw size={16} /></button>}
+        {onEdit && <button title="Edit" onClick={onEdit} className="hover:text-primary"><Edit2 size={16} /></button>}
+        {onDelete && <button title="Delete" onClick={onDelete} className="hover:text-destructive"><Trash2 size={16} /></button>}
+      </div>
       )}
       {/* Message Content */}
       <ReactMarkdown

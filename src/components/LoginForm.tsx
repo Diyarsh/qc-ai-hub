@@ -22,6 +22,8 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
   const [registerLastName, setRegisterLastName] = useState("");
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resetEmailOrUsername, setResetEmailOrUsername] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +54,80 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
     alert("Регистрация успешна! Теперь войдите с admin/admin");
     setLoginEmail("admin");
   };
+
+  const handleResetPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!resetEmailOrUsername.trim()) {
+      alert("Пожалуйста, введите email или имя пользователя");
+      return;
+    }
+    
+    // Simulate password reset
+    alert(`Инструкции по восстановлению пароля отправлены на ${resetEmailOrUsername}`);
+    setShowResetPassword(false);
+    setResetEmailOrUsername("");
+  };
+
+  if (showResetPassword) {
+    return (
+      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-card border-border shadow-card">
+          <CardHeader className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setShowResetPassword(false);
+                setResetEmailOrUsername("");
+              }}
+              className="absolute right-2 top-2 h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            <CardTitle className="text-2xl font-bold text-center">
+              {t('auth.resetPassword.title')}
+            </CardTitle>
+            <CardDescription className="text-center text-muted-foreground">
+              {t('auth.resetPassword.description')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email-username">{t('auth.resetPassword.emailOrUsername')}</Label>
+                <Input
+                  id="reset-email-username"
+                  type="text"
+                  value={resetEmailOrUsername}
+                  onChange={(e) => setResetEmailOrUsername(e.target.value)}
+                  placeholder={t('auth.resetPassword.emailOrUsername')}
+                  required
+                  className="bg-muted border-border"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => {
+                    setShowResetPassword(false);
+                    setResetEmailOrUsername("");
+                  }}
+                >
+                  {t('auth.resetPassword.goBack')}
+                </Button>
+                <Button type="submit" variant="hero" className="flex-1">
+                  {t('auth.resetPassword.submit')}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -107,7 +183,12 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   {t('auth.loginButton')}
                 </Button>
                 <div className="text-center">
-                  <Button type="button" variant="link" className="text-primary">
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="text-primary"
+                    onClick={() => setShowResetPassword(true)}
+                  >
                     {t('auth.forgotPassword')}
                   </Button>
                 </div>
