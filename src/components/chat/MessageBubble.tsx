@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { RefreshCw, Edit2, Trash2, ThumbsUp, ThumbsDown, Timer } from "lucide-react";
+import { RefreshCw, Edit2, Trash2, ThumbsUp, ThumbsDown, Timer, Copy, Volume2, VolumeX } from "lucide-react";
 import { FeedbackDialog } from "./FeedbackDialog";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { showToast } from "@/shared/components/Toast";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface MessageBubbleProps {
   text: string;
@@ -15,10 +18,13 @@ interface MessageBubbleProps {
   onRegenerate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onCopy?: () => void;
+  onTextToSpeech?: () => void;
   files?: { name: string; url?: string; type?: string }[];
   durationMs?: number;
   feedback?: 'like' | 'dislike';
   onFeedbackChange?: (value: 'like' | 'dislike' | null, reasons?: string[], details?: string) => void;
+  isPlayingSpeech?: boolean;
 }
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
@@ -30,11 +36,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   onRegenerate,
   onEdit,
   onDelete,
+  onCopy,
+  onTextToSpeech,
   files = [],
   durationMs,
   feedback,
   onFeedbackChange,
+  isPlayingSpeech = false,
 }) => {
+  const { t } = useLanguage();
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
 
   return (
@@ -81,6 +91,61 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           ))}
         </div>
       )}
+      {/* Message Actions for assistant messages */}
+      {role === 'assistant' && !isLoading && (onCopy || onRegenerate || onTextToSpeech) && (
+        <div className="mt-3 flex items-center gap-2 flex-wrap">
+          {onCopy && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
+                  onClick={onCopy}
+                >
+                  <Copy size={14} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t('message.copy')}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {onRegenerate && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
+                  onClick={onRegenerate}
+                >
+                  <RefreshCw size={14} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t('message.regenerate')}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {onTextToSpeech && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`flex items-center gap-1 px-2 py-1 rounded-xl transition-colors ${
+                    isPlayingSpeech
+                      ? 'bg-primary/15 text-primary'
+                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                  }`}
+                  onClick={onTextToSpeech}
+                >
+                  {isPlayingSpeech ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isPlayingSpeech ? t('message.stopReading') : t('message.readAloud')}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+      )}
+      
       {/* Evaluation for assistant messages */}
       {role === 'assistant' && !isLoading && (
         <>
