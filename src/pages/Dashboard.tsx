@@ -229,19 +229,19 @@ export default function Dashboard() {
                             style={{ borderRadius: '10px' }}
                           >
                             <Icon className="h-4 w-4" />
-                          </div>
+                      </div>
                           <div className="min-w-0 w-full overflow-hidden">
                             <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate">{agent.name}</CardTitle>
                             <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate">
                               {agent.description}
-                            </CardDescription>
-                          </div>
-                        </CardContent>
-                      </Card>
+                        </CardDescription>
+                    </div>
+                  </CardContent>
+                </Card>
                     );
                   })}
-                </div>
-              </div>
+                      </div>
+                    </div>
 
               {/* View all agents link */}
               <div className="text-center mt-4">
