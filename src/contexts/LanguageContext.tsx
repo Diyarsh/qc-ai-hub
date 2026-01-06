@@ -171,7 +171,10 @@ const translations = {
     'message.regenerate': 'Қайта генерациялау',
     'message.readAloud': 'Дауыстап оқу',
     'message.stopReading': 'Оқуды тоқтату',
-    'message.copied': 'Буферге көшірілді'
+    'message.copied': 'Буферге көшірілді',
+    
+    // Disclaimer
+    'disclaimer.text': 'AI-агенттер қателерге ие болуы мүмкін. Маңызды ақпаратты тексеруді ұсынамыз.'
   },
   ru: {
     // Navigation
@@ -333,7 +336,10 @@ const translations = {
     'message.regenerate': 'Сгенерировать заново',
     'message.readAloud': 'Читать вслух',
     'message.stopReading': 'Остановить чтение',
-    'message.copied': 'Скопировано в буфер обмена'
+    'message.copied': 'Скопировано в буфер обмена',
+    
+    // Disclaimer
+    'disclaimer.text': 'AI-агенты могут допускать ошибки. Рекомендуем проверять важную информацию.'
   },
   en: {
     // Navigation
@@ -495,7 +501,10 @@ const translations = {
     'message.regenerate': 'Regenerate',
     'message.readAloud': 'Read aloud',
     'message.stopReading': 'Stop reading',
-    'message.copied': 'Copied to clipboard'
+    'message.copied': 'Copied to clipboard',
+    
+    // Disclaimer
+    'disclaimer.text': 'AI agents may contain errors. We recommend verifying important information.'
   }
 };
 

@@ -17,15 +17,12 @@ interface FeedbackDialogProps {
 }
 
 const feedbackReasons = [
-  { id: "memory", label: "Не должен был использовать память" },
-  { id: "personality", label: "Не нравится личность" },
-  { id: "style", label: "Не нравится стиль" },
-  { id: "facts", label: "Не придерживается фактов" },
-  { id: "instructions", label: "Не полностью следовал инструкциям" },
-  { id: "refused", label: "Отказался, когда не должен был" },
-  { id: "lazy", label: "Ленится" },
-  { id: "unsafe", label: "Небезопасно или проблематично" },
-  { id: "biased", label: "Пристрастный" },
+  { id: "business-requirements", label: "Не соответствует бизнес-требованиям" },
+  { id: "inaccurate-data", label: "Неточные данные или расчеты" },
+  { id: "incomplete-info", label: "Неполная информация" },
+  { id: "corporate-standards", label: "Не соответствует корпоративным стандартам" },
+  { id: "inefficient", label: "Неэффективные рекомендации" },
+  { id: "security", label: "Вопросы безопасности данных" },
   { id: "other", label: "Другое" },
 ];
 
@@ -90,8 +87,8 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = ({
         />
 
         {/* Info text */}
-        <p className="text-[10px] text-muted-foreground mt-2">
-          Отправка отзыва будет включать это полное обсуждение, чтобы помочь улучшить AI-HUB.
+        <p className="text-xs text-muted-foreground mt-2">
+          Ваш отзыв поможет улучшить качество ответов платформы.
         </p>
 
         {/* Submit button */}

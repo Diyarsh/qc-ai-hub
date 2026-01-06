@@ -11,6 +11,7 @@ import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { extractTextFromMarkdown } from "@/lib/utils";
+import { Disclaimer } from "@/components/chat/Disclaimer";
 
 // Quick access agents from AI Studio
 const quickAgents = [
@@ -408,10 +409,10 @@ export default function Dashboard() {
             </div>
           </div>
         ) : (
-          // После отправки: сообщения сверху, поле ввода внизу
+          // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
           <>
             <div className="flex-1 overflow-hidden">
-              <ScrollArea className="h-full p-6">
+              <ScrollArea className="h-full p-6 pb-[180px]">
                 <div className="w-full max-w-3xl mx-auto">
                   <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
 
@@ -420,7 +421,7 @@ export default function Dashboard() {
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        className={msg.role === 'user' ? 'flex justify-end' : ''}
                       >
                         <MessageBubble
                           text={msg.text}
@@ -447,8 +448,8 @@ export default function Dashboard() {
               </ScrollArea>
             </div>
 
-            {/* Input at bottom when messages exist */}
-            <div className="p-4 bg-background">
+            {/* Input at bottom when messages exist - фиксировано */}
+            <div className="sticky bottom-0 p-4 z-10 bg-background/95 backdrop-blur-sm">
               <div className="w-full max-w-3xl mx-auto">
                 <ChatComposer
                   value={input}
@@ -457,6 +458,7 @@ export default function Dashboard() {
                   examples={examplePrompts}
                   disabled={isLoading}
                 />
+                <Disclaimer />
               </div>
             </div>
           </>

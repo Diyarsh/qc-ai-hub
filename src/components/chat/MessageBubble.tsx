@@ -48,10 +48,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
 
   return (
-    <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm border shadow-sm mb-2 ${
+    <div className={`${role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl"} rounded-2xl px-4 py-3 text-sm border shadow-sm mb-2 ${
       role === "user"
-        ? "bg-primary text-primary-foreground border-primary/60 ml-auto"
-        : "bg-card border-border mr-auto"
+        ? "bg-primary text-primary-foreground border-primary/60"
+        : "bg-card border-border"
     }`}>
       {/* Message Actions - only for user messages */}
       {role === 'user' && (onRegenerate || onEdit || onDelete) && (

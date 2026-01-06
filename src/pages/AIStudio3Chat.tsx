@@ -16,6 +16,7 @@ import { AgentChatService } from "@/services/agent-chat.service";
 import { AgentChatMessage } from "@/types/agent-chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { extractTextFromMarkdown } from "@/lib/utils";
+import { Disclaimer } from "@/components/chat/Disclaimer";
 
 export default function AIStudio3Chat() {
   const {
@@ -437,8 +438,8 @@ export default function AIStudio3Chat() {
         )}
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0 border-t">
-          <ScrollArea className="flex-1 p-6">
+        <div className="flex-1 flex flex-col min-w-0 border-t relative">
+          <ScrollArea className="flex-1 p-6 pb-[180px]">
             <div className="max-w-3xl mx-auto">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center py-20">
@@ -450,7 +451,7 @@ export default function AIStudio3Chat() {
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      className={msg.role === 'user' ? 'flex justify-end' : ''}
                     >
                       <MessageBubble
                         text={msg.text}
@@ -485,7 +486,7 @@ export default function AIStudio3Chat() {
               )}
             </div>
           </ScrollArea>
-          <div className="p-4 border-t bg-background">
+          <div className="sticky bottom-0 p-4 z-10 bg-background/95 backdrop-blur-sm">
             <div className="max-w-3xl mx-auto space-y-2">
               {/* Отображение прикрепленных файлов */}
               {attachedFiles.length > 0 && (
@@ -514,6 +515,7 @@ export default function AIStudio3Chat() {
                 disabled={isLoading}
                 className="mb-3"
               />
+              <Disclaimer />
             </div>
           </div>
         </div>
