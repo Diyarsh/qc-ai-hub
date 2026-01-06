@@ -12,6 +12,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Modal } from "@/shared/components/Modal";
 import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { Badge } from "@/shared/components/Badge";
+import { Disclaimer } from "@/components/chat/Disclaimer";
 function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -298,15 +299,15 @@ export default function ProjectChat() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         {/* Chat Messages */}
-        <ScrollArea className="flex-1 p-6 overflow-y-auto">
+        <ScrollArea className="flex-1 p-6 pb-[180px] overflow-y-auto">
           <div className="max-w-3xl mx-auto">
             {selected ? (
               <div className="space-y-4">
                 {selected.messages.map(m => (
-                  <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm border ${m.role === "user" ? "bg-primary text-primary-foreground border-primary/60" : "bg-card border-border"}`}>
+                  <div key={m.id}>
+                    <div className={`w-full max-w-3xl rounded-2xl px-3 py-2 text-sm border ${m.role === "user" ? "bg-primary text-primary-foreground border-primary/60" : "bg-card border-border"}`}>
                       {m.content}
                     </div>
                   </div>
@@ -321,8 +322,8 @@ export default function ProjectChat() {
           </div>
         </ScrollArea>
 
-        {/* Chat Input */}
-        <div className="p-4">
+        {/* Chat Input - фиксировано */}
+        <div className="sticky bottom-0 p-4 z-10 bg-background/95 backdrop-blur-sm">
           <div className="max-w-3xl mx-auto space-y-2">
             {/* Отображение прикрепленных файлов */}
             {attachedFiles.length > 0 && (
@@ -357,6 +358,7 @@ export default function ProjectChat() {
               ]}
               className="mb-3"
             />
+            <Disclaimer />
           </div>
         </div>
       </div>
