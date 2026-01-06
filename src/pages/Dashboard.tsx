@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
+import { extractTextFromMarkdown } from "@/lib/utils";
 
 // Quick access agents from AI Studio
 const quickAgents = [
@@ -69,9 +70,11 @@ export default function Dashboard() {
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'like' | 'dislike' }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'like' | 'dislike'; isRegenerated?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [playingSpeechId, setPlayingSpeechId] = useState<string | null>(null);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -114,6 +117,153 @@ export default function Dashboard() {
       window.removeEventListener('dashboard.new-chat', handleNewChatEvent);
     };
   }, [handleNewChat]);
+
+  // Handle copy message text
+  const handleCopy = useCallback((messageId: string) => {
+    const message = messages.find(m => m.id === messageId);
+    if (!message) return;
+    
+    const textToCopy = message.text;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast(t('message.copied'), 'success');
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = textToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      showToast(t('message.copied'), 'success');
+    });
+  }, [messages, t, showToast]);
+
+  // Handle regenerate response
+  const handleRegenerate = useCallback(async (messageId: string) => {
+    const message = messages.find(m => m.id === messageId);
+    if (!message || message.role !== 'assistant') return;
+    
+    // Find the last user message before this assistant message
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    const previousMessages = messages.slice(0, messageIndex);
+    const lastUserMessage = [...previousMessages].reverse().find(m => m.role === 'user');
+    
+    if (!lastUserMessage) {
+      showToast('Не найдено предыдущее сообщение пользователя', 'error');
+      return;
+    }
+    
+    // Mark current message as regenerated (old version)
+    setMessages(prev => prev.map(m => 
+      m.id === messageId 
+        ? { ...m, isRegenerated: true }
+        : m
+    ));
+    
+    // Create new loading message
+    const loadingMsgId = Math.random().toString(36).slice(2);
+    const loadingMsg = {
+      id: loadingMsgId,
+      role: 'assistant' as const,
+      text: '...',
+      isLoading: true,
+    };
+    
+    setMessages(prev => [...prev, loadingMsg]);
+    setIsLoading(true);
+    
+    try {
+      // Build chat messages up to the user message
+      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
+        ...previousMessages.filter(m => !m.isLoading && !m.isRegenerated).map(m => ({
+          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+          content: m.text,
+        })),
+        { role: 'user' as const, content: lastUserMessage.text },
+      ];
+      
+      // Call AI service
+      const response = await sendChatMessage(chatMessages, {
+        model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
+        temperature: 0.7,
+        maxTokens: 1000,
+        systemPrompt: 'Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform. Отвечай на русском языке профессионально и дружелюбно.',
+      });
+      
+      // Replace loading message with actual response
+      setMessages(prev => prev.map(msg => 
+        msg.id === loadingMsgId 
+          ? { id: loadingMsgId, role: 'assistant' as const, text: response.content }
+          : msg
+      ));
+      
+    } catch (error: any) {
+      console.error('Error regenerating message:', error);
+      setMessages(prev => prev.map(msg => 
+        msg.id === loadingMsgId 
+          ? { id: loadingMsgId, role: 'assistant' as const, text: `Ошибка: ${error.message || 'Не удалось получить ответ от AI'}` }
+          : msg
+      ));
+      showToast(error.message || 'Ошибка при регенерации сообщения', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [messages, t, showToast]);
+
+  // Handle text-to-speech
+  const handleTextToSpeech = useCallback((messageId: string) => {
+    const message = messages.find(m => m.id === messageId);
+    if (!message) return;
+    
+    // If already playing, stop it
+    if (playingSpeechId === messageId) {
+      window.speechSynthesis.cancel();
+      setPlayingSpeechId(null);
+      return;
+    }
+    
+    // Stop any currently playing speech
+    if (playingSpeechId) {
+      window.speechSynthesis.cancel();
+    }
+    
+    // Extract plain text from markdown
+    const plainText = extractTextFromMarkdown(message.text);
+    
+    if (!plainText) {
+      showToast('Нет текста для воспроизведения', 'warning');
+      return;
+    }
+    
+    // Create speech utterance
+    const utterance = new SpeechSynthesisUtterance(plainText);
+    utterance.lang = 'ru-RU';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    utterance.onend = () => {
+      setPlayingSpeechId(null);
+    };
+    
+    utterance.onerror = () => {
+      setPlayingSpeechId(null);
+      showToast('Ошибка при воспроизведении речи', 'error');
+    };
+    
+    speechSynthesisRef.current = utterance;
+    setPlayingSpeechId(messageId);
+    window.speechSynthesis.speak(utterance);
+  }, [messages, playingSpeechId, t, showToast]);
+
+  // Cleanup speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      if (speechSynthesisRef.current) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
 
   const handleSend = async (text: string) => {
     const prompt = text.trim();
@@ -278,6 +428,10 @@ export default function Dashboard() {
                           messageId={msg.id}
                           isLoading={msg.isLoading}
                           feedback={msg.feedback}
+                          onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
+                          onRegenerate={msg.role === 'assistant' ? () => handleRegenerate(msg.id) : undefined}
+                          onTextToSpeech={msg.role === 'assistant' ? () => handleTextToSpeech(msg.id) : undefined}
+                          isPlayingSpeech={playingSpeechId === msg.id}
                           onFeedbackChange={(value) => {
                             if (msg.role !== 'assistant') return;
                             setMessages(prev => prev.map(m => 

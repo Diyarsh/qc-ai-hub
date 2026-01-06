@@ -164,7 +164,14 @@ const translations = {
     'auth.resetPassword.description': 'Құпия сөзді қалпына келтіру үшін email немесе пайдаланушы атын енгізіңіз',
     'auth.resetPassword.emailOrUsername': 'Email немесе пайдаланушы аты',
     'auth.resetPassword.submit': 'Қалпына келтіруге өту',
-    'auth.resetPassword.goBack': 'Артқа'
+    'auth.resetPassword.goBack': 'Артқа',
+    
+    // Message Actions
+    'message.copy': 'Көшіру',
+    'message.regenerate': 'Қайта генерациялау',
+    'message.readAloud': 'Дауыстап оқу',
+    'message.stopReading': 'Оқуды тоқтату',
+    'message.copied': 'Буферге көшірілді'
   },
   ru: {
     // Navigation
@@ -319,7 +326,14 @@ const translations = {
     'auth.resetPassword.description': 'Введите ваш email или имя пользователя для восстановления пароля',
     'auth.resetPassword.emailOrUsername': 'Email или имя пользователя',
     'auth.resetPassword.submit': 'Перейти к сбросу пароля',
-    'auth.resetPassword.goBack': 'Назад'
+    'auth.resetPassword.goBack': 'Назад',
+    
+    // Message Actions
+    'message.copy': 'Копировать',
+    'message.regenerate': 'Сгенерировать заново',
+    'message.readAloud': 'Читать вслух',
+    'message.stopReading': 'Остановить чтение',
+    'message.copied': 'Скопировано в буфер обмена'
   },
   en: {
     // Navigation
@@ -474,7 +488,14 @@ const translations = {
     'auth.resetPassword.description': 'Enter your email or username to recover your password',
     'auth.resetPassword.emailOrUsername': 'Email or username',
     'auth.resetPassword.submit': 'Go to password reset',
-    'auth.resetPassword.goBack': 'Go back'
+    'auth.resetPassword.goBack': 'Go back',
+    
+    // Message Actions
+    'message.copy': 'Copy',
+    'message.regenerate': 'Regenerate',
+    'message.readAloud': 'Read aloud',
+    'message.stopReading': 'Stop reading',
+    'message.copied': 'Copied to clipboard'
   }
 };
 
