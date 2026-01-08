@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,14 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
   const [registerLastName, setRegisterLastName] = useState("");
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetEmailOrUsername, setResetEmailOrUsername] = useState("");
+
+  // Block body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,94 +79,97 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
 
   if (showResetPassword) {
     return (
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-card border-border shadow-card">
-          <CardHeader className="relative">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setShowResetPassword(false);
-                setResetEmailOrUsername("");
-              }}
-              className="absolute right-2 top-2 h-8 w-8 p-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <CardTitle className="text-2xl font-bold text-center">
-              {t('auth.resetPassword.title')}
-            </CardTitle>
-            <CardDescription className="text-center text-muted-foreground">
-              {t('auth.resetPassword.description')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleResetPassword} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="reset-email-username">{t('auth.resetPassword.emailOrUsername')}</Label>
-                <Input
-                  id="reset-email-username"
-                  type="text"
-                  value={resetEmailOrUsername}
-                  onChange={(e) => setResetEmailOrUsername(e.target.value)}
-                  placeholder={t('auth.resetPassword.emailOrUsername')}
-                  required
-                  className="bg-muted border-border"
-                />
-              </div>
-              <div className="flex gap-3">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="flex-1"
-                  onClick={() => {
-                    setShowResetPassword(false);
-                    setResetEmailOrUsername("");
-                  }}
-                >
-                  {t('auth.resetPassword.goBack')}
-                </Button>
-                <Button type="submit" variant="hero" className="flex-1">
-                  {t('auth.resetPassword.submit')}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 overflow-y-auto">
+        <div className="min-h-full flex items-center justify-center p-4">
+          <Card className="w-full max-w-md bg-card border-border shadow-card my-8">
+            <CardHeader className="sticky top-0 bg-card z-10 border-b pb-6">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setShowResetPassword(false);
+                  setResetEmailOrUsername("");
+                }}
+                className="absolute right-2 top-2 h-8 w-8 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <CardTitle className="text-xl sm:text-2xl font-bold text-center pr-8">
+                {t('auth.resetPassword.title')}
+              </CardTitle>
+              <CardDescription className="text-center text-muted-foreground text-sm mt-1">
+                {t('auth.resetPassword.description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email-username">{t('auth.resetPassword.emailOrUsername')}</Label>
+                  <Input
+                    id="reset-email-username"
+                    type="text"
+                    value={resetEmailOrUsername}
+                    onChange={(e) => setResetEmailOrUsername(e.target.value)}
+                    placeholder={t('auth.resetPassword.emailOrUsername')}
+                    required
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => {
+                      setShowResetPassword(false);
+                      setResetEmailOrUsername("");
+                    }}
+                  >
+                    {t('auth.resetPassword.goBack')}
+                  </Button>
+                  <Button type="submit" variant="hero" className="flex-1">
+                    {t('auth.resetPassword.submit')}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-card border-border shadow-card">
-        <CardHeader className="relative">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="absolute right-2 top-2 h-8 w-8 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-          <CardTitle className="text-2xl font-bold text-center">
-            {t('auth.title')}
-          </CardTitle>
-          <CardDescription className="text-center text-muted-foreground">
-            {t('auth.subtitle')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">{t('auth.loginTab')}</TabsTrigger>
-              <TabsTrigger value="register">{t('auth.registerTab')}</TabsTrigger>
-            </TabsList>
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 overflow-y-auto">
+      <div className="min-h-full flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-card border-border shadow-card my-8">
+          <CardHeader className="sticky top-0 bg-card z-10 border-b pb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="absolute right-2 top-2 h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            <CardTitle className="text-xl sm:text-2xl font-bold text-center pr-8">
+              {t('auth.title')}
+            </CardTitle>
+            <CardDescription className="text-center text-muted-foreground text-sm mt-1">
+              {t('auth.subtitle')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="login" className="text-sm sm:text-base">{t('auth.loginTab')}</TabsTrigger>
+                <TabsTrigger value="register" className="text-sm sm:text-base">{t('auth.registerTab')}</TabsTrigger>
+              </TabsList>
             
-            <TabsContent value="login">
+            <TabsContent value="login" className="mt-0">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">{t('auth.username')}</Label>
+                  <Label htmlFor="login-email" className="text-sm">{t('auth.username')}</Label>
                   <Input
                     id="login-email"
                     type="text"
@@ -169,7 +180,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">{t('auth.password')}</Label>
+                  <Label htmlFor="login-password" className="text-sm">{t('auth.password')}</Label>
                   <Input
                     id="login-password"
                     type="password"
@@ -186,7 +197,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   <Button 
                     type="button" 
                     variant="link" 
-                    className="text-primary"
+                    className="text-primary text-sm"
                     onClick={() => setShowResetPassword(true)}
                   >
                     {t('auth.forgotPassword')}
@@ -195,13 +206,13 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
               </form>
             </TabsContent>
             
-            <TabsContent value="register">
-              <div className="mb-4 text-sm text-muted-foreground">
+            <TabsContent value="register" className="mt-0">
+              <div className="mb-4 text-xs sm:text-sm text-muted-foreground">
                 {t('auth.requiredFields')}
               </div>
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-username">
+                  <Label htmlFor="register-username" className="text-sm">
                     {t('auth.username')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -214,7 +225,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-password">
+                  <Label htmlFor="register-password" className="text-sm">
                     {t('auth.password')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -227,7 +238,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-confirm-password">
+                  <Label htmlFor="register-confirm-password" className="text-sm">
                     {t('auth.confirmPassword')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -240,7 +251,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-email">
+                  <Label htmlFor="register-email" className="text-sm">
                     {t('auth.email')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -253,7 +264,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-first-name">
+                  <Label htmlFor="register-first-name" className="text-sm">
                     {t('auth.firstName')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -266,7 +277,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-last-name">
+                  <Label htmlFor="register-last-name" className="text-sm">
                     {t('auth.lastName')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -285,7 +296,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                   <Button 
                     type="button" 
                     variant="link" 
-                    className="text-primary"
+                    className="text-primary text-sm"
                     onClick={() => {
                       const loginTab = document.querySelector('[value="login"]') as HTMLElement;
                       loginTab?.click();
@@ -299,6 +310,7 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };
