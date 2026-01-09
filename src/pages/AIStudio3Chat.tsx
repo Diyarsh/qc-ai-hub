@@ -15,7 +15,6 @@ import { AgentHistorySidebar } from "@/components/AgentHistorySidebar";
 import { AgentChatService } from "@/services/agent-chat.service";
 import { AgentChatMessage } from "@/types/agent-chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
-import { extractTextFromMarkdown } from "@/lib/utils";
 import { Disclaimer } from "@/components/chat/Disclaimer";
 
 export default function AIStudio3Chat() {
@@ -31,13 +30,11 @@ export default function AIStudio3Chat() {
   const [hasInitialized, setHasInitialized] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean; durationMs?: number; feedback?: 'like' | 'dislike'; feedbackReasons?: string[]; feedbackDetails?: string; isRegenerated?: boolean }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean; durationMs?: number; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackReasons?: string[]; feedbackDetails?: string; isRegenerated?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [playingSpeechId, setPlayingSpeechId] = useState<string | null>(null);
-  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   
   const examplePrompts = ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
   
@@ -245,61 +242,6 @@ export default function AIStudio3Chat() {
     }
   }, [messages, agent, t]);
 
-  // Handle text-to-speech
-  const handleTextToSpeech = useCallback((messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (!message) return;
-    
-    // If already playing, stop it
-    if (playingSpeechId === messageId) {
-      window.speechSynthesis.cancel();
-      setPlayingSpeechId(null);
-      return;
-    }
-    
-    // Stop any currently playing speech
-    if (playingSpeechId) {
-      window.speechSynthesis.cancel();
-    }
-    
-    // Extract plain text from markdown
-    const plainText = extractTextFromMarkdown(message.text);
-    
-    if (!plainText) {
-      showToast('Нет текста для воспроизведения', 'warning');
-      return;
-    }
-    
-    // Create speech utterance
-    const utterance = new SpeechSynthesisUtterance(plainText);
-    utterance.lang = 'ru-RU';
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
-    utterance.onend = () => {
-      setPlayingSpeechId(null);
-    };
-    
-    utterance.onerror = () => {
-      setPlayingSpeechId(null);
-      showToast('Ошибка при воспроизведении речи', 'error');
-    };
-    
-    speechSynthesisRef.current = utterance;
-    setPlayingSpeechId(messageId);
-    window.speechSynthesis.speak(utterance);
-  }, [messages, playingSpeechId, t]);
-
-  // Cleanup speech synthesis on unmount
-  useEffect(() => {
-    return () => {
-      if (speechSynthesisRef.current) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
-  
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if ((!text && attachedFiles.length === 0) || isLoading) return;
@@ -422,7 +364,7 @@ export default function AIStudio3Chat() {
     }, 0);
   }
   return <div className="flex flex-col h-screen">
-      <PageHeader title="AI-Studio" subtitle="Вариант с сайдбаром справа" />
+      <PageHeader title="AI-Studio" />
       <main className="flex-1 flex min-h-0">
         {/* Agent History Sidebar - слева */}
         {agent && (
@@ -463,8 +405,6 @@ export default function AIStudio3Chat() {
                         feedback={msg.feedback}
                         onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
                         onRegenerate={msg.role === 'assistant' ? () => handleRegenerate(msg.id) : undefined}
-                        onTextToSpeech={msg.role === 'assistant' ? () => handleTextToSpeech(msg.id) : undefined}
-                        isPlayingSpeech={playingSpeechId === msg.id}
                         onFeedbackChange={(value, reasons, details) => {
                           if (msg.role !== 'assistant') return;
                           setMessages(prev => prev.map(m => 

@@ -309,7 +309,6 @@ export default function AIStudio3() {
     <div className="flex flex-col h-full">
       <PageHeader 
         title="AI-Studio"
-        subtitle="Вариант с сайдбаром справа"
       />
 
       {/* Main Content */}

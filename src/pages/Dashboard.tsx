@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, FileText, Languages, Code, Briefcase, BarChart3, Plus } from "lucide-react";
+import { Brain, FileText, Languages, Code, BarChart3, Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -10,7 +10,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
-import { extractTextFromMarkdown } from "@/lib/utils";
 import { Disclaimer } from "@/components/chat/Disclaimer";
 
 // Quick access agents from AI Studio
@@ -55,14 +54,6 @@ const quickAgents = [
     instructions: "Аналитик данных. Анализируй и визуализируй.",
     placeholder: "Проанализируй продажи за квартал",
   },
-  {
-    id: "Assistant Pro",
-    name: "Assistant Pro",
-    description: "Корпоративный ассистент",
-    icon: Briefcase,
-    instructions: "Корпоративный ассистент для предприятий.",
-    placeholder: "Составь шаблон онбординга",
-  },
 ];
 export default function Dashboard() {
   const { t } = useLanguage();
@@ -71,11 +62,9 @@ export default function Dashboard() {
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'like' | 'dislike'; isRegenerated?: boolean }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; isRegenerated?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [playingSpeechId, setPlayingSpeechId] = useState<string | null>(null);
-  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -211,61 +200,6 @@ export default function Dashboard() {
     }
   }, [messages, t, showToast]);
 
-  // Handle text-to-speech
-  const handleTextToSpeech = useCallback((messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (!message) return;
-    
-    // If already playing, stop it
-    if (playingSpeechId === messageId) {
-      window.speechSynthesis.cancel();
-      setPlayingSpeechId(null);
-      return;
-    }
-    
-    // Stop any currently playing speech
-    if (playingSpeechId) {
-      window.speechSynthesis.cancel();
-    }
-    
-    // Extract plain text from markdown
-    const plainText = extractTextFromMarkdown(message.text);
-    
-    if (!plainText) {
-      showToast('Нет текста для воспроизведения', 'warning');
-      return;
-    }
-    
-    // Create speech utterance
-    const utterance = new SpeechSynthesisUtterance(plainText);
-    utterance.lang = 'ru-RU';
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
-    utterance.onend = () => {
-      setPlayingSpeechId(null);
-    };
-    
-    utterance.onerror = () => {
-      setPlayingSpeechId(null);
-      showToast('Ошибка при воспроизведении речи', 'error');
-    };
-    
-    speechSynthesisRef.current = utterance;
-    setPlayingSpeechId(messageId);
-    window.speechSynthesis.speak(utterance);
-  }, [messages, playingSpeechId, t, showToast]);
-
-  // Cleanup speech synthesis on unmount
-  useEffect(() => {
-    return () => {
-      if (speechSynthesisRef.current) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
-
   const handleSend = async (text: string) => {
     const prompt = text.trim();
     if (!prompt || isLoading) return;
@@ -356,14 +290,14 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Quick Access Agent Cards - Marquee */}
-              <div className="relative w-full overflow-hidden">
-                <div className="flex animate-marquee gap-3">
-                  {[...quickAgents, ...quickAgents].map((agent, index) => {
+              {/* Quick Access Agent Cards - Static */}
+              <div className="w-full">
+                <div className="flex flex-wrap justify-center gap-3">
+                  {quickAgents.map((agent) => {
                     const Icon = agent.icon;
                     return (
                       <Card 
-                        key={`${agent.id}-${index}`}
+                        key={agent.id}
                         onClick={() => navigate('/ai-studio-3-chat', { 
                           state: { 
                             agent: agent.name, 
@@ -380,31 +314,31 @@ export default function Dashboard() {
                             style={{ borderRadius: '10px' }}
                           >
                             <Icon className="h-4 w-4" />
-                      </div>
+                          </div>
                           <div className="min-w-0 w-full overflow-hidden">
                             <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate">{agent.name}</CardTitle>
                             <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate">
                               {agent.description}
-                        </CardDescription>
-                    </div>
-                  </CardContent>
-                </Card>
+                            </CardDescription>
+                          </div>
+                        </CardContent>
+                      </Card>
                     );
                   })}
-                      </div>
-                    </div>
+                </div>
 
-              {/* View all agents link */}
-              <div className="text-center mt-4">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => navigate('/ai-studio-3')}
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Все агенты AI Studio
-                </Button>
+                {/* View all agents link */}
+                <div className="text-center mt-4">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/ai-studio-3')}
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Все агенты AI Studio
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -431,8 +365,6 @@ export default function Dashboard() {
                           feedback={msg.feedback}
                           onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
                           onRegenerate={msg.role === 'assistant' ? () => handleRegenerate(msg.id) : undefined}
-                          onTextToSpeech={msg.role === 'assistant' ? () => handleTextToSpeech(msg.id) : undefined}
-                          isPlayingSpeech={playingSpeechId === msg.id}
                           onFeedbackChange={(value) => {
                             if (msg.role !== 'assistant') return;
                             setMessages(prev => prev.map(m => 
@@ -459,6 +391,57 @@ export default function Dashboard() {
                   disabled={isLoading}
                 />
                 <Disclaimer />
+                
+                {/* Quick Access Agent Cards - Static under input */}
+                <div className="mt-4">
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {quickAgents.map((agent) => {
+                      const Icon = agent.icon;
+                      return (
+                        <Card 
+                          key={agent.id}
+                          onClick={() => navigate('/ai-studio-3-chat', { 
+                            state: { 
+                              agent: agent.name, 
+                              instructions: agent.instructions,
+                              placeholder: agent.placeholder 
+                            } 
+                          })} 
+                          className="card-glow bg-card border-border cursor-pointer transition-all hover:bg-muted/50 hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px]"
+                          style={{ borderRadius: '16px' }}
+                        >
+                          <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
+                            <div 
+                              className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
+                              style={{ borderRadius: '10px' }}
+                            >
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0 w-full overflow-hidden">
+                              <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate">{agent.name}</CardTitle>
+                              <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate">
+                                {agent.description}
+                              </CardDescription>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+
+                  {/* View all agents link */}
+                  <div className="text-center mt-4">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => navigate('/ai-studio-3')}
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Все агенты AI Studio
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </>

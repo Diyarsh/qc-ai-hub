@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, ChevronLeft, ChevronRight, MessageSquare, Trash2 } from "lucide-react";
+import { Plus, PanelLeft, PanelRight, MessageSquare, Trash2 } from "lucide-react";
 import { AgentChatSession } from "@/types/agent-chat";
 import { AgentChatService } from "@/services/agent-chat.service";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -203,27 +203,27 @@ export function AgentHistorySidebar({
               className="h-8 w-8"
             >
               {isLeft ? (
-                <ChevronRight className="h-4 w-4" />
+                <PanelRight className="h-4 w-4" />
               ) : (
-                <ChevronLeft className="h-4 w-4" />
+                <PanelLeft className="h-4 w-4" />
               )}
             </Button>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <div className="flex-1" />
+              <h3 className="text-sm font-medium truncate flex-1 min-w-0 mr-2">{agentId}</h3>
               {onToggleCollapse && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={onToggleCollapse}
-                  className="h-7 w-7"
+                  className="h-7 w-7 flex-shrink-0"
                 >
                   {isLeft ? (
-                  <ChevronLeft className="h-4 w-4" />
+                  <PanelLeft className="h-4 w-4" />
               ) : (
-                  <ChevronRight className="h-4 w-4" />
+                  <PanelRight className="h-4 w-4" />
                   )}
                 </Button>
               )}

@@ -158,7 +158,7 @@ export default function ProjectChat() {
   const selected = conversations.find(c => c.id === selectedId) || null;
 
   return <div className="flex flex-col h-screen">
-      <PageHeader title={t('sidebar.projects')} subtitle="Управление проектными чатами" />
+      <PageHeader title={t('sidebar.projects')} />
       <main className="flex-1 flex min-h-0">
       {/* Project Sidebar */}
       <div className={`${sidebarCollapsed ? 'w-12' : 'w-60'} border-r border-t bg-muted/30 flex flex-col transition-all duration-200`} style={{ minWidth: sidebarCollapsed ? '48px' : '240px', maxWidth: sidebarCollapsed ? '48px' : '240px' }}>
@@ -177,47 +177,16 @@ export default function ProjectChat() {
           <>
             {/* Header with collapse button */}
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <div className="flex-1" />
+              <h3 className="text-sm font-medium truncate flex-1 min-w-0 mr-2">{projectName}</h3>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarCollapsed(true)}
-                className="h-7 w-7"
+                className="h-7 w-7 flex-shrink-0"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
             </div>
-
-        {/* Project Name - Editable */}
-            <div className="px-3 py-3 border-b border-border">
-            {isEditingName ? (
-              <div className="flex items-center gap-2">
-                <Input
-                  ref={nameInputRef}
-                  value={editingNameValue}
-                  onChange={(e) => setEditingNameValue(e.target.value)}
-                  onKeyDown={handleNameKeyDown}
-                  onBlur={confirmNameEdit}
-                  className="h-8 text-sm font-medium bg-accent"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 shrink-0"
-                  onClick={confirmNameEdit}
-                >
-                  <Check className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <div 
-                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                onClick={startEditingName}
-              >
-                <span className="font-medium text-sm truncate">{projectName}</span>
-              </div>
-            )}
-          </div>
 
         {/* Instructions Button */}
             <button
