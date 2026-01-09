@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Sun, Moon, Code } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -32,7 +31,6 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
   return (
     <header className="sticky top-0 flex flex-col sm:flex-row items-center justify-between gap-4 bg-background/95 backdrop-blur-sm border-b px-4 sm:px-6 py-4 h-[68px] z-50">
       <div className="flex items-center gap-3 w-full sm:w-auto min-h-[36px]">
-        <SidebarTrigger className="h-9 w-9 flex-shrink-0" />
         <div className="min-w-0 flex-1 flex flex-col justify-center">
           {title ? (
             <h1 className="text-xl sm:text-2xl font-bold leading-tight truncate">{title}</h1>
