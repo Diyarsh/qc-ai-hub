@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, User, Settings, Clock, Shield, LogOut, Palette, HelpCircle, Workflow } from "lucide-react";
+import { MessageCircle, Sparkles, FolderOpen, History, Terminal, ChevronRight, ChevronsLeft, ChevronsRight, User, Settings, Clock, Shield, LogOut, Palette, HelpCircle, Workflow } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDeveloperMode } from "@/contexts/DeveloperModeContext";
 import { Button } from "@/components/ui/button";
@@ -109,7 +109,8 @@ const menuItems = [{
 }];
 export function AppSidebar() {
   const {
-    state
+    state,
+    toggleSidebar
   } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -216,20 +217,46 @@ export function AppSidebar() {
   // const { user } = useAuth(); // временно убрать
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="px-3 py-4">
-        <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center gap-3"}`}>
-          <div className={collapsed ? "w-8 h-8 flex items-center justify-center" : "w-7 h-7 flex items-center justify-center flex-shrink-0"}>
-            <img 
-              src={theme === "dark" ? qcLogoLight : qcLogo} 
-              alt="QazCloud AI-HUB" 
-              className="h-full w-auto object-contain"
-              style={{ transform: 'rotate(-90deg)' }} 
-            />
+        <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-between gap-3"}`}>
+          <div className={`${collapsed ? "flex items-center justify-center group/logo" : "flex items-center gap-3"} transition-all duration-200`}>
+            <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
+              <img 
+                src={theme === "dark" ? qcLogoLight : qcLogo} 
+                alt="QazCloud AI-HUB" 
+                className="h-full w-auto object-contain transition-all duration-200"
+                style={{ transform: 'rotate(-90deg)' }} 
+              />
+            </div>
+            {collapsed && (
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/logo:opacity-100 transition-opacity">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleSidebar}
+                  className="h-8 w-8"
+                >
+                  <ChevronsRight className="h-4 w-4" />
+                  <span className="sr-only">Toggle Sidebar</span>
+                </Button>
+              </div>
+            )}
+            {!collapsed && (
+              <div className="flex flex-col justify-center leading-tight animate-in fade-in slide-in-from-left duration-200">
+                <span className="text-base font-semibold tracking-tight">AI-HUB</span>
+                <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
+              </div>
+            )}
           </div>
           {!collapsed && (
-            <div className="flex flex-col justify-center leading-tight">
-              <span className="text-base font-semibold tracking-tight">AI-HUB</span>
-              <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
-            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="h-7 w-7 flex-shrink-0"
+            >
+              <ChevronsLeft className="h-4 w-4" />
+              <span className="sr-only">Toggle Sidebar</span>
+            </Button>
           )}
         </div>
       </SidebarHeader>
