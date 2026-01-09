@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useToast } from "@/shared/components/Toast";
+import { InlineError } from "@/components/alerts/InlineError";
 
 interface LoginFormProps {
   onClose: () => void;
@@ -14,6 +16,7 @@ interface LoginFormProps {
 
 export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
@@ -24,6 +27,11 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
   const [registerLastName, setRegisterLastName] = useState("");
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetEmailOrUsername, setResetEmailOrUsername] = useState("");
+  
+  // Error states for inline validation
+  const [registerPasswordError, setRegisterPasswordError] = useState("");
+  const [registerConfirmPasswordError, setRegisterConfirmPasswordError] = useState("");
+  const [resetPasswordError, setResetPasswordError] = useState("");
 
   // Block body scroll when modal is open
   useEffect(() => {
@@ -41,40 +49,53 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
       onLogin();
       onClose();
     } else {
-      alert("Неверные учетные данные. Используйте admin/admin");
+      showToast("Неверные учетные данные. Используйте admin/admin", "error");
     }
   };
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (registerPassword !== registerConfirmPassword) {
-      alert("Пароли не совпадают");
-      return;
-    }
+    // Reset errors
+    setRegisterPasswordError("");
+    setRegisterConfirmPasswordError("");
+    
+    let hasError = false;
     
     if (registerPassword.length < 6) {
-      alert("Пароль должен содержать минимум 6 символов");
+      setRegisterPasswordError("Пароль должен содержать минимум 6 символов");
+      hasError = true;
+    }
+    
+    if (registerPassword !== registerConfirmPassword) {
+      setRegisterConfirmPasswordError("Пароли не совпадают");
+      hasError = true;
+    }
+    
+    if (hasError) {
       return;
     }
     
     // Simulate successful registration
-    alert("Регистрация успешна! Теперь войдите с admin/admin");
+    showToast("Регистрация успешна! Теперь войдите с admin/admin", "success");
     setLoginEmail("admin");
   };
 
   const handleResetPassword = (e: React.FormEvent) => {
     e.preventDefault();
     
+    setResetPasswordError("");
+    
     if (!resetEmailOrUsername.trim()) {
-      alert("Пожалуйста, введите email или имя пользователя");
+      setResetPasswordError("Пожалуйста, введите email или имя пользователя");
       return;
     }
     
     // Simulate password reset
-    alert(`Инструкции по восстановлению пароля отправлены на ${resetEmailOrUsername}`);
+    showToast(`Инструкции по восстановлению пароля отправлены на ${resetEmailOrUsername}`, "success");
     setShowResetPassword(false);
     setResetEmailOrUsername("");
+    setResetPasswordError("");
   };
 
   if (showResetPassword) {
@@ -109,11 +130,15 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                     id="reset-email-username"
                     type="text"
                     value={resetEmailOrUsername}
-                    onChange={(e) => setResetEmailOrUsername(e.target.value)}
+                    onChange={(e) => {
+                      setResetEmailOrUsername(e.target.value);
+                      if (resetPasswordError) setResetPasswordError("");
+                    }}
                     placeholder={t('auth.resetPassword.emailOrUsername')}
                     required
-                    className="bg-muted border-border"
+                    className={`bg-muted border-border ${resetPasswordError ? "border-destructive" : ""}`}
                   />
+                  {resetPasswordError && <InlineError message={resetPasswordError} />}
                 </div>
                 <div className="flex gap-3">
                   <Button 
@@ -232,10 +257,14 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                     id="register-password"
                     type="password"
                     value={registerPassword}
-                    onChange={(e) => setRegisterPassword(e.target.value)}
+                    onChange={(e) => {
+                      setRegisterPassword(e.target.value);
+                      if (registerPasswordError) setRegisterPasswordError("");
+                    }}
                     required
-                    className="bg-muted border-border"
+                    className={`bg-muted border-border ${registerPasswordError ? "border-destructive" : ""}`}
                   />
+                  {registerPasswordError && <InlineError message={registerPasswordError} />}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="register-confirm-password" className="text-sm">
@@ -245,10 +274,14 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
                     id="register-confirm-password"
                     type="password"
                     value={registerConfirmPassword}
-                    onChange={(e) => setRegisterConfirmPassword(e.target.value)}
+                    onChange={(e) => {
+                      setRegisterConfirmPassword(e.target.value);
+                      if (registerConfirmPasswordError) setRegisterConfirmPasswordError("");
+                    }}
                     required
-                    className="bg-muted border-border"
+                    className={`bg-muted border-border ${registerConfirmPasswordError ? "border-destructive" : ""}`}
                   />
+                  {registerConfirmPasswordError && <InlineError message={registerConfirmPasswordError} />}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="register-email" className="text-sm">

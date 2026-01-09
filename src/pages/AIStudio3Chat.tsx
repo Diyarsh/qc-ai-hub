@@ -143,105 +143,6 @@ export default function AIStudio3Chat() {
     });
   }, [messages, t]);
 
-  // Handle regenerate response
-  const handleRegenerate = useCallback(async (messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (!message || message.role !== 'assistant') return;
-    
-    // Find the last user message before this assistant message
-    const messageIndex = messages.findIndex(m => m.id === messageId);
-    const previousMessages = messages.slice(0, messageIndex);
-    const lastUserMessage = [...previousMessages].reverse().find(m => m.role === 'user');
-    
-    if (!lastUserMessage) {
-      showToast('Не найдено предыдущее сообщение пользователя', 'error');
-      return;
-    }
-    
-    // Mark current message as regenerated (old version)
-    setMessages(prev => prev.map(m => 
-      m.id === messageId 
-        ? { ...m, isRegenerated: true }
-        : m
-    ));
-    
-    // Create new loading message
-    const loadingMsgId = Math.random().toString(36).slice(2);
-    const loadingMsg = {
-      id: loadingMsgId,
-      role: 'assistant' as const,
-      text: '...',
-      isLoading: true,
-    };
-    
-    setMessages(prev => [...prev, loadingMsg]);
-    setIsLoading(true);
-    
-    try {
-      const startedAt = performance.now();
-      
-      // Build system prompt
-      const systemPrompt = agent 
-        ? `Ты ${agent} - профессиональный эксперт AI ассистент высокого уровня. 
-
-ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
-
-Требования к ответам:
-- Структурируй информацию с заголовками и подзаголовками (используй ** для выделения)
-- Используй маркированные и нумерованные списки для лучшей читаемости
-- Приводи конкретные примеры и практические рекомендации
-- Объясняй концепции подробно, как эксперт в своей области
-- Отвечай на русском языке профессионально и информативно
-- Если вопрос короткий или простой, всё равно дай полный, развёрнутый ответ с контекстом и деталями`
-        : `Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform.
-
-ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
-
-Требования к ответам:
-- Структурируй информацию с заголовками и подзаголовками
-- Используй маркированные и нумерованные списки
-- Приводи конкретные примеры и рекомендации
-- Отвечай на русском языке профессионально и дружелюбно
-- Даже на простые вопросы давай полные, информативные ответы`;
-      
-      // Build chat messages up to the user message
-      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
-        ...previousMessages.filter(m => !m.isLoading && !m.isRegenerated).map(m => ({
-          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
-          content: m.text + (m.files && m.files.length > 0 ? `\n\nПрикреплено файлов: ${m.files.map(f => f.name).join(', ')}` : ''),
-        })),
-        { role: 'user' as const, content: lastUserMessage.text },
-      ];
-      
-      // Call AI service
-      const response = await sendChatMessage(chatMessages, {
-        model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
-        temperature: 0.8,
-        maxTokens: 2000,
-        systemPrompt,
-      });
-      const durationMs = performance.now() - startedAt;
-      
-      // Replace loading message with actual response
-      setMessages(prev => prev.map(msg => 
-        msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: response.content, durationMs }
-          : msg
-      ));
-      
-    } catch (error: any) {
-      console.error('Error regenerating message:', error);
-      setMessages(prev => prev.map(msg => 
-        msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: `Ошибка: ${error.message || 'Не удалось получить ответ от AI'}` }
-          : msg
-      ));
-      showToast(error.message || 'Ошибка при регенерации сообщения', 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [messages, agent, t]);
-
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if ((!text && attachedFiles.length === 0) || isLoading) return;
@@ -404,7 +305,6 @@ export default function AIStudio3Chat() {
                         durationMs={msg.durationMs}
                         feedback={msg.feedback}
                         onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
-                        onRegenerate={msg.role === 'assistant' ? () => handleRegenerate(msg.id) : undefined}
                         onFeedbackChange={(value, reasons, details) => {
                           if (msg.role !== 'assistant') return;
                           setMessages(prev => prev.map(m => 

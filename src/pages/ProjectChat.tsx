@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File, Check } from "lucide-react";
+import { Settings, ExternalLink, Pencil, Trash2, FolderOpen, Menu, Paperclip, ChevronLeft, ChevronRight, Plus, X, File, Check, PanelLeft, PanelRight } from "lucide-react";
 import { ProjectSettingsDialog } from "@/components/ProjectSettingsDialog";
 import { ChatComposer } from "@/components/ChatComposer";
 import { PageHeader } from "@/components/PageHeader";
@@ -170,7 +170,7 @@ export default function ProjectChat() {
               onClick={() => setSidebarCollapsed(false)}
               className="h-8 w-8"
             >
-              <ChevronRight className="h-4 w-4" />
+              <PanelRight className="h-4 w-4" />
             </Button>
           </div>
         ) : (
@@ -184,7 +184,7 @@ export default function ProjectChat() {
                 onClick={() => setSidebarCollapsed(true)}
                 className="h-7 w-7 flex-shrink-0"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <PanelLeft className="h-4 w-4" />
               </Button>
             </div>
 
