@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { RefreshCw, Edit2, Trash2, Timer, Copy, Star } from "lucide-react";
+import { Edit2, Trash2, Timer, Copy, MessageSquare } from "lucide-react";
 import { FeedbackModal } from "./FeedbackModal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -14,7 +14,6 @@ interface MessageBubbleProps {
   messageId?: string;
   isLoading?: boolean;
   streaming?: boolean;
-  onRegenerate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
   onCopy?: () => void;
@@ -30,7 +29,6 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   messageId,
   isLoading,
   streaming,
-  onRegenerate,
   onEdit,
   onDelete,
   onCopy,
@@ -49,9 +47,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         : "bg-card border-border"
     }`}>
       {/* Message Actions - only for user messages */}
-      {role === 'user' && (onRegenerate || onEdit || onDelete) && (
+      {role === 'user' && (onEdit || onDelete) && (
       <div className="flex gap-2 mb-1 justify-end text-muted-foreground">
-        {onRegenerate && <button title="Regenerate" onClick={onRegenerate} className="hover:text-primary"><RefreshCw size={16} /></button>}
         {onEdit && <button title="Edit" onClick={onEdit} className="hover:text-primary"><Edit2 size={16} /></button>}
         {onDelete && <button title="Delete" onClick={onDelete} className="hover:text-destructive"><Trash2 size={16} /></button>}
       </div>
@@ -88,7 +85,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       )}
       {/* Message Actions for assistant messages */}
-      {role === 'assistant' && !isLoading && (onCopy || onRegenerate || onFeedbackChange) && (
+      {role === 'assistant' && !isLoading && (onCopy || onFeedbackChange) && (
         <div className="mt-3 flex items-center gap-2 flex-wrap">
           {onCopy && (
             <Tooltip>
@@ -105,33 +102,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
               </TooltipContent>
             </Tooltip>
           )}
-          {onRegenerate && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
-                  onClick={onRegenerate}
-                >
-                  <RefreshCw size={14} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t('message.regenerate')}</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
           {onFeedbackChange && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  className={`flex items-center gap-1 px-2 py-1 rounded-xl transition-colors ${
-                    feedback
-                      ? 'bg-primary/15 text-primary'
-                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
+                  className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
                   onClick={() => setShowFeedbackModal(true)}
                 >
-                  <Star size={14} />
+                  <MessageSquare size={14} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>

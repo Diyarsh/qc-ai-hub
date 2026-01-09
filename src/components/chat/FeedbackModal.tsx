@@ -48,7 +48,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     if (type === 'correct') {
       // Для "верно" показываем подтверждение и закрываем
       onSubmit(type);
-      showToast(t('feedback.correct') + ' - Спасибо за отзыв!', 'success');
+      showToast(t('feedback.correct') + ' - Спасибо за отзыв!', 'info');
       onClose();
     } else {
       // Для "частично верно" и "неверно" переходим на шаг 2
@@ -65,6 +65,15 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   const handleSubmit = () => {
     if (selectedType) {
       onSubmit(selectedType, details);
+      
+      // Показываем подтверждение для всех типов feedback
+      const feedbackMessages = {
+        'correct': t('feedback.correct'),
+        'partially-correct': t('feedback.partiallyCorrect'),
+        'incorrect': t('feedback.incorrect'),
+      };
+      
+      showToast(feedbackMessages[selectedType] + ' - Спасибо за отзыв!', 'info');
       onClose();
     }
   };
@@ -198,7 +207,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               placeholder="Поделитесь подробностями (необязательно)"
               value={details}
               onChange={(e) => setDetails(e.target.value)}
-              className="min-h-[100px] text-sm resize-none border-border/60 focus:border-primary/50"
+              className="min-h-[100px] text-sm resize-none border-border/60 focus:border-primary/50 focus-visible:ring-0 focus-visible:ring-offset-0"
               autoFocus
             />
 

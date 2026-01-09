@@ -66,7 +66,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
     success: "bg-green-600 text-white border-green-700 dark:bg-green-700 dark:border-green-800",
     error: "bg-red-600 text-white border-red-700 dark:bg-red-700 dark:border-red-800",
     warning: "bg-orange-500 text-white border-orange-600 dark:bg-orange-600 dark:border-orange-700",
-    info: "bg-blue-600 text-white border-blue-700 dark:bg-blue-700 dark:border-blue-800",
+    info: "bg-blue-50 text-slate-700 border-blue-100 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700",
   };
 
   const Icon = icons[toast.type];

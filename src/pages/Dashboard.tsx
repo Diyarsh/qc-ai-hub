@@ -128,78 +128,6 @@ export default function Dashboard() {
     });
   }, [messages, t, showToast]);
 
-  // Handle regenerate response
-  const handleRegenerate = useCallback(async (messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (!message || message.role !== 'assistant') return;
-    
-    // Find the last user message before this assistant message
-    const messageIndex = messages.findIndex(m => m.id === messageId);
-    const previousMessages = messages.slice(0, messageIndex);
-    const lastUserMessage = [...previousMessages].reverse().find(m => m.role === 'user');
-    
-    if (!lastUserMessage) {
-      showToast('Не найдено предыдущее сообщение пользователя', 'error');
-      return;
-    }
-    
-    // Mark current message as regenerated (old version)
-    setMessages(prev => prev.map(m => 
-      m.id === messageId 
-        ? { ...m, isRegenerated: true }
-        : m
-    ));
-    
-    // Create new loading message
-    const loadingMsgId = Math.random().toString(36).slice(2);
-    const loadingMsg = {
-      id: loadingMsgId,
-      role: 'assistant' as const,
-      text: '...',
-      isLoading: true,
-    };
-    
-    setMessages(prev => [...prev, loadingMsg]);
-    setIsLoading(true);
-    
-    try {
-      // Build chat messages up to the user message
-      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
-        ...previousMessages.filter(m => !m.isLoading && !m.isRegenerated).map(m => ({
-          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
-          content: m.text,
-        })),
-        { role: 'user' as const, content: lastUserMessage.text },
-      ];
-      
-      // Call AI service
-      const response = await sendChatMessage(chatMessages, {
-        model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 1000,
-        systemPrompt: 'Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform. Отвечай на русском языке профессионально и дружелюбно.',
-      });
-      
-      // Replace loading message with actual response
-      setMessages(prev => prev.map(msg => 
-        msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: response.content }
-          : msg
-      ));
-      
-    } catch (error: any) {
-      console.error('Error regenerating message:', error);
-      setMessages(prev => prev.map(msg => 
-        msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: `Ошибка: ${error.message || 'Не удалось получить ответ от AI'}` }
-          : msg
-      ));
-      showToast(error.message || 'Ошибка при регенерации сообщения', 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [messages, t, showToast]);
-
   const handleSend = async (text: string) => {
     const prompt = text.trim();
     if (!prompt || isLoading) return;
@@ -364,7 +292,6 @@ export default function Dashboard() {
                           isLoading={msg.isLoading}
                           feedback={msg.feedback}
                           onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
-                          onRegenerate={msg.role === 'assistant' ? () => handleRegenerate(msg.id) : undefined}
                           onFeedbackChange={(value) => {
                             if (msg.role !== 'assistant') return;
                             setMessages(prev => prev.map(m => 
@@ -391,57 +318,6 @@ export default function Dashboard() {
                   disabled={isLoading}
                 />
                 <Disclaimer />
-                
-                {/* Quick Access Agent Cards - Static under input */}
-                <div className="mt-4">
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {quickAgents.map((agent) => {
-                      const Icon = agent.icon;
-                      return (
-                        <Card 
-                          key={agent.id}
-                          onClick={() => navigate('/ai-studio-3-chat', { 
-                            state: { 
-                              agent: agent.name, 
-                              instructions: agent.instructions,
-                              placeholder: agent.placeholder 
-                            } 
-                          })} 
-                          className="card-glow bg-card border-border cursor-pointer transition-all hover:bg-muted/50 hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px]"
-                          style={{ borderRadius: '16px' }}
-                        >
-                          <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
-                            <div 
-                              className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
-                              style={{ borderRadius: '10px' }}
-                            >
-                              <Icon className="h-4 w-4" />
-                            </div>
-                            <div className="min-w-0 w-full overflow-hidden">
-                              <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate">{agent.name}</CardTitle>
-                              <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate">
-                                {agent.description}
-                              </CardDescription>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
-
-                  {/* View all agents link */}
-                  <div className="text-center mt-4">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => navigate('/ai-studio-3')}
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      <Plus className="h-4 w-4 mr-1" />
-                      Все агенты AI Studio
-                    </Button>
-                  </div>
-                </div>
               </div>
             </div>
           </>
