@@ -169,9 +169,13 @@ const translations = {
     // Message Actions
     'message.copy': 'Көшіру',
     'message.regenerate': 'Қайта генерациялау',
-    'message.readAloud': 'Дауыстап оқу',
-    'message.stopReading': 'Оқуды тоқтату',
+    'message.feedback': 'Пікір',
     'message.copied': 'Буферге көшірілді',
+    
+    // Feedback
+    'feedback.correct': 'Дұрыс',
+    'feedback.partiallyCorrect': 'Жартылай дұрыс',
+    'feedback.incorrect': 'Дұрыс емес',
     
     // Disclaimer
     'disclaimer.text': 'AI-агенттер қателерге ие болуы мүмкін. Маңызды ақпаратты тексеруді ұсынамыз.'
@@ -334,9 +338,13 @@ const translations = {
     // Message Actions
     'message.copy': 'Копировать',
     'message.regenerate': 'Сгенерировать заново',
-    'message.readAloud': 'Читать вслух',
-    'message.stopReading': 'Остановить чтение',
+    'message.feedback': 'Отзыв',
     'message.copied': 'Скопировано в буфер обмена',
+    
+    // Feedback
+    'feedback.correct': 'Верно',
+    'feedback.partiallyCorrect': 'Частично верно',
+    'feedback.incorrect': 'Неверно',
     
     // Disclaimer
     'disclaimer.text': 'AI-агенты могут допускать ошибки. Рекомендуем проверять важную информацию.'
@@ -499,9 +507,13 @@ const translations = {
     // Message Actions
     'message.copy': 'Copy',
     'message.regenerate': 'Regenerate',
-    'message.readAloud': 'Read aloud',
-    'message.stopReading': 'Stop reading',
+    'message.feedback': 'Feedback',
     'message.copied': 'Copied to clipboard',
+    
+    // Feedback
+    'feedback.correct': 'Correct',
+    'feedback.partiallyCorrect': 'Partially correct',
+    'feedback.incorrect': 'Incorrect',
     
     // Disclaimer
     'disclaimer.text': 'AI agents may contain errors. We recommend verifying important information.'

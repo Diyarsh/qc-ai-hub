@@ -18,8 +18,8 @@ export interface AgentChatMessage {
   createdAt: string; // ISO string
   isLoading?: boolean;
   durationMs?: number; // response generation time in ms
-  feedback?: 'like' | 'dislike';
-  feedbackReasons?: string[]; // reasons for dislike feedback
+  feedback?: 'correct' | 'partially-correct' | 'incorrect';
+  feedbackReasons?: string[]; // reasons for partially-correct or incorrect feedback
   feedbackDetails?: string; // additional details for feedback
 }
 

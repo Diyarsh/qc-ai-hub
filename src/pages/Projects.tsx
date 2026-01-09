@@ -73,7 +73,7 @@ export default function Projects() {
   };
 
   return <div className="flex flex-col h-full">
-      <PageHeader title={t('projects.my')} subtitle={t('projects.subtitle')} />
+      <PageHeader title={t('projects.my')} />
 
       {/* Main Content */}
       <main className="flex-1 p-6">

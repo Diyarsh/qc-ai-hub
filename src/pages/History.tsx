@@ -6,6 +6,22 @@ import { PageHeader } from "@/components/PageHeader";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
+// Маппинг агентов на модели LLM
+const agentToModelMap: Record<string, string> = {
+  "LLM-Ultra": "Qwen2.5 72B",
+  "Assistant Pro": "GPT-4 Turbo",
+  "Doc AI": "GPT-4 Turbo",
+  "Translation Master": "DeepSeek Chat",
+  "Code Assistant": "DeepSeek Coder",
+  "Data Analyst": "GPT-4 Turbo",
+  "Legal Advisor": "GPT-4 Turbo",
+  "Content Creator": "GPT-3.5 Turbo",
+  "Financial Advisor": "GPT-4 Turbo",
+  "Customer Support": "GPT-3.5 Turbo",
+  "Research Assistant": "GPT-4 Turbo",
+  "Security Auditor": "GPT-4 Turbo",
+};
+
 const staticHistory = [{
   text: "Проанализировать GDPR требования для корпоративного сектора",
   time: "2 часа назад",
@@ -84,6 +100,11 @@ export default function History() {
   };
   const getTypeLabel = (type: string) => {
     return type === 'veo' ? t('history.veo-prompt') : t('history.chat-prompt');
+  };
+  
+  // Получить название модели по агенту
+  const getModelName = (agentName: string): string => {
+    return agentToModelMap[agentName] || agentName;
   };
   
   const parseTime = (time: string) => {
@@ -167,19 +188,23 @@ export default function History() {
             <div className="overflow-x-auto overflow-y-auto h-[calc(100vh-200px)] w-full">
               <table className="w-full border-collapse table-fixed" style={{ width: '100%' }}>
                 <colgroup>
-                  <col style={{ width: '50%', maxWidth: '500px' }} />
-                  <col style={{ width: '200px' }} />
+                  <col style={{ width: '40%', maxWidth: '400px' }} />
+                  <col style={{ width: '20%' }} />
+                  <col style={{ width: '20%' }} />
                   <col style={{ width: '60px' }} />
                 </colgroup>
                 <thead className="bg-background sticky top-0 z-10 shadow-sm">
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background" style={{ maxWidth: '500px' }}>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background" style={{ maxWidth: '400px' }}>
                       {t('history.name')}
+                    </th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground bg-background">
+                      {t('history.model')}
                     </th>
                     <th 
                       className="text-right py-3 px-4 text-sm font-medium text-muted-foreground bg-background cursor-pointer hover:text-foreground transition-colors whitespace-nowrap"
                       onClick={toggleSort}
-                      style={{ width: '200px' }}
+                      style={{ width: '20%' }}
                     >
                       <div className="flex items-center justify-end gap-2">
                         {t('history.updated')}
@@ -192,12 +217,17 @@ export default function History() {
                 </thead>
                 <tbody>
                   {sortedItems.map((item, index) => <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
-                      <td className="py-3 px-4" style={{ maxWidth: '500px', overflow: 'hidden' }}>
+                      <td className="py-3 px-4" style={{ maxWidth: '400px', overflow: 'hidden' }}>
                         <span className="text-sm truncate block">
                           {item.text}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right whitespace-nowrap" style={{ width: '200px' }}>
+                      <td className="py-3 px-4">
+                        <span className="text-sm text-muted-foreground truncate block">
+                          {getModelName(item.model)}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-right whitespace-nowrap" style={{ width: '20%' }}>
                         <span className="text-sm text-muted-foreground">
                           {formatTime(item.time)}
                         </span>

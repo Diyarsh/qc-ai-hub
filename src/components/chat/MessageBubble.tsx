@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { RefreshCw, Edit2, Trash2, ThumbsUp, ThumbsDown, Timer, Copy, Volume2, VolumeX } from "lucide-react";
-import { FeedbackDialog } from "./FeedbackDialog";
+import { RefreshCw, Edit2, Trash2, Timer, Copy, Star } from "lucide-react";
+import { FeedbackModal } from "./FeedbackModal";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { showToast } from "@/shared/components/Toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface MessageBubbleProps {
@@ -19,12 +18,10 @@ interface MessageBubbleProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onCopy?: () => void;
-  onTextToSpeech?: () => void;
   files?: { name: string; url?: string; type?: string }[];
   durationMs?: number;
-  feedback?: 'like' | 'dislike';
-  onFeedbackChange?: (value: 'like' | 'dislike' | null, reasons?: string[], details?: string) => void;
-  isPlayingSpeech?: boolean;
+  feedback?: 'correct' | 'partially-correct' | 'incorrect';
+  onFeedbackChange?: (value: 'correct' | 'partially-correct' | 'incorrect' | null, reasons?: string[], details?: string) => void;
 }
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
@@ -37,15 +34,13 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   onEdit,
   onDelete,
   onCopy,
-  onTextToSpeech,
   files = [],
   durationMs,
   feedback,
   onFeedbackChange,
-  isPlayingSpeech = false,
 }) => {
   const { t } = useLanguage();
-  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   return (
     <div className={`${role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl"} rounded-2xl px-4 py-3 text-sm border shadow-sm mb-2 ${
@@ -65,10 +60,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          code({node, inline, className, children, ...props}) {
+          code({node, className, children, ...props}: any) {
             const match = /language-(\w+)/.exec(className || '');
+            const inline = !match;
             return !inline && match ? (
-              <SyntaxHighlighter style={atomDark} language={match[1]} PreTag="div" {...props}>
+              <SyntaxHighlighter style={atomDark as any} language={match[1]} PreTag="div">
                 {String(children).replace(/\n$/, '')}
               </SyntaxHighlighter>
             ) : (
@@ -92,7 +88,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       )}
       {/* Message Actions for assistant messages */}
-      {role === 'assistant' && !isLoading && (onCopy || onRegenerate || onTextToSpeech) && (
+      {role === 'assistant' && !isLoading && (onCopy || onRegenerate || onFeedbackChange) && (
         <div className="mt-3 flex items-center gap-2 flex-wrap">
           {onCopy && (
             <Tooltip>
@@ -124,99 +120,50 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
               </TooltipContent>
             </Tooltip>
           )}
-          {onTextToSpeech && (
+          {onFeedbackChange && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   className={`flex items-center gap-1 px-2 py-1 rounded-xl transition-colors ${
-                    isPlayingSpeech
+                    feedback
                       ? 'bg-primary/15 text-primary'
                       : 'hover:bg-muted text-muted-foreground hover:text-foreground'
                   }`}
-                  onClick={onTextToSpeech}
+                  onClick={() => setShowFeedbackModal(true)}
                 >
-                  {isPlayingSpeech ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                  <Star size={14} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{isPlayingSpeech ? t('message.stopReading') : t('message.readAloud')}</p>
+                <p>{t('message.feedback')}</p>
               </TooltipContent>
             </Tooltip>
           )}
         </div>
       )}
-      
-      {/* Evaluation for assistant messages */}
-      {role === 'assistant' && !isLoading && (
-        <>
-          <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
-            <div className="flex items-center gap-3">
-              {durationMs !== undefined && (
-                <span className="inline-flex items-center gap-1">
-                  <Timer size={14} className="text-muted-foreground" />
-                  {(durationMs / 1000).toFixed(1)}s
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                className={`flex items-center gap-1 px-2 py-1 rounded-xl transition-colors ${
-                  feedback === 'like'
-                    ? 'bg-primary/15 text-primary'
-                    : 'hover:bg-muted'
-                }`}
-                onClick={() => {
-                  if (feedback === 'like') {
-                    onFeedbackChange?.(null);
-                  } else {
-                    onFeedbackChange?.('like');
-                  }
-                }}
-                title="Нравится"
-              >
-                {feedback === 'like' ? (
-                  <ThumbsUp size={14} fill="currentColor" strokeWidth={0} />
-                ) : (
-                  <ThumbsUp size={14} />
-                )}
-              </button>
-              <button
-                className={`flex items-center gap-1 px-2 py-1 rounded-xl transition-colors ${
-                  feedback === 'dislike'
-                    ? 'bg-destructive/10 text-destructive'
-                    : 'hover:bg-muted'
-                }`}
-                onClick={() => {
-                  if (feedback === 'dislike') {
-                    onFeedbackChange?.(null);
-                    setShowFeedbackDialog(false);
-                  } else {
-                    setShowFeedbackDialog(true);
-                  }
-                }}
-                title="Не нравится"
-              >
-                {feedback === 'dislike' ? (
-                  <ThumbsDown size={14} fill="currentColor" strokeWidth={0} />
-                ) : (
-                  <ThumbsDown size={14} />
-                )}
-              </button>
-            </div>
-          </div>
 
-          {/* Feedback Dialog */}
-          <FeedbackDialog
-            isOpen={showFeedbackDialog}
-            onClose={() => setShowFeedbackDialog(false)}
-            onSubmit={(reasons, details) => {
-              onFeedbackChange?.('dislike', reasons, details);
-              setShowFeedbackDialog(false);
-            }}
-          />
-        </>
+      {/* Duration for assistant messages */}
+      {role === 'assistant' && !isLoading && durationMs !== undefined && (
+        <div className="mt-3 flex items-center text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1">
+            <Timer size={14} className="text-muted-foreground" />
+            {(durationMs / 1000).toFixed(1)}s
+          </span>
+        </div>
+      )}
+
+      {/* Feedback Modal */}
+      {onFeedbackChange && (
+        <FeedbackModal
+          isOpen={showFeedbackModal}
+          onClose={() => setShowFeedbackModal(false)}
+          onSubmit={(type, details) => {
+            onFeedbackChange(type, [], details);
+            setShowFeedbackModal(false);
+          }}
+          currentFeedback={feedback}
+        />
       )}
     </div>
   );
 };
-
