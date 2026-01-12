@@ -87,17 +87,15 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="sm:max-w-[380px] p-5">
-        <DialogHeader className="pb-3">
+      <DialogContent className="sm:max-w-[380px] p-4">
+        <DialogHeader className={cn("pb-3", step === 'details' && "pb-2.5")}>
           <DialogTitle className="text-base font-medium">
             {step === 'select' ? 'Оцените ответ' : 
              selectedType === 'partially-correct' ? 'Частично верно' : 
              'Неверно'}
           </DialogTitle>
           <DialogDescription className="text-xs mt-1">
-            {step === 'select' 
-              ? 'Выберите, насколько точным был ответ'
-              : 'Поделитесь подробностями, чтобы помочь улучшить качество ответов'}
+            {step === 'select' && 'Выберите, насколько точным был ответ'}
           </DialogDescription>
         </DialogHeader>
 
@@ -202,20 +200,16 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         )}
 
         {step === 'details' && (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <Textarea
-              placeholder="Поделитесь подробностями (необязательно)"
+              placeholder="Что можно улучшить? (необязательно)"
               value={details}
               onChange={(e) => setDetails(e.target.value)}
-              className="min-h-[100px] text-sm resize-none border-border/60 focus:border-primary/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="min-h-[80px] text-sm resize-none border-border/60 focus:border-primary/50 focus-visible:ring-0 focus-visible:ring-offset-0"
               autoFocus
             />
 
-            <p className="text-xs text-muted-foreground/70 leading-relaxed">
-              Ваш отзыв поможет улучшить качество ответов платформы.
-            </p>
-
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="flex justify-end gap-2 pt-2">
               <Button
                 variant="outline"
                 onClick={handleBack}
