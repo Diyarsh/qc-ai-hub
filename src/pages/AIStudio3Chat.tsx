@@ -142,7 +142,7 @@ export default function AIStudio3Chat() {
       showToast(t('message.copied'), 'success');
     });
   }, [messages, t]);
-
+  
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if ((!text && attachedFiles.length === 0) || isLoading) return;
