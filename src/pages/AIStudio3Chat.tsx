@@ -281,53 +281,56 @@ export default function AIStudio3Chat() {
         )}
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0 border-t relative">
-          <ScrollArea className="flex-1 p-6 pb-[180px]">
-            <div className="max-w-3xl mx-auto">
-              {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                  <h2 className="text-2xl font-semibold mb-2">{agent ? `Чат с агентом: ${agent}` : 'Начать беседу'}</h2>
-                  <p className="text-muted-foreground max-w-md">Задавайте вопросы выбранному агенту из AI Studio</p>
-                </div>
-              ) : (
-                <div className="space-y-4 py-4">
-                  {messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={msg.role === 'user' ? 'flex justify-end' : ''}
-                    >
-                      <MessageBubble
-                        text={msg.text}
-                        role={msg.role}
-                        messageId={msg.id}
-                        isLoading={msg.isLoading}
-                        files={msg.files?.map(f => ({ name: f.name, type: f.type }))}
-                        durationMs={msg.durationMs}
-                        feedback={msg.feedback}
-                        onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
-                        onFeedbackChange={(value, reasons, details) => {
-                          if (msg.role !== 'assistant') return;
-                          setMessages(prev => prev.map(m => 
-                            m.id === msg.id 
-                              ? { 
-                                  ...m, 
-                                  feedback: value || undefined,
-                                  feedbackReasons: reasons,
-                                  feedbackDetails: details,
-                                } 
-                              : m
-                          ));
-                        }}
-                      />
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-          <div className="sticky bottom-0 p-4 z-10 bg-background/95 backdrop-blur-sm">
-            <div className="max-w-3xl mx-auto space-y-2">
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full p-6 pb-0">
+              <div className="w-full max-w-3xl mx-auto">
+                {messages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center py-20">
+                    <h2 className="text-2xl font-semibold mb-2">{agent ? `Чат с агентом: ${agent}` : 'Начать беседу'}</h2>
+                    <p className="text-muted-foreground max-w-md">Задавайте вопросы выбранному агенту из AI Studio</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4 pb-0">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={msg.role === 'user' ? 'flex justify-end' : ''}
+                      >
+                        <MessageBubble
+                          text={msg.text}
+                          role={msg.role}
+                          messageId={msg.id}
+                          isLoading={msg.isLoading}
+                          files={msg.files?.map(f => ({ name: f.name, type: f.type }))}
+                          feedback={msg.feedback}
+                          onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
+                          onFeedbackChange={(value, reasons, details) => {
+                            if (msg.role !== 'assistant') return;
+                            setMessages(prev => prev.map(m => 
+                              m.id === msg.id 
+                                ? { 
+                                    ...m, 
+                                    feedback: value || undefined,
+                                    feedbackReasons: reasons,
+                                    feedbackDetails: details,
+                                  } 
+                                : m
+                            ));
+                          }}
+                        />
+                      </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+
+          {/* Input at bottom when messages exist - фиксировано */}
+          <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
+            <div className="w-full max-w-3xl mx-auto space-y-2">
               {/* Отображение прикрепленных файлов */}
               {attachedFiles.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-2">

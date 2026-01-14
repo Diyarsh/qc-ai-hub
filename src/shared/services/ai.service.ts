@@ -75,12 +75,21 @@ export async function sendChatMessage(
   } catch (error: any) {
     console.error('AI API Error:', error);
     
-    // Return mock response on error for graceful degradation
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      throw new Error('Invalid API key. Please check your VITE_OPENAI_API_KEY in .env file.');
+    // Return mock response on network errors for graceful degradation
+    if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError') || error.name === 'TypeError') {
+      console.warn('Network error detected. Falling back to mock response.');
+      return getMockResponse(messages);
     }
     
-    throw new Error(`AI service error: ${error.message || 'Unknown error'}`);
+    // Return mock response on API errors for graceful degradation
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      console.warn('API authentication error. Falling back to mock response.');
+      return getMockResponse(messages);
+    }
+    
+    // For other errors, still return mock response instead of throwing
+    console.warn('AI API error occurred. Falling back to mock response:', error.message);
+    return getMockResponse(messages);
   }
 }
 

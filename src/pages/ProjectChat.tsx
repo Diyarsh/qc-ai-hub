@@ -13,6 +13,9 @@ import { Modal } from "@/shared/components/Modal";
 import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { Badge } from "@/shared/components/Badge";
 import { Disclaimer } from "@/components/chat/Disclaimer";
+import { MessageBubble } from "@/components/chat/MessageBubble";
+import { sendChatMessage } from "@/shared/services/ai.service.ts";
+import { useToast } from "@/shared/components/Toast";
 function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -29,6 +32,7 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   createdAt: string; // ISO
+  feedback?: 'correct' | 'partially-correct' | 'incorrect';
 };
 
 type Conversation = {
@@ -42,6 +46,7 @@ const LS_KEY = "projectChat.conversations";
 
 export default function ProjectChat() {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const location = useLocation();
   const passedProjectName = (location.state as { projectName?: string })?.projectName;
   const [message, setMessage] = useState("");
@@ -52,6 +57,7 @@ export default function ProjectChat() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState(passedProjectName || "My project");
   const [isEditingName, setIsEditingName] = useState(false);
   const [editingNameValue, setEditingNameValue] = useState("");
@@ -115,30 +121,167 @@ export default function ProjectChat() {
     setActiveTab("conversations");
   };
 
-  const appendMessage = (text: string) => {
+  const appendMessage = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed && attachedFiles.length === 0) return;
+    if (isLoading) return;
     
+    setIsLoading(true);
     const fileInfo = attachedFiles.length > 0 
       ? `\n\n📎 Прикреплено файлов: ${attachedFiles.length}\n${attachedFiles.map(f => `- ${f.name} (${(f.size / 1024).toFixed(1)} KB)`).join('\n')}`
       : '';
     
     const fullContent = trimmed + fileInfo;
+    const nowIso = new Date().toISOString();
+    const loadingMsgId = Math.random().toString(36).slice(2);
     
     // if no conversation selected, create one
     if (!selectedId) {
-      createConversation(fullContent);
+      const id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+      const title = trimmed.slice(0, 60);
+      const firstUser: Message = { id: id + "u", role: "user", content: fullContent, createdAt: nowIso };
+      const loadingAssistant: Message = { id: loadingMsgId, role: "assistant", content: "", createdAt: nowIso };
+      const conv: Conversation = { id, title, updatedAt: nowIso, messages: [firstUser, loadingAssistant] };
+      setConversations(prev => [conv, ...prev]);
+      setSelectedId(id);
+      setActiveTab("conversations");
       setAttachedFiles([]);
+      
+      try {
+        // Build detailed system prompt for project context
+        const systemPrompt = `Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform, работающий в контексте проекта "${projectName}".
+
+ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
+
+Требования к ответам:
+- Структурируй информацию с заголовками и подзаголовками (используй ** для выделения)
+- Используй маркированные и нумерованные списки для лучшей читаемости
+- Приводи конкретные примеры и практические рекомендации
+- Объясняй концепции подробно, как эксперт в своей области
+- Отвечай на русском языке профессионально и информативно
+- Если вопрос короткий или простой, всё равно дай полный, развёрнутый ответ с контекстом и деталями
+- Учитывай контекст проекта "${projectName}" при формулировании ответов`;
+        
+        // Convert messages to format expected by AI service
+        const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
+          { role: 'user' as const, content: fullContent },
+        ];
+        
+        // Call AI service with higher token limit for detailed responses
+        const response = await sendChatMessage(chatMessages, {
+          model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
+          temperature: 0.8,
+          maxTokens: 2000,
+          systemPrompt,
+        });
+        
+        // Replace loading message with actual response
+        setConversations(prev => prev.map(c => {
+          if (c.id !== id) return c;
+          return {
+            ...c,
+            messages: c.messages.map(m => 
+              m.id === loadingMsgId 
+                ? { ...m, content: response.content }
+                : m
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+        }));
+      } catch (error: any) {
+        console.error('Error sending message:', error);
+        // Replace loading message with error message
+        setConversations(prev => prev.map(c => {
+          if (c.id !== id) return c;
+          return {
+            ...c,
+            messages: c.messages.map(m => 
+              m.id === loadingMsgId 
+                ? { ...m, content: `Ошибка: ${error.message || 'Не удалось получить ответ от AI'}` }
+                : m
+            ),
+          };
+        }));
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
+    
+    // Add user message and loading assistant message
     setConversations(prev => prev.map(c => {
       if (c.id !== selectedId) return c;
-      const nowIso = new Date().toISOString();
       const userMsg: Message = { id: Math.random().toString(36).slice(2), role: "user", content: fullContent, createdAt: nowIso };
-      const assistantMsg: Message = { id: Math.random().toString(36).slice(2), role: "assistant", content: attachedFiles.length > 0 ? "Получил сообщение с файлами. Обрабатываю..." : "OK — зафиксировал. Продолжайте.", createdAt: nowIso };
-      return { ...c, messages: [...c.messages, userMsg, assistantMsg], updatedAt: nowIso, title: c.title || trimmed.slice(0, 60) };
+      const loadingAssistant: Message = { id: loadingMsgId, role: "assistant", content: "", createdAt: nowIso };
+      return { ...c, messages: [...c.messages, userMsg, loadingAssistant], updatedAt: nowIso, title: c.title || trimmed.slice(0, 60) };
     }));
     setAttachedFiles([]);
+    
+    try {
+      const selected = conversations.find(c => c.id === selectedId);
+      if (!selected) return;
+      
+      // Build detailed system prompt for project context
+      const systemPrompt = `Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform, работающий в контексте проекта "${projectName}".
+
+ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
+
+Требования к ответам:
+- Структурируй информацию с заголовками и подзаголовками (используй ** для выделения)
+- Используй маркированные и нумерованные списки для лучшей читаемости
+- Приводи конкретные примеры и практические рекомендации
+- Объясняй концепции подробно, как эксперт в своей области
+- Отвечай на русском языке профессионально и информативно
+- Если вопрос короткий или простой, всё равно дай полный, развёрнутый ответ с контекстом и деталями
+- Учитывай контекст проекта "${projectName}" при формулировании ответов`;
+      
+      // Convert messages to format expected by AI service
+      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
+        ...selected.messages.filter(m => m.role !== 'assistant' || m.content).map(m => ({
+          role: m.role as 'user' | 'assistant',
+          content: m.content,
+        })),
+        { role: 'user' as const, content: fullContent },
+      ];
+      
+      // Call AI service with higher token limit for detailed responses
+      const response = await sendChatMessage(chatMessages, {
+        model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
+        temperature: 0.8,
+        maxTokens: 2000,
+        systemPrompt,
+      });
+      
+      // Replace loading message with actual response
+      setConversations(prev => prev.map(c => {
+        if (c.id !== selectedId) return c;
+        return {
+          ...c,
+          messages: c.messages.map(m => 
+            m.id === loadingMsgId 
+              ? { ...m, content: response.content }
+              : m
+          ),
+          updatedAt: new Date().toISOString(),
+        };
+      }));
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      // Replace loading message with error message
+      setConversations(prev => prev.map(c => {
+        if (c.id !== selectedId) return c;
+        return {
+          ...c,
+          messages: c.messages.map(m => 
+            m.id === loadingMsgId 
+              ? { ...m, content: `Ошибка: ${error.message || 'Не удалось получить ответ от AI'}` }
+              : m
+          ),
+        };
+      }));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renameConversation = (id: string) => {
@@ -153,6 +296,16 @@ export default function ProjectChat() {
     if (!window.confirm("Удалить чат?")) return;
     setConversations(prev => prev.filter(c => c.id !== id));
     setSelectedId(prev => (prev === id ? null : prev));
+  };
+
+  const handleCopy = (messageId: string) => {
+    const selected = conversations.find(c => c.id === selectedId);
+    if (!selected) return;
+    const message = selected.messages.find(m => m.id === messageId);
+    if (message && message.role === 'assistant') {
+      navigator.clipboard.writeText(message.content);
+      showToast('Сообщение скопировано', 'success');
+    }
   };
 
   const selected = conversations.find(c => c.id === selectedId) || null;
@@ -268,32 +421,55 @@ export default function ProjectChat() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-        {/* Chat Messages */}
-        <ScrollArea className="flex-1 p-6 pb-[180px] overflow-y-auto">
-          <div className="max-w-3xl mx-auto">
-            {selected ? (
-              <div className="space-y-4">
-                {selected.messages.map(m => (
-                  <div key={m.id}>
-                    <div className={`w-full max-w-3xl rounded-2xl px-3 py-2 text-sm border ${m.role === "user" ? "bg-primary text-primary-foreground border-primary/60" : "bg-card border-border"}`}>
-                      {m.content}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full p-6 pb-0">
+            <div className="w-full max-w-3xl mx-auto">
+              {selected ? (
+                <div className="space-y-4 pb-0">
+                  {selected.messages.map(m => (
+                    <div
+                      key={m.id}
+                      className={m.role === 'user' ? 'flex justify-end' : ''}
+                    >
+                      <MessageBubble
+                        text={m.content || "..."}
+                        role={m.role}
+                        messageId={m.id}
+                        isLoading={!m.content && m.role === 'assistant'}
+                        feedback={m.feedback}
+                        onCopy={m.role === 'assistant' ? () => handleCopy(m.id) : undefined}
+                        onFeedbackChange={(value, reasons, details) => {
+                          if (m.role !== 'assistant') return;
+                          setConversations(prev => prev.map(c => {
+                            if (c.id !== selectedId) return c;
+                            return {
+                              ...c,
+                              messages: c.messages.map(msg => 
+                                msg.id === m.id 
+                                  ? { ...msg, feedback: value || undefined }
+                                  : msg
+                              ),
+                            };
+                          }));
+                        }}
+                      />
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                <h2 className="text-2xl font-semibold mb-2">Начать беседу</h2>
-                <p className="text-muted-foreground max-w-md">Задавайте вопросы, получайте помощь или обсуждайте ваш проект</p>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center py-20">
+                  <h2 className="text-2xl font-semibold mb-2">Начать беседу</h2>
+                  <p className="text-muted-foreground max-w-md">Задавайте вопросы, получайте помощь или обсуждайте ваш проект</p>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+        </div>
 
-        {/* Chat Input - фиксировано */}
-        <div className="sticky bottom-0 p-4 z-10 bg-background/95 backdrop-blur-sm">
-          <div className="max-w-3xl mx-auto space-y-2">
+        {/* Input at bottom when messages exist - фиксировано */}
+        <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
+          <div className="w-full max-w-3xl mx-auto space-y-2">
             {/* Отображение прикрепленных файлов */}
             {attachedFiles.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
@@ -316,10 +492,15 @@ export default function ProjectChat() {
               value={message}
               onChange={setMessage}
               onSend={(text) => { 
-                selected ? appendMessage(text) : createConversation(text); 
+                if (selected) {
+                  appendMessage(text);
+                } else {
+                  appendMessage(text);
+                }
                 setMessage(""); 
               }}
               onAttachClick={() => setIsAttachModalOpen(true)}
+              disabled={isLoading}
               examples={[
                 "Задайте вопрос по файлам проекта",
                 "Попросите сгенерировать сводку по документам",
