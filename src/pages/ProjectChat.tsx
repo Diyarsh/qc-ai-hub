@@ -506,9 +506,10 @@ export default function ProjectChat() {
                 "Попросите сгенерировать сводку по документам",
                 "Уточните статус задач и рисков"
               ]}
-              className="mb-3"
             />
-            <Disclaimer />
+            <div className="pb-1">
+              <Disclaimer />
+            </div>
           </div>
         </div>
       </div>

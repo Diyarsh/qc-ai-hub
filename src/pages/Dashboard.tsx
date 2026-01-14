@@ -317,7 +317,9 @@ export default function Dashboard() {
                   examples={examplePrompts}
                   disabled={isLoading}
                 />
-                <Disclaimer />
+                <div className="pb-1">
+                  <Disclaimer />
+                </div>
               </div>
             </div>
           </>

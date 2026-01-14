@@ -356,9 +356,10 @@ export default function AIStudio3Chat() {
                 onSend={() => handleSend()}
                 onAttachClick={() => setIsAttachModalOpen(true)}
                 disabled={isLoading}
-                className="mb-3"
               />
-              <Disclaimer />
+              <div className="pb-1">
+                <Disclaimer />
+              </div>
             </div>
           </div>
         </div>

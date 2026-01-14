@@ -188,7 +188,7 @@ export function AgentHistorySidebar({
     return (
       <div
         className={cn(
-          "flex-shrink-0 border-border bg-muted/30 transition-all duration-200",
+          "flex-shrink-0 border-border bg-muted/30 transition-all duration-200 flex flex-col h-full",
           isLeft ? "border-r" : "border-l",
           collapsed ? "w-12" : "w-60"
         )}
@@ -211,7 +211,7 @@ export function AgentHistorySidebar({
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+            <div className="flex items-center justify-between px-3 py-2 border-b border-border flex-shrink-0">
               <h3 className="text-sm font-medium truncate flex-1 min-w-0 mr-2">{agentId}</h3>
               {onToggleCollapse && (
                 <Button
@@ -228,13 +228,15 @@ export function AgentHistorySidebar({
                 </Button>
               )}
             </div>
-            <SidebarContent
-              agentId={agentId}
-              activeSessionId={activeSessionId}
-              onSessionSelect={onSessionSelect}
-              onNewSession={onNewSession}
-              onDeleteSession={() => {}}
-            />
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <SidebarContent
+                agentId={agentId}
+                activeSessionId={activeSessionId}
+                onSessionSelect={onSessionSelect}
+                onNewSession={onNewSession}
+                onDeleteSession={() => {}}
+              />
+            </div>
           </>
         )}
       </div>
