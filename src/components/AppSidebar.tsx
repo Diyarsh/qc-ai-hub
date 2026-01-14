@@ -98,10 +98,6 @@ const menuItems = [{
   url: "/laboratory2",
   icon: Workflow
 }, {
-  title: "sidebar.lab3",
-  url: "/laboratory3",
-  icon: Workflow
-}, {
   title: "sidebar.history",
   url: "/history",
   icon: History,
@@ -264,8 +260,8 @@ export function AppSidebar() {
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="space-y-0.5">
           {menuItems.filter(item => {
-            // Show Lab, Laboratory2.0 and Laboratory3.0 only when Dev Mode is enabled
-            if ((item.url === "/lab" || item.url === "/laboratory2" || item.url === "/laboratory3") && !isDeveloperMode) {
+            // Show Lab and Laboratory2.0 only when Dev Mode is enabled
+            if ((item.url === "/lab" || item.url === "/laboratory2") && !isDeveloperMode) {
               return false;
             }
             return true;

@@ -308,7 +308,7 @@ export default function Dashboard() {
             </div>
 
             {/* Input at bottom when messages exist - фиксировано */}
-            <div className="sticky bottom-0 p-4 z-10 bg-background/95 backdrop-blur-sm">
+            <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
               <div className="w-full max-w-3xl mx-auto">
                 <ChatComposer
                   value={input}
