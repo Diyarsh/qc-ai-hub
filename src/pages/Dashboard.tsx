@@ -62,7 +62,7 @@ export default function Dashboard() {
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; isRegenerated?: boolean }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackDetails?: string; isRegenerated?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -273,52 +273,61 @@ export default function Dashboard() {
         ) : (
           // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
           <>
-            <div className="flex-1 overflow-hidden">
-              <ScrollArea className="h-full p-6 pb-[180px]">
-                <div className="w-full max-w-3xl mx-auto">
-                  <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
+            <div className="flex-1 flex flex-col min-h-0">
+              <div className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full p-6 pb-[180px]">
+                  <div className="w-full max-w-3xl mx-auto">
+                    <h2 className="text-4xl font-bold text-center mb-8 pt-4">AI-HUB</h2>
 
-                  {/* Messages Display */}
-                  <div className="space-y-4 mb-8">
-                    {messages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={msg.role === 'user' ? 'flex justify-end' : ''}
-                      >
-                        <MessageBubble
-                          text={msg.text}
-                          role={msg.role}
-                          messageId={msg.id}
-                          isLoading={msg.isLoading}
-                          feedback={msg.feedback}
-                          onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
-                          onFeedbackChange={(value) => {
-                            if (msg.role !== 'assistant') return;
-                            setMessages(prev => prev.map(m => 
-                              m.id === msg.id ? { ...m, feedback: value || undefined } : m
-                            ));
-                          }}
-                        />
-                      </div>
-                    ))}
-                    <div ref={messagesEndRef} />
+                    {/* Messages Display */}
+                    <div className="space-y-4 pb-0">
+                      {messages.map((msg) => (
+                        <div
+                          key={msg.id}
+                          className={msg.role === 'user' ? 'flex justify-end' : ''}
+                        >
+                          <MessageBubble
+                            text={msg.text}
+                            role={msg.role}
+                            messageId={msg.id}
+                            isLoading={msg.isLoading}
+                            feedback={msg.feedback}
+                            feedbackDetails={msg.feedbackDetails}
+                            onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
+                            onFeedbackChange={(value, reasons, details) => {
+                              if (msg.role !== 'assistant') return;
+                              setMessages(prev => prev.map(m => 
+                                m.id === msg.id 
+                                  ? { 
+                                      ...m, 
+                                      feedback: value || undefined,
+                                      feedbackDetails: details || ""
+                                    } 
+                                  : m
+                              ));
+                            }}
+                          />
+                        </div>
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
                   </div>
-                </div>
-              </ScrollArea>
-            </div>
+                </ScrollArea>
+              </div>
 
-            {/* Input at bottom when messages exist - фиксировано */}
-            <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
-              <div className="w-full max-w-3xl mx-auto">
-                <ChatComposer
-                  value={input}
-                  onChange={setInput}
-                  onSend={handleSend}
-                  examples={examplePrompts}
-                  disabled={isLoading}
-                />
-                <div className="pb-1">
-                  <Disclaimer />
+              {/* Input at bottom when messages exist - фиксировано */}
+              <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
+                <div className="w-full max-w-3xl mx-auto space-y-2">
+                  <ChatComposer
+                    value={input}
+                    onChange={setInput}
+                    onSend={handleSend}
+                    examples={examplePrompts}
+                    disabled={isLoading}
+                  />
+                  <div className="pb-1">
+                    <Disclaimer />
+                  </div>
                 </div>
               </div>
             </div>

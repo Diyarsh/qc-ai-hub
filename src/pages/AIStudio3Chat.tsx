@@ -304,6 +304,7 @@ export default function AIStudio3Chat() {
                           isLoading={msg.isLoading}
                           files={msg.files?.map(f => ({ name: f.name, type: f.type }))}
                           feedback={msg.feedback}
+                          feedbackDetails={msg.feedbackDetails}
                           onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
                           onFeedbackChange={(value, reasons, details) => {
                             if (msg.role !== 'assistant') return;
@@ -313,7 +314,7 @@ export default function AIStudio3Chat() {
                                     ...m, 
                                     feedback: value || undefined,
                                     feedbackReasons: reasons,
-                                    feedbackDetails: details,
+                                    feedbackDetails: details || "",
                                   } 
                                 : m
                             ));

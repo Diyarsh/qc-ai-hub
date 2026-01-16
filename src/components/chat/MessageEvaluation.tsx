@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Star, MessageSquare, X } from "lucide-react";
+import { CheckCircle2, AlertCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { EvaluationService } from "@/services/evaluation.service";
-import { MessageEvaluation, EvaluationRating } from "@/types/message-evaluation";
+import { MessageEvaluation, EvaluationRating, EvaluationOption } from "@/types/message-evaluation";
 import { cn } from "@/lib/utils";
+
+const evaluationOptions: EvaluationOption[] = [
+  { value: 1, label: "Верно", icon: "✓", color: "bg-green-500 hover:bg-green-600 border-green-500" },
+  { value: 2, label: "Частично верно", icon: "~", color: "bg-yellow-500 hover:bg-yellow-600 border-yellow-500" },
+  { value: 3, label: "Неверно", icon: "✗", color: "bg-red-500 hover:bg-red-600 border-red-500" },
+];
 
 interface MessageEvaluationProps {
   messageId: string;
@@ -21,31 +26,33 @@ export const MessageEvaluationComponent: React.FC<MessageEvaluationProps> = ({
   const [evaluation, setEvaluation] = useState<MessageEvaluation | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [tempRating, setTempRating] = useState<EvaluationRating | null>(null);
-  const [tempComment, setTempComment] = useState("");
 
   useEffect(() => {
     const existing = EvaluationService.getEvaluation(messageId);
     setEvaluation(existing);
     if (existing) {
       setTempRating(existing.rating);
-      setTempComment(existing.comment || "");
+    } else {
+      setTempRating(null);
     }
   }, [messageId]);
 
-  const handleStarClick = (rating: EvaluationRating) => {
-    setTempRating(rating);
-    if (!isDialogOpen) {
+  const handleRatingClick = (rating: EvaluationRating) => {
+    if (evaluation && evaluation.rating === rating) {
+      // Если кликнули на уже выбранную оценку, открываем диалог для удаления
       setIsDialogOpen(true);
+      setTempRating(rating);
+    } else {
+      // Сохраняем оценку сразу
+      const newEvaluation = EvaluationService.saveEvaluation(messageId, rating);
+      setEvaluation(newEvaluation);
+      onEvaluationChange?.(newEvaluation);
     }
   };
 
   const handleSave = () => {
     if (tempRating) {
-      const newEvaluation = EvaluationService.saveEvaluation(
-        messageId,
-        tempRating,
-        tempComment || undefined
-      );
+      const newEvaluation = EvaluationService.saveEvaluation(messageId, tempRating);
       setEvaluation(newEvaluation);
       setIsDialogOpen(false);
       onEvaluationChange?.(newEvaluation);
@@ -56,7 +63,6 @@ export const MessageEvaluationComponent: React.FC<MessageEvaluationProps> = ({
     EvaluationService.deleteEvaluation(messageId);
     setEvaluation(null);
     setTempRating(null);
-    setTempComment("");
     setIsDialogOpen(false);
     onEvaluationChange?.(null);
   };
@@ -64,43 +70,41 @@ export const MessageEvaluationComponent: React.FC<MessageEvaluationProps> = ({
   const handleOpenDialog = () => {
     if (evaluation) {
       setTempRating(evaluation.rating);
-      setTempComment(evaluation.comment || "");
     }
     setIsDialogOpen(true);
   };
 
   if (compact) {
+    const selectedOption = evaluation ? evaluationOptions.find(opt => opt.value === evaluation.rating) : null;
+    
     return (
       <>
-        <div className="flex items-center gap-1 mt-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              onClick={() => handleStarClick(star as EvaluationRating)}
-              className={cn(
-                "transition-colors hover:scale-110",
-                evaluation && evaluation.rating >= star
-                  ? "text-yellow-500"
-                  : "text-muted-foreground hover:text-yellow-400"
-              )}
-            >
-              <Star
-                size={14}
+        <div className="flex items-center gap-2 mt-2 flex-wrap">
+          {evaluationOptions.map((option) => {
+            const isSelected = evaluation?.rating === option.value;
+            return (
+              <button
+                key={option.value}
+                onClick={() => handleRatingClick(option.value)}
                 className={cn(
-                  evaluation && evaluation.rating >= star ? "fill-current" : ""
+                  "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all",
+                  "border hover:scale-105",
+                  isSelected
+                    ? cn(
+                        "border-2 font-medium",
+                        option.value === 1 && "bg-green-500/10 border-green-500 text-green-700 dark:text-green-400",
+                        option.value === 2 && "bg-yellow-500/10 border-yellow-500 text-yellow-700 dark:text-yellow-400",
+                        option.value === 3 && "bg-red-500/10 border-red-500 text-red-700 dark:text-red-400"
+                      )
+                    : "border-border text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
-              />
-            </button>
-          ))}
-          {evaluation?.comment && (
-            <button
-              onClick={handleOpenDialog}
-              className="ml-2 text-muted-foreground hover:text-primary"
-              title="Показать комментарий"
-            >
-              <MessageSquare size={14} />
-            </button>
-          )}
+                title={option.label}
+              >
+                <span>{option.icon}</span>
+                <span>{option.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -109,35 +113,33 @@ export const MessageEvaluationComponent: React.FC<MessageEvaluationProps> = ({
               <DialogTitle>Оценить ответ</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="flex items-center justify-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
+              <div className="grid grid-cols-3 gap-3">
+                {evaluationOptions.map((option) => (
                   <button
-                    key={star}
-                    onClick={() => setTempRating(star as EvaluationRating)}
+                    key={option.value}
+                    onClick={() => setTempRating(option.value)}
                     className={cn(
-                      "transition-all hover:scale-125",
-                      tempRating && tempRating >= star
-                        ? "text-yellow-500"
-                        : "text-muted-foreground hover:text-yellow-400"
+                      "flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all",
+                      "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                      tempRating === option.value
+                        ? cn(
+                            "border-primary scale-105",
+                            option.value === 1 && "border-green-500 bg-green-500/10",
+                            option.value === 2 && "border-yellow-500 bg-yellow-500/10",
+                            option.value === 3 && "border-red-500 bg-red-500/10"
+                          )
+                        : "border-border hover:border-primary/50 hover:bg-accent"
                     )}
                   >
-                    <Star
-                      size={32}
-                      className={cn(
-                        tempRating && tempRating >= star ? "fill-current" : ""
-                      )}
-                    />
+                    <span className="text-2xl">{option.icon}</span>
+                    <span className={cn(
+                      "text-sm font-medium",
+                      tempRating === option.value && "text-primary"
+                    )}>
+                      {option.label}
+                    </span>
                   </button>
                 ))}
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Комментарий (необязательно)</label>
-                <Textarea
-                  value={tempComment}
-                  onChange={(e) => setTempComment(e.target.value)}
-                  placeholder="Добавьте комментарий к оценке..."
-                  rows={4}
-                />
               </div>
             </div>
             <DialogFooter>
@@ -161,47 +163,32 @@ export const MessageEvaluationComponent: React.FC<MessageEvaluationProps> = ({
 
   return (
     <>
-      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50">
+      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50 flex-wrap">
         <span className="text-xs text-muted-foreground">Оценка:</span>
-        <div className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
+        {evaluationOptions.map((option) => {
+          const isSelected = evaluation?.rating === option.value;
+          return (
             <button
-              key={star}
-              onClick={() => handleStarClick(star as EvaluationRating)}
+              key={option.value}
+              onClick={() => handleRatingClick(option.value)}
               className={cn(
-                "transition-colors hover:scale-110",
-                evaluation && evaluation.rating >= star
-                  ? "text-yellow-500"
-                  : "text-muted-foreground hover:text-yellow-400"
+                "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all",
+                "border hover:scale-105",
+                isSelected
+                  ? cn(
+                      "border-2 font-medium",
+                      option.value === 1 && "bg-green-500/10 border-green-500 text-green-700 dark:text-green-400",
+                      option.value === 2 && "bg-yellow-500/10 border-yellow-500 text-yellow-700 dark:text-yellow-400",
+                      option.value === 3 && "bg-red-500/10 border-red-500 text-red-700 dark:text-red-400"
+                    )
+                  : "border-border text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
             >
-              <Star
-                size={16}
-                className={cn(
-                  evaluation && evaluation.rating >= star ? "fill-current" : ""
-                )}
-              />
+              <span>{option.icon}</span>
+              <span>{option.label}</span>
             </button>
-          ))}
-        </div>
-        {evaluation?.comment && (
-          <button
-            onClick={handleOpenDialog}
-            className="ml-2 text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
-          >
-            <MessageSquare size={14} />
-            Комментарий
-          </button>
-        )}
-        {!evaluation && (
-          <button
-            onClick={handleOpenDialog}
-            className="ml-2 text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
-          >
-            <MessageSquare size={14} />
-            Добавить комментарий
-          </button>
-        )}
+          );
+        })}
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -210,35 +197,33 @@ export const MessageEvaluationComponent: React.FC<MessageEvaluationProps> = ({
             <DialogTitle>Оценить ответ модели</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="flex items-center justify-center gap-2">
-              {[1, 2, 3, 4, 5].map((star) => (
+            <div className="grid grid-cols-3 gap-3">
+              {evaluationOptions.map((option) => (
                 <button
-                  key={star}
-                  onClick={() => setTempRating(star as EvaluationRating)}
+                  key={option.value}
+                  onClick={() => setTempRating(option.value)}
                   className={cn(
-                    "transition-all hover:scale-125",
-                    tempRating && tempRating >= star
-                      ? "text-yellow-500"
-                      : "text-muted-foreground hover:text-yellow-400"
+                    "flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all",
+                    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                    tempRating === option.value
+                      ? cn(
+                          "border-primary scale-105",
+                          option.value === 1 && "border-green-500 bg-green-500/10",
+                          option.value === 2 && "border-yellow-500 bg-yellow-500/10",
+                          option.value === 3 && "border-red-500 bg-red-500/10"
+                        )
+                      : "border-border hover:border-primary/50 hover:bg-accent"
                   )}
                 >
-                  <Star
-                    size={32}
-                    className={cn(
-                      tempRating && tempRating >= star ? "fill-current" : ""
-                    )}
-                  />
+                  <span className="text-2xl">{option.icon}</span>
+                  <span className={cn(
+                    "text-sm font-medium",
+                    tempRating === option.value && "text-primary"
+                  )}>
+                    {option.label}
+                  </span>
                 </button>
               ))}
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Комментарий (необязательно)</label>
-              <Textarea
-                value={tempComment}
-                onChange={(e) => setTempComment(e.target.value)}
-                placeholder="Добавьте комментарий к оценке..."
-                rows={4}
-              />
             </div>
           </div>
           <DialogFooter>

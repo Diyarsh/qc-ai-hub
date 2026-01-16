@@ -18,13 +18,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Star, Trash2, CheckCircle2 } from "lucide-react";
+import { Trash2, CheckCircle2 } from "lucide-react";
 import { AgentEvaluationService } from "@/services/agent-evaluation.service";
-import { EvaluationRating } from "@/types/agent-evaluation";
+import { EvaluationRating, EvaluationOption } from "@/types/agent-evaluation";
 import { AgentEvaluation } from "@/types/agent-evaluation";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+
+const evaluationOptions: EvaluationOption[] = [
+  { value: 1, label: "Плохо", icon: "👎", color: "bg-red-500 hover:bg-red-600" },
+  { value: 2, label: "Средне", icon: "➖", color: "bg-yellow-500 hover:bg-yellow-600" },
+  { value: 3, label: "Хорошо", icon: "👍", color: "bg-green-500 hover:bg-green-600" },
+];
 
 interface AgentEvaluationDialogProps {
   agentId: string;
@@ -40,8 +45,6 @@ export function AgentEvaluationDialog({
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("rate");
   const [rating, setRating] = useState<EvaluationRating | 0>(0);
-  const [hoveredRating, setHoveredRating] = useState<number>(0);
-  const [comment, setComment] = useState("");
   const [allEvaluations, setAllEvaluations] = useState<AgentEvaluation[]>([]);
   const [statistics, setStatistics] = useState(AgentEvaluationService.getStatistics(agentId));
   const [userEvaluation, setUserEvaluation] = useState<AgentEvaluation | null>(null);
@@ -57,8 +60,6 @@ export function AgentEvaluationDialog({
     } else {
       // Сбрасываем состояние при закрытии диалога
       setRating(0);
-      setComment("");
-      setHoveredRating(0);
       setShowDeleteDialog(false);
       setIsSaving(false);
     }
@@ -75,10 +76,8 @@ export function AgentEvaluationDialog({
     
     if (userEval) {
       setRating(userEval.rating as EvaluationRating);
-      setComment(userEval.comment || "");
     } else {
       setRating(0);
-      setComment("");
     }
   };
 
@@ -87,7 +86,7 @@ export function AgentEvaluationDialog({
       toast({
         variant: "destructive",
         title: "Выберите оценку",
-        description: "Пожалуйста, выберите оценку от 1 до 5 звезд",
+        description: "Пожалуйста, выберите один из вариантов оценки",
       });
       return;
     }
@@ -95,7 +94,7 @@ export function AgentEvaluationDialog({
     setIsSaving(true);
     try {
       const isUpdate = !!userEvaluation;
-      AgentEvaluationService.saveEvaluation(agentId, rating as EvaluationRating, comment);
+      AgentEvaluationService.saveEvaluation(agentId, rating as EvaluationRating);
       
       // Обновляем данные сразу после сохранения
       loadData();
@@ -131,7 +130,6 @@ export function AgentEvaluationDialog({
     AgentEvaluationService.deleteEvaluation(agentId);
     loadData();
     setRating(0);
-    setComment("");
     setShowDeleteDialog(false);
     
     // Переключаемся на вкладку "Оценить" после удаления
@@ -173,23 +171,16 @@ export function AgentEvaluationDialog({
           <DialogDescription>
             {userEvaluation 
               ? "Вы уже оценили этого агента. Вы можете обновить свою оценку или просмотреть все оценки."
-              : "Оцените качество работы агента и оставьте отзыв. Ваше мнение поможет другим пользователям."
+              : "Оцените качество работы агента. Ваше мнение поможет другим пользователям."
             }
           </DialogDescription>
         </DialogHeader>
 
         <div className="mb-4 p-4 bg-muted rounded-lg">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold flex items-center justify-center gap-1">
-                {statistics.average > 0 ? (
-                  <>
-                    {statistics.average.toFixed(1)}
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  </>
-                ) : (
-                  "—"
-                )}
+              <div className="text-3xl font-bold">
+                {statistics.average > 0 ? statistics.average.toFixed(1) : "—"}
               </div>
               <div className="text-sm text-muted-foreground mt-1">
                 {statistics.total === 0 
@@ -200,21 +191,25 @@ export function AgentEvaluationDialog({
             </div>
             <div className="flex-1">
               {statistics.total > 0 ? (
-                <div className="flex flex-col gap-1.5">
-                  {[5, 4, 3, 2, 1].map((value) => {
-                    const count = statistics.distribution[value] || 0;
+                <div className="flex flex-col gap-2">
+                  {evaluationOptions.map((option) => {
+                    const count = statistics.distribution[option.value] || 0;
                     const percentage = (count / statistics.total) * 100;
                     return (
-                      <div key={value} className="flex items-center gap-2">
-                        <span className="text-xs w-6 text-right">{value}</span>
-                        <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                        <div className="flex-1 h-2 bg-muted-foreground/20 rounded-full overflow-hidden">
+                      <div key={option.value} className="flex items-center gap-3">
+                        <span className="text-sm w-16 text-left">{option.label}</span>
+                        <div className="flex-1 h-3 bg-muted-foreground/20 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-yellow-400 transition-all duration-300"
+                            className={cn(
+                              "h-full transition-all duration-300",
+                              option.value === 1 && "bg-red-500",
+                              option.value === 2 && "bg-yellow-500",
+                              option.value === 3 && "bg-green-500"
+                            )}
                             style={{ width: `${percentage}%` }}
                           />
                         </div>
-                        <span className="text-xs text-muted-foreground w-8 text-left">
+                        <span className="text-xs text-muted-foreground w-8 text-right">
                           {count}
                         </span>
                       </div>
@@ -252,81 +247,47 @@ export function AgentEvaluationDialog({
 
           <TabsContent value="rate" className="space-y-4 mt-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">
+              <label className="text-sm font-medium mb-4 block">
                 Ваша оценка <span className="text-destructive">*</span>
               </label>
-              <div className="flex items-center gap-2 mb-2">
-                {[1, 2, 3, 4, 5].map((value) => (
+              <div className="grid grid-cols-3 gap-4">
+                {evaluationOptions.map((option) => (
                   <button
-                    key={value}
+                    key={option.value}
                     type="button"
-                    className="focus:outline-none transition-transform hover:scale-110"
+                    className={cn(
+                      "flex flex-col items-center justify-center gap-2 p-6 rounded-lg border-2 transition-all duration-200",
+                      "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                      rating === option.value
+                        ? cn(
+                            "border-primary bg-primary/10 scale-105",
+                            option.value === 1 && "border-red-500 bg-red-500/10",
+                            option.value === 2 && "border-yellow-500 bg-yellow-500/10",
+                            option.value === 3 && "border-green-500 bg-green-500/10"
+                          )
+                        : "border-border hover:border-primary/50 hover:bg-accent"
+                    )}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setRating(value as EvaluationRating);
+                      setRating(option.value);
                     }}
-                    onMouseEnter={() => setHoveredRating(value)}
-                    onMouseLeave={() => setHoveredRating(0)}
-                    aria-label={`Оценить ${value} из 5`}
                   >
-                    <Star
-                      className={cn(
-                        "h-10 w-10 transition-all duration-200",
-                        (hoveredRating >= value || rating >= value)
-                          ? "fill-yellow-400 text-yellow-400 scale-110"
-                          : "text-muted-foreground hover:text-yellow-300"
-                      )}
-                    />
+                    <span className="text-4xl">{option.icon}</span>
+                    <span className={cn(
+                      "text-sm font-medium",
+                      rating === option.value && "text-primary"
+                    )}>
+                      {option.label}
+                    </span>
+                    {rating === option.value && (
+                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    )}
                   </button>
                 ))}
-                {rating > 0 && (
-                  <div className="ml-3 flex items-center gap-2">
-                    <span className="text-sm font-medium">
-                      {rating} из 5
-                    </span>
-                    <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  </div>
-                )}
               </div>
               {rating === 0 && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Наведите курсор на звезды и выберите оценку
-                </p>
-              )}
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor="comment" className="text-sm font-medium">
-                  Комментарий (необязательно)
-                </label>
-                {comment.length > 0 && (
-                  <span className="text-xs text-muted-foreground">
-                    {comment.length} / 500
-                  </span>
-                )}
-              </div>
-              <Textarea
-                id="comment"
-                placeholder="Оставьте отзыв о работе агента... (максимум 500 символов)"
-                value={comment}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  if (e.target.value.length <= 500) {
-                    setComment(e.target.value);
-                  }
-                }}
-                onClick={(e) => e.stopPropagation()}
-                onPointerDown={(e) => e.stopPropagation()}
-                rows={4}
-                maxLength={500}
-                className={cn(
-                  comment.length >= 450 && "border-orange-300 focus-visible:ring-orange-300"
-                )}
-              />
-              {comment.length >= 450 && (
-                <p className="text-xs text-orange-600 mt-1">
-                  Осталось {500 - comment.length} символов
+                <p className="text-xs text-muted-foreground mt-3 text-center">
+                  Выберите один из вариантов оценки
                 </p>
               )}
             </div>
@@ -398,6 +359,8 @@ export function AgentEvaluationDialog({
                     userEvaluation &&
                     evaluation.createdAt === userEvaluation.createdAt;
                   
+                  const option = evaluationOptions.find(opt => opt.value === evaluation.rating);
+                  
                   return (
                     <div
                       key={`${evaluation.agentId}-${evaluation.createdAt}-${evaluation.updatedAt || ''}-${index}`}
@@ -407,18 +370,9 @@ export function AgentEvaluationDialog({
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((value) => (
-                            <Star
-                              key={value}
-                              className={cn(
-                                "h-4 w-4",
-                                evaluation.rating >= value
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-muted-foreground"
-                              )}
-                            />
-                          ))}
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{option?.icon}</span>
+                          <span className="text-sm font-medium">{option?.label}</span>
                           {isUserEvaluation && (
                             <span className="ml-2 text-xs text-primary font-medium px-2 py-0.5 bg-primary/10 rounded">
                               Ваша оценка
@@ -432,9 +386,6 @@ export function AgentEvaluationDialog({
                           )}
                         </span>
                       </div>
-                      {evaluation.comment && (
-                        <p className="text-sm text-foreground mt-2">{evaluation.comment}</p>
-                      )}
                     </div>
                   );
                 })}
