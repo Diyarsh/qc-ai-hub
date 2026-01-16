@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AgentEvaluationService } from "@/services/agent-evaluation.service";
 import { AgentEvaluationDialog } from "./AgentEvaluationDialog";
@@ -69,8 +68,7 @@ export const AgentRatingBadge: React.FC<AgentRatingBadgeProps> = ({ agentId }) =
           setIsDialogOpen(true);
         }}
       >
-        <Star size={12} className="fill-yellow-500 text-yellow-500" />
-        <span>{averageRating?.toFixed(1)}</span>
+        <span>{averageRating?.toFixed(1)}/3</span>
         {ratingCount > 0 && <span className="text-muted-foreground">({ratingCount})</span>}
       </Badge>
       <AgentEvaluationDialog

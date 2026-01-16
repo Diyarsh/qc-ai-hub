@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Edit2, Trash2, Timer, Copy, MessageSquare } from "lucide-react";
-import { FeedbackModal } from "./FeedbackModal";
+import { Edit2, Trash2, Timer, Copy, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/shared/components/Toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 interface MessageBubbleProps {
   text: string;
@@ -20,6 +33,7 @@ interface MessageBubbleProps {
   files?: { name: string; url?: string; type?: string }[];
   durationMs?: number;
   feedback?: 'correct' | 'partially-correct' | 'incorrect';
+  feedbackDetails?: string;
   onFeedbackChange?: (value: 'correct' | 'partially-correct' | 'incorrect' | null, reasons?: string[], details?: string) => void;
 }
 
@@ -35,10 +49,68 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   files = [],
   durationMs,
   feedback,
+  feedbackDetails,
   onFeedbackChange,
 }) => {
   const { t } = useLanguage();
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const { showToast } = useToast();
+  const [comment, setComment] = useState(feedbackDetails || "");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showCommentField, setShowCommentField] = useState(false);
+
+  useEffect(() => {
+    const savedComment = feedbackDetails || "";
+    setComment(savedComment);
+    // Показываем поле комментария только если есть сохраненный комментарий
+    if (savedComment.trim().length > 0) {
+      setShowCommentField(true);
+    } else {
+      // Если комментария нет, скрываем поле
+      setShowCommentField(false);
+    }
+  }, [feedbackDetails]);
+
+  const handleFeedbackClick = (value: 'correct' | 'partially-correct' | 'incorrect') => {
+    if (feedback === value) {
+      // Если кликнули на уже выбранную оценку, снимаем её
+      // Если есть комментарий, показываем диалог подтверждения
+      if (comment.trim().length > 0) {
+        setShowConfirmDialog(true);
+      } else {
+        // Если комментария нет, просто снимаем оценку
+        onFeedbackChange?.(null, [], "");
+        setComment("");
+      }
+    } else {
+      // Выбираем новую оценку
+      if (value === 'correct') {
+        // Для "верно" не нужен комментарий
+        onFeedbackChange?.(value, [], "");
+        setComment("");
+      } else {
+        // Для "частично верно" и "неверно" сохраняем оценку сразу (комментарий может быть пустым)
+        onFeedbackChange?.(value, [], comment.trim());
+        // Сразу открываем поле комментария при выборе "частично верно" или "неверно"
+        setShowCommentField(true);
+      }
+    }
+  };
+
+  const handleConfirmSkip = () => {
+    // Пропускаем - снимаем оценку и очищаем комментарий
+    onFeedbackChange?.(null, [], "");
+    setComment("");
+    setShowConfirmDialog(false);
+  };
+
+  const handleCommentChange = (newComment: string) => {
+    setComment(newComment);
+    // Сохраняем комментарий сразу при изменении, если выбрана оценка
+    if (feedback && (feedback === 'partially-correct' || feedback === 'incorrect')) {
+      // Сохраняем оценку с комментарием (сохраняем как есть, без trim, чтобы пользователь мог вводить пробелы)
+      onFeedbackChange?.(feedback, [], newComment);
+    }
+  };
 
   return (
     <div className={`${role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl"} rounded-2xl px-4 py-3 text-sm border shadow-sm mb-2 ${
@@ -86,36 +158,139 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       )}
       {/* Message Actions for assistant messages */}
       {role === 'assistant' && !isLoading && (onCopy || onFeedbackChange) && (
-        <div className="mt-3 flex items-center gap-2 flex-wrap">
-          {onCopy && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
-                  onClick={onCopy}
-                >
-                  <Copy size={14} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t('message.copy')}</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
+        <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
+            {onCopy && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
+                    onClick={onCopy}
+                  >
+                    <Copy size={14} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t('message.copy')}</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           {onFeedbackChange && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowFeedbackModal(true)}
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center justify-center w-8 h-8 rounded-full transition-all",
+                      feedback === 'correct'
+                        ? "bg-muted border-2 border-border text-foreground"
+                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent"
+                    )}
+                    onClick={() => handleFeedbackClick('correct')}
+                  >
+                    <CheckCircle2 size={16} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ответ верный</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center justify-center w-8 h-8 rounded-full transition-all",
+                      feedback === 'partially-correct'
+                        ? "bg-muted border-2 border-border text-foreground"
+                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent"
+                    )}
+                    onClick={() => handleFeedbackClick('partially-correct')}
+                  >
+                    <AlertCircle size={16} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ответ частично верный</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center justify-center w-8 h-8 rounded-full transition-all",
+                      feedback === 'incorrect'
+                        ? "bg-muted border-2 border-border text-foreground"
+                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent"
+                    )}
+                    onClick={() => handleFeedbackClick('incorrect')}
+                  >
+                    <XCircle size={16} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ответ неверный</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Comment field for partially-correct and incorrect feedback */}
+      {role === 'assistant' && !isLoading && onFeedbackChange && (feedback === 'partially-correct' || feedback === 'incorrect') && (
+        <div className="mt-3 space-y-2">
+          {!showCommentField ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-3 text-xs text-muted-foreground hover:text-foreground"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowCommentField(true);
+              }}
+            >
+              Добавить отзыв (необязательно)
+            </Button>
+          ) : (
+            <>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-muted-foreground">
+                  {feedback === 'partially-correct' ? 'Почему ответ частично верен?' : 'Почему ответ неверен?'}
+                </label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (comment.trim().length > 0) {
+                      // Если есть текст, сохраняем его
+                      onFeedbackChange?.(feedback, [], comment.trim());
+                      showToast('Ваш отзыв сохранен', 'success');
+                    } else {
+                      // Если текста нет, просто закрываем поле
+                      onFeedbackChange?.(feedback, [], "");
+                    }
+                    setShowCommentField(false);
+                  }}
                 >
-                  <MessageSquare size={14} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t('message.feedback')}</p>
-              </TooltipContent>
-            </Tooltip>
+                  {comment.trim().length > 0 ? 'Сохранить' : 'Пропустить'}
+                </Button>
+              </div>
+              <Textarea
+                value={comment}
+                onChange={(e) => handleCommentChange(e.target.value)}
+                placeholder={feedback === 'partially-correct' 
+                  ? 'Опишите, что неверно или что можно улучшить...' 
+                  : 'Опишите, что неверно в ответе...'}
+                rows={3}
+                className="text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                maxLength={500}
+                onFocus={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </>
           )}
         </div>
       )}
@@ -130,18 +305,26 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       )}
 
-      {/* Feedback Modal */}
-      {onFeedbackChange && (
-        <FeedbackModal
-          isOpen={showFeedbackModal}
-          onClose={() => setShowFeedbackModal(false)}
-          onSubmit={(type, details) => {
-            onFeedbackChange(type, [], details);
-            setShowFeedbackModal(false);
-          }}
-          currentFeedback={feedback}
-        />
-      )}
+      {/* Confirmation dialog when removing feedback with comment */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Снять оценку?</AlertDialogTitle>
+            <AlertDialogDescription>
+              У вас есть комментарий к этой оценке. Комментарий будет удален вместе с оценкой.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+            <AlertDialogCancel>
+              Отмена
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSkip} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Пропустить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 };

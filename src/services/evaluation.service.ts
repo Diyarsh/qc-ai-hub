@@ -6,14 +6,13 @@ export class EvaluationService {
   /**
    * Сохранить или обновить оценку сообщения
    */
-  static saveEvaluation(messageId: string, rating: EvaluationRating, comment?: string): MessageEvaluation {
+  static saveEvaluation(messageId: string, rating: EvaluationRating): MessageEvaluation {
     const evaluations = this.getAllEvaluations();
     const existingIndex = evaluations.findIndex((e) => e.messageId === messageId);
 
     const evaluation: MessageEvaluation = {
       messageId,
       rating,
-      comment: comment?.trim() || undefined,
       createdAt: existingIndex >= 0 ? evaluations[existingIndex].createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -75,7 +74,7 @@ export class EvaluationService {
     const sum = evaluations.reduce((acc, e) => acc + e.rating, 0);
     const average = sum / evaluations.length;
 
-    const distribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    const distribution: Record<number, number> = { 1: 0, 2: 0, 3: 0 };
     evaluations.forEach((e) => {
       distribution[e.rating] = (distribution[e.rating] || 0) + 1;
     });
