@@ -177,61 +177,43 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             )}
           </div>
           {onFeedbackChange && (
-            <div className="flex items-center gap-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-full transition-all",
-                      feedback === 'correct'
-                        ? "bg-muted border-2 border-border text-foreground"
-                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent"
-                    )}
-                    onClick={() => handleFeedbackClick('correct')}
-                  >
-                    <CheckCircle2 size={16} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Ответ верный</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-full transition-all",
-                      feedback === 'partially-correct'
-                        ? "bg-muted border-2 border-border text-foreground"
-                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent"
-                    )}
-                    onClick={() => handleFeedbackClick('partially-correct')}
-                  >
-                    <AlertCircle size={16} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Ответ частично верный</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-full transition-all",
-                      feedback === 'incorrect'
-                        ? "bg-muted border-2 border-border text-foreground"
-                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-transparent"
-                    )}
-                    onClick={() => handleFeedbackClick('incorrect')}
-                  >
-                    <XCircle size={16} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Ответ неверный</p>
-                </TooltipContent>
-              </Tooltip>
+            <div className="flex items-center gap-2">
+              <button
+                className={cn(
+                  "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all border",
+                  feedback === 'correct'
+                    ? "bg-muted border-border text-foreground font-medium"
+                    : "bg-muted/80 border-border/50 text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+                onClick={() => handleFeedbackClick('correct')}
+              >
+                <CheckCircle2 size={14} />
+                <span>Верно</span>
+              </button>
+              <button
+                className={cn(
+                  "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all border",
+                  feedback === 'partially-correct'
+                    ? "bg-muted border-border text-foreground font-medium"
+                    : "bg-muted/80 border-border/50 text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+                onClick={() => handleFeedbackClick('partially-correct')}
+              >
+                <AlertCircle size={14} />
+                <span>Частично верно</span>
+              </button>
+              <button
+                className={cn(
+                  "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all border",
+                  feedback === 'incorrect'
+                    ? "bg-muted border-border text-foreground font-medium"
+                    : "bg-muted/80 border-border/50 text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+                onClick={() => handleFeedbackClick('incorrect')}
+              >
+                <XCircle size={14} />
+                <span>Неверно</span>
+              </button>
             </div>
           )}
         </div>
