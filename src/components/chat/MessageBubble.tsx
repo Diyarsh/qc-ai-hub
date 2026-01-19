@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Edit2, Trash2, Timer, Copy, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
+import { Edit2, Trash2, Timer, Copy, Check, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,6 +57,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   const [comment, setComment] = useState(feedbackDetails || "");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showCommentField, setShowCommentField] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const savedComment = feedbackDetails || "";
@@ -69,6 +70,33 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       setShowCommentField(false);
     }
   }, [feedbackDetails]);
+
+  // Reset copied state after 3 seconds
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      onCopy?.();
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      onCopy?.();
+    });
+  };
 
   const handleFeedbackClick = (value: 'correct' | 'partially-correct' | 'incorrect') => {
     if (feedback === value) {
@@ -165,13 +193,13 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 <TooltipTrigger asChild>
                   <button
                     className="flex items-center gap-1 px-2 py-1 rounded-xl transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
-                    onClick={onCopy}
+                    onClick={handleCopyClick}
                   >
-                    <Copy size={14} />
+                    {copied ? <Check size={14} className="text-muted-foreground" /> : <Copy size={14} />}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{t('message.copy')}</p>
+                  <p>{copied ? t('message.copied') || 'Скопировано' : t('message.copy')}</p>
                 </TooltipContent>
               </Tooltip>
             )}

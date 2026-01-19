@@ -299,13 +299,8 @@ export default function ProjectChat() {
   };
 
   const handleCopy = (messageId: string) => {
-    const selected = conversations.find(c => c.id === selectedId);
-    if (!selected) return;
-    const message = selected.messages.find(m => m.id === messageId);
-    if (message && message.role === 'assistant') {
-      navigator.clipboard.writeText(message.content);
-      showToast('Сообщение скопировано', 'success');
-    }
+    // MessageBubble handles copying and visual feedback internally
+    // This callback is kept for compatibility but doesn't need to do anything
   };
 
   const selected = conversations.find(c => c.id === selectedId) || null;

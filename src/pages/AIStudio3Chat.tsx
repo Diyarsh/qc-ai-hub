@@ -123,25 +123,11 @@ export default function AIStudio3Chat() {
     loadSession(sessionId);
   };
 
-  // Handle copy message text
+  // Handle copy message text (callback for MessageBubble, no toast needed)
   const handleCopy = useCallback((messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (!message) return;
-    
-    const textToCopy = message.text;
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      showToast(t('message.copied'), 'success');
-    }).catch(() => {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = textToCopy;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      showToast(t('message.copied'), 'success');
-    });
-  }, [messages, t]);
+    // MessageBubble handles copying and visual feedback internally
+    // This callback is kept for compatibility but doesn't need to do anything
+  }, []);
   
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
