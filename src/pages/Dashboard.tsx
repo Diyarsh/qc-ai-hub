@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, FileText, Languages, Code, BarChart3, Plus } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Sparkles, FileText, Languages, Code, BarChart3, Plus, Info } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -11,16 +12,40 @@ import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Disclaimer } from "@/components/chat/Disclaimer";
+import { cn } from "@/lib/utils";
+import type { LucideIcon } from "lucide-react";
+
+type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
+type AgentType = "agent" | "developer";
+
+interface QuickAgent {
+  id: string;
+  name: string;
+  description: string;
+  icon: LucideIcon;
+  instructions: string;
+  placeholder: string;
+  category?: AgentCategory[];
+  type?: AgentType;
+  tags?: string[];
+  isLocal?: boolean;
+  featured?: boolean;
+  gradient?: string;
+}
 
 // Quick access agents from AI Studio
-const quickAgents = [
+const quickAgents: QuickAgent[] = [
   {
     id: "LLM-Ultra",
     name: "LLM-Ultra",
     description: "Суверенная модель для корпоративного сектора",
-    icon: Brain,
+    icon: Sparkles,
     instructions: "Высокоточная многоязычная модель для корпоративных задач.",
     placeholder: "Сформируй краткую сводку по рынку",
+    category: ["language"],
+    type: "agent",
+    tags: ["Казахский", "Русский", "Английский"],
+    isLocal: true,
   },
   {
     id: "Doc AI",
@@ -29,6 +54,10 @@ const quickAgents = [
     icon: FileText,
     instructions: "Анализ документов РК. Извлекай ключевые положения.",
     placeholder: "Извлеки ключевые требования из договора",
+    category: ["documents"],
+    type: "agent",
+    tags: ["Госдокументы", "Правовые акты"],
+    isLocal: true,
   },
   {
     id: "Translation Master",
@@ -37,6 +66,10 @@ const quickAgents = [
     icon: Languages,
     instructions: "Профессиональный переводчик с множеством языков.",
     placeholder: "Переведи текст на казахский",
+    category: ["language"],
+    type: "agent",
+    tags: ["Перевод", "Многоязычность"],
+    isLocal: true,
   },
   {
     id: "Code Assistant",
@@ -45,6 +78,10 @@ const quickAgents = [
     icon: Code,
     instructions: "Инженер-программист. Пиши код с комментариями.",
     placeholder: "Напиши функцию на TypeScript",
+    category: ["code"],
+    type: "agent",
+    tags: ["Программирование", "Код"],
+    isLocal: true,
   },
   {
     id: "Data Analyst",
@@ -53,6 +90,10 @@ const quickAgents = [
     icon: BarChart3,
     instructions: "Аналитик данных. Анализируй и визуализируй.",
     placeholder: "Проанализируй продажи за квартал",
+    category: ["assistant"],
+    type: "agent",
+    tags: ["Аналитика", "Данные"],
+    isLocal: true,
   },
 ];
 export default function Dashboard() {
@@ -108,25 +149,11 @@ export default function Dashboard() {
     };
   }, [handleNewChat]);
 
-  // Handle copy message text
+  // Handle copy message text (callback for MessageBubble, no toast needed)
   const handleCopy = useCallback((messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (!message) return;
-    
-    const textToCopy = message.text;
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      showToast(t('message.copied'), 'success');
-    }).catch(() => {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = textToCopy;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      showToast(t('message.copied'), 'success');
-    });
-  }, [messages, t, showToast]);
+    // MessageBubble handles copying and visual feedback internally
+    // This callback is kept for compatibility but doesn't need to do anything
+  }, []);
 
   const handleSend = async (text: string) => {
     const prompt = text.trim();
@@ -201,137 +228,168 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-0">
-        {messages.length === 0 ? (
-          // Начальное состояние: контент по центру вертикально
-          <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-8 -mt-16">
-            <div className="w-full max-w-3xl">
-              <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full p-6 pb-0">
+            <div className="w-full max-w-3xl mx-auto">
+              {messages.length === 0 ? (
+                // Начальное состояние: контент по центру вертикально
+                <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] py-8">
+                  <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
 
-              {/* Central Input - по центру страницы */}
-              <div className="relative mb-8">
-                <ChatComposer
-                  value={input}
-                  onChange={setInput}
-                  onSend={handleSend}
-                  examples={examplePrompts}
-                  disabled={isLoading}
-                />
-              </div>
+                  {/* Central Input - по центру страницы */}
+                  <div className="relative mb-8 w-full">
+                    <ChatComposer
+                      value={input}
+                      onChange={setInput}
+                      onSend={handleSend}
+                      examples={examplePrompts}
+                      disabled={isLoading}
+                    />
+                  </div>
 
-              {/* Quick Access Agent Cards - Static */}
-              <div className="w-full">
-                <div className="flex flex-wrap justify-center gap-3">
-                  {quickAgents.map((agent) => {
-                    const Icon = agent.icon;
-                    return (
-                      <Card 
-                        key={agent.id}
-                        onClick={() => navigate('/ai-studio-3-chat', { 
-                          state: { 
-                            agent: agent.name, 
-                            instructions: agent.instructions,
-                            placeholder: agent.placeholder 
-                          } 
-                        })} 
-                        className="card-glow bg-card border-border cursor-pointer transition-all hover:bg-muted/50 hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px]"
-                        style={{ borderRadius: '16px' }}
-                      >
-                        <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
-                          <div 
-                            className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
-                            style={{ borderRadius: '10px' }}
+                  {/* Quick Access Agent Cards - Static */}
+                  <div className="w-full">
+                    <div className="flex flex-wrap justify-center gap-3">
+                      {quickAgents.map((agent) => {
+                        const Icon = agent.icon;
+                        return (
+                          <Card 
+                            key={agent.id}
+                            onClick={() => navigate('/ai-studio-3-chat', { 
+                              state: { 
+                                agent: agent.name, 
+                                instructions: agent.instructions,
+                                placeholder: agent.placeholder 
+                              } 
+                            })} 
+                            className="card-glow bg-card border-border cursor-pointer transition-all hover:bg-muted/50 hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px] relative"
+                            style={{ borderRadius: '16px' }}
                           >
-                            <Icon className="h-4 w-4" />
-                          </div>
-                          <div className="min-w-0 w-full overflow-hidden">
-                            <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate">{agent.name}</CardTitle>
-                            <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate">
-                              {agent.description}
-                            </CardDescription>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
+                            {/* Info icon with tooltip - always visible but transparent */}
+                            <Tooltip delayDuration={100}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  className="absolute top-1.5 right-1.5 z-50 p-0.5 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.01] group-hover:opacity-100"
+                                  style={{ pointerEvents: 'auto' }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }}
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  <Info className="h-3 w-3 text-muted-foreground" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent 
+                                side="top" 
+                                sideOffset={8}
+                                className="max-w-xs z-[99999]"
+                              >
+                                <div className="space-y-1">
+                                  <p className="font-semibold text-sm">{agent.name}</p>
+                                  <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                            
+                            <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
+                              <div 
+                                className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
+                                style={{ borderRadius: '10px' }}
+                              >
+                                <Icon className="h-4 w-4" />
+                              </div>
+                              <div className="min-w-0 w-full overflow-hidden">
+                                <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate w-full">
+                                  {agent.name}
+                                </CardTitle>
+                                <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate w-full">
+                                  {agent.description}
+                                </CardDescription>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
 
-                {/* View all agents link */}
-                <div className="text-center mt-4">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => navigate('/ai-studio-3')}
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    <Plus className="h-4 w-4 mr-1" />
-                    Все агенты AI Studio
-                  </Button>
+                    {/* View all agents link */}
+                    <div className="text-center mt-4">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => navigate('/ai-studio-3')}
+                        className="text-muted-foreground hover:text-primary"
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Все агенты AI Studio
+                      </Button>
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
+                <>
+                  <h2 className="text-4xl font-bold text-center mb-8 pt-4">AI-HUB</h2>
+
+                  {/* Messages Display */}
+                  <div className="space-y-4 pb-0">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={msg.role === 'user' ? 'flex justify-end' : ''}
+                      >
+                        <MessageBubble
+                          text={msg.text}
+                          role={msg.role}
+                          messageId={msg.id}
+                          isLoading={msg.isLoading}
+                          feedback={msg.feedback}
+                          feedbackDetails={msg.feedbackDetails}
+                          onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
+                          onFeedbackChange={(value, reasons, details) => {
+                            if (msg.role !== 'assistant') return;
+                            setMessages(prev => prev.map(m => 
+                              m.id === msg.id 
+                                ? { 
+                                    ...m, 
+                                    feedback: value || undefined,
+                                    feedbackDetails: details || ""
+                                  } 
+                                : m
+                            ));
+                          }}
+                        />
+                      </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </div>
+                </>
+              )}
+            </div>
+          </ScrollArea>
+        </div>
+
+        {/* Input at bottom - только когда есть сообщения */}
+        {messages.length > 0 && (
+          <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
+            <div className="w-full max-w-3xl mx-auto space-y-2">
+              <ChatComposer
+                value={input}
+                onChange={setInput}
+                onSend={handleSend}
+                examples={examplePrompts}
+                disabled={isLoading}
+              />
+              <div className="pb-1">
+                <Disclaimer />
               </div>
             </div>
           </div>
-        ) : (
-          // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
-          <>
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="flex-1 overflow-hidden">
-                <ScrollArea className="h-full p-6 pb-[180px]">
-                  <div className="w-full max-w-3xl mx-auto">
-                    <h2 className="text-4xl font-bold text-center mb-8 pt-4">AI-HUB</h2>
-
-                    {/* Messages Display */}
-                    <div className="space-y-4 pb-0">
-                      {messages.map((msg) => (
-                        <div
-                          key={msg.id}
-                          className={msg.role === 'user' ? 'flex justify-end' : ''}
-                        >
-                          <MessageBubble
-                            text={msg.text}
-                            role={msg.role}
-                            messageId={msg.id}
-                            isLoading={msg.isLoading}
-                            feedback={msg.feedback}
-                            feedbackDetails={msg.feedbackDetails}
-                            onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
-                            onFeedbackChange={(value, reasons, details) => {
-                              if (msg.role !== 'assistant') return;
-                              setMessages(prev => prev.map(m => 
-                                m.id === msg.id 
-                                  ? { 
-                                      ...m, 
-                                      feedback: value || undefined,
-                                      feedbackDetails: details || ""
-                                    } 
-                                  : m
-                              ));
-                            }}
-                          />
-                        </div>
-                      ))}
-                      <div ref={messagesEndRef} />
-                    </div>
-                  </div>
-                </ScrollArea>
-              </div>
-
-              {/* Input at bottom when messages exist - фиксировано */}
-              <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
-                <div className="w-full max-w-3xl mx-auto space-y-2">
-                  <ChatComposer
-                    value={input}
-                    onChange={setInput}
-                    onSend={handleSend}
-                    examples={examplePrompts}
-                    disabled={isLoading}
-                  />
-                  <div className="pb-1">
-                    <Disclaimer />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
         )}
       </main>
     </div>;

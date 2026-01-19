@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Search, 
   Filter,
-  Brain,
+  Sparkles,
   Briefcase,
   FileText,
   Code,
@@ -20,8 +20,8 @@ import {
   Kanban,
   Grid3x3,
   Factory,
-  Sparkles,
-  Users
+  Users,
+  Info
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -29,6 +29,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
 type AgentType = "agent" | "developer";
@@ -59,7 +61,7 @@ const agents: Agent[] = [
     placeholder: "Сформируй краткую сводку по рынку за Q3 2025",
     tags: ["Казахский", "Русский", "Английский", "+1"],
     isLocal: true,
-    icon: Brain,
+    icon: Sparkles,
     featured: true,
     gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
   },
@@ -88,6 +90,32 @@ const agents: Agent[] = [
     isLocal: true,
     icon: FileText,
     gradient: "from-green-500/20 via-emerald-500/10 to-transparent",
+  },
+  {
+    id: "Long-Name-Test",
+    name: "Суверенная модель для корпоративного сектора с поддержкой множества языков и расширенными возможностями",
+    description: "Высокоточная многоязычная модель искусственного интеллекта, специально разработанная для корпоративного сектора с расширенными возможностями обработки естественного языка и поддержкой более 50 языков, включая редкие диалекты и специализированные терминологии",
+    category: ["language"],
+    type: "agent",
+    instructions: "Высокоточная многоязычная модель для корпоративных задач.",
+    placeholder: "Тестовый промпт",
+    tags: ["Тест"],
+    isLocal: true,
+    icon: Sparkles,
+    gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
+  },
+  {
+    id: "Long-Desc-Test",
+    name: "Корпоративный интеллектуальный ассистент",
+    description: "Мощный корпоративный ассистент, предназначенный для автоматизации внутренних процессов предприятий, управления документами, планирования задач и координации работы команд с использованием передовых технологий искусственного интеллекта и машинного обучения для повышения эффективности бизнес-операций",
+    category: ["assistant"],
+    type: "agent",
+    instructions: "Корпоративный ассистент.",
+    placeholder: "Тестовый промпт",
+    tags: ["Тест"],
+    isLocal: true,
+    icon: Briefcase,
+    gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
   },
   {
     id: "Code Assistant",
@@ -312,8 +340,9 @@ export default function AIStudio3() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
+      <main className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="max-w-7xl mx-auto space-y-6 p-6">
           {/* Search Section */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -445,7 +474,7 @@ export default function AIStudio3() {
                 opacity: 0,
                 borderRadius: '20px',
               }}
-                  onClick={(e) => handleCardClick(e, agent)}
+              onClick={(e) => handleCardClick(e, agent)}
             >
               {/* Gradient background */}
               {agent.gradient && (
@@ -459,6 +488,33 @@ export default function AIStudio3() {
               )}
               
               <CardHeader className="p-3 relative z-10 h-full flex flex-col">
+                {/* Info icon with tooltip */}
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="absolute top-2 right-2 z-50 p-1 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.01] group-hover:opacity-100"
+                      style={{ pointerEvents: 'auto' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" sideOffset={8} className="max-w-xs z-[99999]">
+                    <div className="space-y-1">
+                      <p className="font-semibold text-sm">{agent.name}</p>
+                      <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+                
                 <div className="flex items-center gap-2 mb-1.5">
                   <div className={cn(
                     "p-1.5 transition-all duration-300",
@@ -470,11 +526,22 @@ export default function AIStudio3() {
                   >
                     <Icon className="h-4 w-4" />
                   </div>
-                  <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors truncate">
+                  <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors truncate flex-1 min-w-0">
                     {agent.name}
                   </CardTitle>
                 </div>
-                <CardDescription className="text-xs mb-2 line-clamp-2 flex-1">
+                <CardDescription 
+                  className="text-xs mb-2 flex-1 min-w-0"
+                  style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    lineHeight: '1.3em',
+                    maxHeight: '2.6em'
+                  }}
+                >
                   {agent.description}
                 </CardDescription>
                 <div className="flex flex-wrap gap-1 mt-auto">
@@ -501,7 +568,8 @@ export default function AIStudio3() {
               )})}
                 </div>
           )}
-        </div>
+          </div>
+        </ScrollArea>
       </main>
     </div>
   );
