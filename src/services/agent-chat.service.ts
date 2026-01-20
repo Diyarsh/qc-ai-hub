@@ -414,7 +414,7 @@ export class AgentChatService {
         text: responseText,
         createdAt: responseTime,
         durationMs,
-        feedback: Math.random() > 0.7 ? (Math.random() > 0.5 ? 'like' : 'dislike') : undefined,
+        feedback: Math.random() > 0.7 ? (Math.random() > 0.5 ? 'correct' : 'incorrect') : undefined,
       });
     }
 
