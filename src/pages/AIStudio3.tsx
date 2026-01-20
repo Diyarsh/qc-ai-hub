@@ -493,20 +493,26 @@ export default function AIStudio3() {
                   <TooltipProvider>
                     <Tooltip delayDuration={100}>
                       <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          className="p-1 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.1] group-hover:opacity-100"
-                          onClick={(e) => {
-                            e.preventDefault();
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Info: ${agent.name}`}
+                          className="inline-flex p-1 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.15] group-hover:opacity-100"
+                          onPointerDown={(e) => {
                             e.stopPropagation();
                           }}
-                          onMouseDown={(e) => {
-                            e.preventDefault();
+                          onClick={(e) => {
                             e.stopPropagation();
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }
                           }}
                         >
                           <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                        </button>
+                        </span>
                       </TooltipTrigger>
                       <TooltipContent side="top" sideOffset={8} className="max-w-xs z-[99999]">
                         <div className="space-y-1">
