@@ -5,6 +5,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
 import logoDark from "@/assets/QC_Black_icon.svg";
 import logoLight from "@/assets/QC_White_icon.svg";
+import samrukKazynaLogo from "@/assets/samruk-kazyna.svg";
 import { useEffect, useState } from "react";
 
 interface NavigationProps {
@@ -31,12 +32,23 @@ export const Navigation = ({ onLoginClick }: NavigationProps) => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <img 
-          src={currentTheme === "dark" ? logoLight : logoDark} 
-          alt="QazCloud AI-HUB" 
-          className="h-10"
-          style={{ transform: 'rotate(-90deg)' }}
-        />
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center h-10">
+            <img 
+              src={currentTheme === "dark" ? logoLight : logoDark} 
+              alt="QazCloud AI-HUB" 
+              className="h-10 w-auto object-contain"
+              style={{ transform: 'rotate(-90deg)' }}
+            />
+          </div>
+          <div className="flex items-center justify-center h-10">
+            <img 
+              src={samrukKazynaLogo} 
+              alt="Samruk Kazyna" 
+              className="h-10 w-auto object-contain"
+            />
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           <LanguageSelector />
           <Button
