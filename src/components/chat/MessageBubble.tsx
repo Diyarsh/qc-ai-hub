@@ -141,10 +141,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   };
 
   return (
-    <div className={`${role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl"} rounded-2xl px-4 py-3 text-sm border shadow-sm mb-2 ${
+    <div className={`${role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl"} rounded-2xl px-4 py-3 text-sm mb-2 ${
       role === "user"
-        ? "bg-primary text-primary-foreground border-primary/60"
-        : "bg-card border-border"
+        ? "bg-primary text-primary-foreground border border-primary/60 shadow-sm"
+        : "bg-card"
     }`}>
       {/* Message Actions - only for user messages */}
       {role === 'user' && (onEdit || onDelete) && (
