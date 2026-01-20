@@ -489,31 +489,32 @@ export default function AIStudio3() {
               
               <CardHeader className="p-3 relative z-10 h-full flex flex-col">
                 {/* Info icon with tooltip */}
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      className="absolute top-2 right-2 z-50 p-1 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.01] group-hover:opacity-100"
-                      style={{ pointerEvents: 'auto' }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                    >
-                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" sideOffset={8} className="max-w-xs z-[99999]">
-                    <div className="space-y-1">
-                      <p className="font-semibold text-sm">{agent.name}</p>
-                      <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
+                <div className="absolute top-2 right-2 z-[100]">
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        className="p-1 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.1] group-hover:opacity-100"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                      >
+                        <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={8} className="max-w-xs z-[99999]">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-sm">{agent.name}</p>
+                        <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 
                 <div className="flex items-center gap-2 mb-1.5">
                   <div className={cn(
