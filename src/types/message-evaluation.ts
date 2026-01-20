@@ -1,6 +1,6 @@
 export interface MessageEvaluation {
   messageId: string;
-  rating: number; // 1 = Верно, 2 = Частично верно, 3 = Неверно
+  rating: EvaluationRating; // 1 = Верно, 2 = Частично верно, 3 = Неверно
   createdAt: string; // ISO string
   updatedAt?: string; // ISO string
 }
