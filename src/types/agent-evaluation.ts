@@ -1,6 +1,7 @@
 export interface AgentEvaluation {
   agentId: string;
-  rating: number; // 1-3: 1 = Плохо, 2 = Средне, 3 = Хорошо
+  rating: number; // 1-5 rating scale
+  comment?: string; // Optional comment for the evaluation
   createdAt: string; // ISO string
   updatedAt?: string; // ISO string
   userId?: string; // Optional user identifier for multi-user scenarios
