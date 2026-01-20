@@ -438,7 +438,7 @@ export default function AIStudio3() {
               </p>
             </div>
           ) : isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
               {[...Array(10)].map((_, index) => (
                 <Card key={index} className="overflow-hidden h-[140px]" style={{ borderRadius: '20px' }}>
               <CardHeader className="p-3 h-full flex flex-col">
@@ -457,7 +457,7 @@ export default function AIStudio3() {
               ))}
             </div>
           ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
               {filteredAgents.map((agent, index) => {
                 const Icon = agent.icon;
                 return (
