@@ -20,8 +20,7 @@ import {
   Kanban,
   Grid3x3,
   Factory,
-  Users,
-  Info
+  Users
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -29,7 +28,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
@@ -488,42 +486,6 @@ export default function AIStudio3() {
               )}
               
               <CardHeader className="p-3 relative z-10 h-full flex flex-col">
-                {/* Info icon with tooltip */}
-                <div className="absolute top-2 right-2 z-[100]">
-                  <TooltipProvider>
-                    <Tooltip delayDuration={100}>
-                      <TooltipTrigger asChild>
-                        <span
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Info: ${agent.name}`}
-                          className="inline-flex p-1 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.15] group-hover:opacity-100"
-                          onPointerDown={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }
-                          }}
-                        >
-                          <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" sideOffset={8} className="max-w-xs z-[99999]">
-                        <div className="space-y-1">
-                          <p className="font-semibold text-sm">{agent.name}</p>
-                          <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-                
                 <div className="flex items-center gap-2 mb-1.5">
                   <div className={cn(
                     "p-1.5 transition-all duration-300",

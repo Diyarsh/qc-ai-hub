@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Sparkles, FileText, Languages, Code, BarChart3, Plus, Info } from "lucide-react";
+import { Sparkles, FileText, Languages, Code, BarChart3, Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -265,37 +264,6 @@ export default function Dashboard() {
                             className="card-glow bg-card border-border cursor-pointer transition-all hover:bg-muted/50 hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px] relative"
                             style={{ borderRadius: '16px' }}
                           >
-                            {/* Info icon with tooltip - always visible but transparent */}
-                            <Tooltip delayDuration={100}>
-                              <TooltipTrigger asChild>
-                                <button
-                                  type="button"
-                                  className="absolute top-1.5 right-1.5 z-50 p-0.5 rounded-md hover:bg-muted/50 transition-opacity opacity-[0.01] group-hover:opacity-100"
-                                  style={{ pointerEvents: 'auto' }}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                  }}
-                                  onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                  }}
-                                >
-                                  <Info className="h-3 w-3 text-muted-foreground" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent 
-                                side="top" 
-                                sideOffset={8}
-                                className="max-w-xs z-[99999]"
-                              >
-                                <div className="space-y-1">
-                                  <p className="font-semibold text-sm">{agent.name}</p>
-                                  <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
-                      </div>
-                              </TooltipContent>
-                            </Tooltip>
-                            
                             <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
                               <div 
                                 className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
