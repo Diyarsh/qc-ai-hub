@@ -35,7 +35,7 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
           {title ? (
             <h1 className="text-xl sm:text-2xl font-bold leading-tight truncate">{title}</h1>
           ) : (
-            <h1 className="text-xl sm:text-2xl font-bold leading-tight opacity-0 select-none pointer-events-none">&nbsp;</h1>
+            <span className="text-xl sm:text-2xl font-bold tracking-tight">AI-HUB</span>
           )}
           {subtitle && (
             <p className="text-xs sm:text-sm text-muted-foreground truncate leading-tight mt-0.5">{subtitle}</p>
