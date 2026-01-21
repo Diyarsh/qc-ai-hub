@@ -231,21 +231,21 @@ export default function Dashboard() {
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-full p-6 pb-0">
             <div className="w-full max-w-3xl mx-auto">
-              {messages.length === 0 ? (
-                // Начальное состояние: контент по центру вертикально
+        {messages.length === 0 ? (
+          // Начальное состояние: контент по центру вертикально
                 <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] py-8">
-                  <h2 className="text-4xl font-bold text-center mb-8">AI-HUB</h2>
+                  <h2 className="text-4xl font-semibold text-center mb-8">Сәлем Роман! Готовы начать?</h2>
 
-                  {/* Central Input - по центру страницы */}
+              {/* Central Input - по центру страницы */}
                   <div className="relative mb-8 w-full">
-                    <ChatComposer
-                      value={input}
-                      onChange={setInput}
-                      onSend={handleSend}
-                      examples={examplePrompts}
-                      disabled={isLoading}
-                    />
-                  </div>
+                <ChatComposer
+                  value={input}
+                  onChange={setInput}
+                  onSend={handleSend}
+                  examples={examplePrompts}
+                  disabled={isLoading}
+                />
+              </div>
 
                   {/* Quick Access Agent Cards - Static */}
                   <div className="w-full">
@@ -292,7 +292,7 @@ export default function Dashboard() {
                                 <div className="space-y-1">
                                   <p className="font-semibold text-sm">{agent.name}</p>
                                   <p className="text-sm text-muted-foreground whitespace-normal">{agent.description}</p>
-                                </div>
+                      </div>
                               </TooltipContent>
                             </Tooltip>
                             
@@ -302,17 +302,17 @@ export default function Dashboard() {
                                 style={{ borderRadius: '10px' }}
                               >
                                 <Icon className="h-4 w-4" />
-                              </div>
+                      </div>
                               <div className="min-w-0 w-full overflow-hidden">
                                 <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate w-full">
                                   {agent.name}
                                 </CardTitle>
                                 <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate w-full">
                                   {agent.description}
-                                </CardDescription>
-                              </div>
-                            </CardContent>
-                          </Card>
+                        </CardDescription>
+                    </div>
+                  </CardContent>
+                </Card>
                         );
                       })}
                     </div>
@@ -328,13 +328,13 @@ export default function Dashboard() {
                         <Plus className="h-4 w-4 mr-1" />
                         Все агенты AI Studio
                       </Button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
+              </div>
+            </div>
+          </div>
+        ) : (
                 // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
-                <>
-                  <h2 className="text-4xl font-bold text-center mb-8 pt-4">AI-HUB</h2>
+          <>
+                  <h2 className="text-4xl font-semibold text-center mb-8 pt-4">Сәлем Роман! Готовы начать?</h2>
 
                   {/* Messages Display */}
                   <div className="space-y-4 pb-0">
@@ -370,21 +370,21 @@ export default function Dashboard() {
                   </div>
                 </>
               )}
+                </div>
+              </ScrollArea>
             </div>
-          </ScrollArea>
-        </div>
 
         {/* Input at bottom - только когда есть сообщения */}
         {messages.length > 0 && (
           <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
             <div className="w-full max-w-3xl mx-auto space-y-2">
-              <ChatComposer
-                value={input}
-                onChange={setInput}
-                onSend={handleSend}
-                examples={examplePrompts}
-                disabled={isLoading}
-              />
+                <ChatComposer
+                  value={input}
+                  onChange={setInput}
+                  onSend={handleSend}
+                  examples={examplePrompts}
+                  disabled={isLoading}
+                />
               <div className="pb-1">
                 <Disclaimer />
               </div>

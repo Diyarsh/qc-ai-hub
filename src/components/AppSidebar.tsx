@@ -11,6 +11,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useTheme } from "next-themes";
 import qcLogo from "@/assets/QC_Black_icon.svg";
 import qcLogoLight from "@/assets/QC_White_icon.svg";
+import samrukKazynaLogo from "@/assets/samruk-kazyna.svg";
+import skLogo from "@/assets/sk-logo.svg";
 import { UserSettingsDialog } from "@/components/UserSettingsDialog";
 import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 
@@ -214,13 +216,20 @@ export function AppSidebar() {
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="px-3 py-4">
         <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-between gap-3"}`}>
-          <div className={`${collapsed ? "flex items-center justify-center group/logo" : "flex items-center gap-3"} transition-all duration-200`}>
+          <div className={`${collapsed ? "flex flex-col items-center justify-center gap-2 group/logo" : "flex items-center gap-3"} transition-all duration-200`}>
             <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
               <img 
                 src={theme === "dark" ? qcLogoLight : qcLogo} 
                 alt="QazCloud AI-HUB" 
                 className="h-full w-auto object-contain transition-all duration-200"
                 style={{ transform: 'rotate(-90deg)' }} 
+              />
+            </div>
+            <div className={`h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
+              <img 
+                src={collapsed ? skLogo : samrukKazynaLogo} 
+                alt="Samruk Kazyna" 
+                className="h-8 w-auto object-contain transition-all duration-200"
               />
             </div>
             {collapsed && (
@@ -234,12 +243,6 @@ export function AppSidebar() {
                   <ChevronsRight className="h-4 w-4" />
                   <span className="sr-only">Toggle Sidebar</span>
                 </Button>
-              </div>
-            )}
-            {!collapsed && (
-              <div className="flex flex-col justify-center leading-tight animate-in fade-in slide-in-from-left duration-200">
-                <span className="text-base font-semibold tracking-tight">AI-HUB</span>
-                <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
               </div>
             )}
           </div>
