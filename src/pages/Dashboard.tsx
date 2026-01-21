@@ -234,7 +234,7 @@ export default function Dashboard() {
         {messages.length === 0 ? (
           // Начальное состояние: контент по центру вертикально
                 <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] py-8">
-                  <h2 className="text-4xl font-semibold text-center mb-8">Сәлем Роман! Готовы начать?</h2>
+                  <h2 className="text-4xl font-semibold text-center mb-8">AI-HUB</h2>
 
               {/* Central Input - по центру страницы */}
                   <div className="relative mb-8 w-full">
@@ -334,7 +334,7 @@ export default function Dashboard() {
         ) : (
                 // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
           <>
-                  <h2 className="text-4xl font-semibold text-center mb-8 pt-4">Сәлем Роман! Готовы начать?</h2>
+                  <h2 className="text-4xl font-semibold text-center mb-8 pt-4">AI-HUB</h2>
 
                   {/* Messages Display */}
                   <div className="space-y-4 pb-0">
