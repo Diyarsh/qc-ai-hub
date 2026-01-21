@@ -216,7 +216,8 @@ export function AppSidebar() {
   return <Sidebar collapsible="icon" className="border-r border-border bg-card">
       <SidebarHeader className="px-3 py-4">
         <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-between gap-3"}`}>
-          <div className={`${collapsed ? "flex flex-col items-center justify-center gap-2 group/logo" : "flex items-center gap-3"} transition-all duration-200`}>
+          <div className={`${collapsed ? "flex items-center justify-center group/logo" : "flex items-center gap-2"} transition-all duration-200`}>
+            {/* QC logo */}
             <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
               <img 
                 src={theme === "dark" ? qcLogoLight : qcLogo} 
@@ -225,13 +226,13 @@ export function AppSidebar() {
                 style={{ transform: 'rotate(-90deg)' }} 
               />
             </div>
-            <div className={`h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
-              <img 
-                src={collapsed ? skLogo : samrukKazynaLogo} 
-                alt="Samruk Kazyna" 
-                className="h-8 w-auto object-contain transition-all duration-200"
-              />
-            </div>
+            {/* AI-HUB text */}
+            {!collapsed && (
+              <div className="flex flex-col leading-tight animate-in fade-in slide-in-from-left duration-200">
+                <span className="text-base font-semibold tracking-tight">AI-HUB</span>
+                <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
+              </div>
+            )}
             {collapsed && (
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/logo:opacity-100 transition-opacity">
                 <Button
@@ -377,58 +378,16 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-2 mt-auto">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div
-              role="button"
-              tabIndex={0}
-              className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 w-full ${collapsed ? "justify-center" : ""}`}
-            >
-              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-                <span className="text-primary-foreground text-sm font-semibold">RL</span>
-              </div>
-              {!collapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">Roman Lefarov</p>
-                </div>
-              )}
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Roman Lefarov</p>
-                <p className="text-xs leading-none text-muted-foreground">roman.lefarov@example.com</p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setUserSettingsOpen(true)}>
-              <Palette className="mr-2 h-4 w-4" />
-              <span>Персонализация</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setUserSettingsOpen(true)}>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Настройки</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/admin/dashboard')}>
-              <Shield className="mr-2 h-4 w-4" />
-              <span>Администрирование</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <HelpCircle className="mr-2 h-4 w-4" />
-              <span>Справка</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => {
-              logout();
-              navigate('/');
-            }}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Выйти</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className={`flex items-center ${collapsed ? "justify-center" : "justify-start gap-2"} px-2 py-2`}>
+          {/* Samruk Kazyna logo */}
+          <div className="h-8 flex items-center justify-center flex-shrink-0">
+            <img 
+              src={collapsed ? skLogo : samrukKazynaLogo} 
+              alt="Samruk Kazyna" 
+              className="h-8 w-auto object-contain"
+            />
+          </div>
+        </div>
       </SidebarFooter>
       <UserSettingsDialog open={userSettingsOpen} onOpenChange={setUserSettingsOpen} />
     </Sidebar>;
