@@ -73,7 +73,7 @@ export const HeroSection = ({
             </div>
 
             {/* Right content - 3D Scene */}
-            <div className="flex-1 relative min-h-[400px] lg:min-h-[600px]">
+            <div className="flex-1 relative min-h-[400px] lg:min-h-[600px] opacity-100" style={{ visibility: 'visible' }}>
               <SplineScene scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" className="w-full h-full" />
             </div>
           </div>

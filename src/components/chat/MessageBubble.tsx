@@ -210,7 +210,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 className={cn(
                   "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all border",
                   feedback === 'correct'
-                    ? "bg-muted border-border text-foreground font-medium"
+                    ? "bg-green-100/60 dark:bg-green-900/30 border-green-300 dark:border-green-600 text-green-700 dark:text-green-300 font-medium"
                     : "bg-muted/80 border-border/50 text-foreground/70 hover:bg-muted hover:text-foreground"
                 )}
                 onClick={() => handleFeedbackClick('correct')}
@@ -222,7 +222,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 className={cn(
                   "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all border",
                   feedback === 'partially-correct'
-                    ? "bg-muted border-border text-foreground font-medium"
+                    ? "bg-yellow-100/60 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-600 text-yellow-700 dark:text-yellow-300 font-medium"
                     : "bg-muted/80 border-border/50 text-foreground/70 hover:bg-muted hover:text-foreground"
                 )}
                 onClick={() => handleFeedbackClick('partially-correct')}
@@ -234,7 +234,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 className={cn(
                   "flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all border",
                   feedback === 'incorrect'
-                    ? "bg-muted border-border text-foreground font-medium"
+                    ? "bg-red-100/60 dark:bg-red-900/30 border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 font-medium"
                     : "bg-muted/80 border-border/50 text-foreground/70 hover:bg-muted hover:text-foreground"
                 )}
                 onClick={() => handleFeedbackClick('incorrect')}
