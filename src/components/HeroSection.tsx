@@ -61,13 +61,6 @@ export const HeroSection = ({
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
                 </Button>
-                <Button 
-                  variant="outline-hero" 
-                  size="lg"
-                  className="hover:bg-primary/5 transition-all duration-300"
-                >
-                  {t('hero.learn-more')}
-                </Button>
               </div>
               
             </div>

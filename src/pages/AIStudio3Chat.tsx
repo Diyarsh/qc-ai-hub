@@ -16,6 +16,7 @@ import { AgentChatService } from "@/services/agent-chat.service";
 import { AgentChatMessage } from "@/types/agent-chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Disclaimer } from "@/components/chat/Disclaimer";
+import { FeedbackPopup } from "@/components/chat/FeedbackPopup";
 
 export default function AIStudio3Chat() {
   const {
@@ -35,6 +36,8 @@ export default function AIStudio3Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
+  const [lastAssistantMessageId, setLastAssistantMessageId] = useState<string | null>(null);
   
   const examplePrompts = ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
   
@@ -163,6 +166,9 @@ export default function AIStudio3Chat() {
     setMessages(prev => [...prev, userMsg, loadingMsg]);
     setMessage("");
     setAttachedFiles([]);
+    // Закрываем всплывающее окно при отправке нового сообщения
+    setShowFeedbackPopup(false);
+    setLastAssistantMessageId(null);
     
     try {
       const startedAt = performance.now();
@@ -214,6 +220,10 @@ export default function AIStudio3Chat() {
           ? { id: loadingMsgId, role: 'assistant' as const, text: response.content, durationMs }
           : msg
       ));
+
+      // Показываем всплывающее окно для оценки ответа
+      setLastAssistantMessageId(loadingMsgId);
+      setShowFeedbackPopup(true);
 
       // Update session title if this is the first message
       // Обновляем название сессии из первого сообщения, если оно еще "Новый чат"
@@ -317,7 +327,31 @@ export default function AIStudio3Chat() {
 
           {/* Input at bottom when messages exist - фиксировано */}
           <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
-            <div className="w-full max-w-3xl mx-auto space-y-2">
+            <div className="w-full max-w-3xl mx-auto space-y-3 relative">
+              {/* Окошко оценки над полем ввода — после каждого ответа агента */}
+              {showFeedbackPopup && lastAssistantMessageId && (() => {
+                const lastMessage = messages.find(m => m.id === lastAssistantMessageId);
+                return (
+                  <FeedbackPopup
+                    messageId={lastAssistantMessageId}
+                    feedback={lastMessage?.feedback}
+                    feedbackDetails={lastMessage?.feedbackDetails}
+                    onFeedbackChange={(value, _reasons, details) => {
+                      if (lastAssistantMessageId) {
+                        setMessages(prev => prev.map(m => 
+                          m.id === lastAssistantMessageId 
+                            ? { ...m, feedback: value ?? undefined, feedbackDetails: details ?? "" }
+                            : m
+                        ));
+                      }
+                    }}
+                    onClose={() => {
+                      setShowFeedbackPopup(false);
+                      setLastAssistantMessageId(null);
+                    }}
+                  />
+                );
+              })()}
               {/* Отображение прикрепленных файлов */}
               {attachedFiles.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-2">

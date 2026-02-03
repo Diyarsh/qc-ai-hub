@@ -11,6 +11,7 @@ import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Disclaimer } from "@/components/chat/Disclaimer";
+import { FeedbackPopup } from "@/components/chat/FeedbackPopup";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -105,6 +106,8 @@ export default function Dashboard() {
   const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackDetails?: string; isRegenerated?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
+  const [lastAssistantMessageId, setLastAssistantMessageId] = useState<string | null>(null);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -170,6 +173,9 @@ export default function Dashboard() {
     
     setMessages(prev => [...prev, userMsg, loadingMsg]);
     setInput("");
+    // Закрываем всплывающее окно при отправке нового сообщения
+    setShowFeedbackPopup(false);
+    setLastAssistantMessageId(null);
     
     // Save to history immediately when first message is sent in a new chat
     if (isNewChat) {
@@ -205,6 +211,10 @@ export default function Dashboard() {
           ? { id: loadingMsgId, role: 'assistant' as const, text: response.content }
           : msg
       ));
+
+      // Показываем всплывающее окно для оценки ответа
+      setLastAssistantMessageId(loadingMsgId);
+      setShowFeedbackPopup(true);
       
     } catch (error: any) {
       console.error('Error sending message:', error);
@@ -345,7 +355,31 @@ export default function Dashboard() {
         {/* Input at bottom - только когда есть сообщения */}
         {messages.length > 0 && (
           <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
-            <div className="w-full max-w-3xl mx-auto space-y-2">
+            <div className="w-full max-w-3xl mx-auto space-y-3">
+              {/* Окошко оценки над полем ввода — после каждого ответа агента */}
+              {showFeedbackPopup && lastAssistantMessageId && (() => {
+                const lastMessage = messages.find(m => m.id === lastAssistantMessageId);
+                return (
+                  <FeedbackPopup
+                    messageId={lastAssistantMessageId}
+                    feedback={lastMessage?.feedback}
+                    feedbackDetails={lastMessage?.feedbackDetails}
+                    onFeedbackChange={(value, _reasons, details) => {
+                      if (lastAssistantMessageId) {
+                        setMessages(prev => prev.map(m => 
+                          m.id === lastAssistantMessageId 
+                            ? { ...m, feedback: value ?? undefined, feedbackDetails: details ?? "" }
+                            : m
+                        ));
+                      }
+                    }}
+                    onClose={() => {
+                      setShowFeedbackPopup(false);
+                      setLastAssistantMessageId(null);
+                    }}
+                  />
+                );
+              })()}
                 <ChatComposer
                   value={input}
                   onChange={setInput}
