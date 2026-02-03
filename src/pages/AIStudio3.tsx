@@ -463,6 +463,7 @@ export default function AIStudio3() {
                   key={agent.id}
               className={cn(
                 "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[140px]",
+                "bg-muted/30 hover:bg-muted/50 border-border/50",
                 "hover:scale-[1.02] hover:shadow-lg",
                 agent.featured && "ring-1 ring-primary/40"
               )}

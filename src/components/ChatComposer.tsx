@@ -113,7 +113,7 @@ export function ChatComposer({
 
   return (
     <div 
-      className={`relative border border-border rounded-2xl bg-background ${className || ''}`}
+      className={`relative border border-border/50 rounded-2xl bg-muted/50 hover:bg-muted/70 transition-colors ${className || ''}`}
       onClick={(e) => {
         // If click is on the container (not on buttons), focus textarea
         if (e.target === e.currentTarget || (e.target as HTMLElement).tagName === 'DIV') {

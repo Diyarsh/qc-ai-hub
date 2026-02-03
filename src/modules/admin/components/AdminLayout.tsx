@@ -1,7 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
-import { DevModeToggle } from "@/components/DevModeToggle";
 import { useTheme } from "next-themes";
 
 export function AdminLayout({ role = "ROLE_ADMIN", children }: { children: ReactNode; role?: string }) {
@@ -22,7 +21,6 @@ export function AdminLayout({ role = "ROLE_ADMIN", children }: { children: React
         <main className="flex-1 bg-background p-8">
           {children}
         </main>
-        <DevModeToggle />
       </div>
     </div>
   );

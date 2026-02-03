@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Sparkles, FolderOpen, Upload, Bot } from "lucide-react";
+import { Sparkles, FolderOpen, Upload, Bot, type LucideIcon } from "lucide-react";
+import { IconPicker } from "@/components/IconPicker";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 interface CreateProjectDialogProps {
@@ -20,6 +21,7 @@ export function CreateProjectDialog({
   const [projectInstructions, setProjectInstructions] = useState("");
   const [model, setModel] = useState("gpt-oss-20b");
   const [files, setFiles] = useState<File[]>([]);
+  const [selectedIcon, setSelectedIcon] = useState<LucideIcon>(Sparkles);
   const navigate = useNavigate();
   const handleTitleInput = (e: React.FormEvent<HTMLSpanElement>) => {
     const value = e.currentTarget.textContent ?? "";
@@ -49,6 +51,7 @@ export function CreateProjectDialog({
     setProjectInstructions("");
     setModel("gpt-oss-20b");
     setFiles([]);
+    setSelectedIcon(Sparkles);
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -62,6 +65,7 @@ export function CreateProjectDialog({
     setProjectInstructions("");
     setModel("gpt-oss-20b");
     setFiles([]);
+    setSelectedIcon(Sparkles);
   };
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -86,6 +90,14 @@ export function CreateProjectDialog({
             </DialogHeader>
             <div className="space-y-6 py-4">
               {/* Project name is edited inline in the title above */}
+              
+              <div className="space-y-2">
+                <Label>Иконка проекта</Label>
+                <IconPicker
+                  selectedIcon={selectedIcon}
+                  onIconSelect={setSelectedIcon}
+                />
+              </div>
               
               <div className="space-y-2">
                 <Label htmlFor="description">Описание</Label>

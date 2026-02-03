@@ -16,7 +16,7 @@ export function AdminHeader() {
         </Button>
         <Button variant="ghost" size="sm" onClick={() => {
           logout();
-          navigate('/');
+          navigate('/dashboard');
         }}>
           Выйти
         </Button>

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Shield, Users, Database, Brain, BarChart3, Cog, BookOpen } from "lucide-react";
+import { Shield, Users, Database, Brain, BarChart3, Cog, BookOpen, FileText, Building2, Briefcase } from "lucide-react";
 
 export interface AdminSidebarProps {
   role: string;
@@ -11,6 +11,9 @@ const adminMenu = [
   { id: 'llm-models', label: 'LLM Модели', icon: Database, path: '/admin/llm-models', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'ai-agents', label: 'AI Агенты', icon: Brain, path: '/admin/ai-agents', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'knowledge', label: 'База знаний', icon: BookOpen, path: '/admin/knowledge', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
+  { id: 'reports', label: 'QA - Контроль качества', icon: FileText, path: '/admin/reports', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
+  { id: 'companies', label: 'Компании', icon: Briefcase, path: '/admin/companies', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
+  { id: 'departments', label: 'Департаменты', icon: Building2, path: '/admin/departments', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'system', label: 'Система', icon: Cog, path: '/admin/system', roles: ["ROLE_SUPER_ADMIN"] },
 ];
 
