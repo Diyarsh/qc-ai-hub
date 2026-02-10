@@ -148,16 +148,16 @@ export default function Projects() {
                           trigger={
                             <div 
                               className={cn(
-                                "p-1.5 rounded-lg transition-all duration-300 flex-shrink-0 cursor-pointer",
-                                "bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110",
+                                "p-2 transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm",
+                                "bg-gradient-to-br from-primary/20 to-primary/5 text-primary group-hover:from-primary/30 group-hover:to-primary/10 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-primary/15",
                                 editingIconId === project.id && "ring-2 ring-primary"
                               )}
-                              style={{ borderRadius: '10px' }}
+                              style={{ borderRadius: '12px' }}
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}
                             >
-                              <ProjectIcon className="h-4 w-4" />
+                              <ProjectIcon className="h-5 w-5 drop-shadow-sm" />
                             </div>
                           }
                         />
