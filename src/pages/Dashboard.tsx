@@ -266,15 +266,15 @@ export default function Dashboard() {
                                 placeholder: agent.placeholder 
                               } 
                             })} 
-                            className="card-glow bg-muted/30 hover:bg-muted/50 border-border/50 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[140px] h-[90px] relative"
-                            style={{ borderRadius: '16px' }}
+                            className="card-glow bg-muted/30 hover:bg-muted/50 border-border/50 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[160px] h-[110px] relative"
+                            style={{ borderRadius: '18px' }}
                           >
-                            <CardContent className="p-2.5 h-full flex flex-col items-center justify-center gap-1.5 text-center overflow-hidden">
+                            <CardContent className="p-3 h-full flex flex-col items-center justify-center gap-2 text-center overflow-hidden">
                               <div 
-                                className="p-1.5 bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0"
-                                style={{ borderRadius: '10px' }}
+                                className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 text-primary group-hover:from-primary/30 group-hover:to-primary/10 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300 flex-shrink-0"
+                                style={{ borderRadius: '14px' }}
                               >
-                                <Icon className="h-4 w-4" />
+                                <Icon className="h-6 w-6 drop-shadow-sm" />
                       </div>
                               <div className="min-w-0 w-full overflow-hidden">
                                 <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate w-full">

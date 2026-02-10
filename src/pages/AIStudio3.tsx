@@ -440,8 +440,8 @@ export default function AIStudio3() {
               {[...Array(10)].map((_, index) => (
                 <Card key={index} className="overflow-hidden h-[140px]" style={{ borderRadius: '20px' }}>
               <CardHeader className="p-3 h-full flex flex-col">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <div className="skeleton h-7 w-7" style={{ borderRadius: '10px' }} />
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <div className="skeleton h-9 w-9" style={{ borderRadius: '12px' }} />
                       <div className="skeleton h-4 w-20 rounded" />
                     </div>
                     <div className="skeleton h-3 w-full rounded mb-1 flex-1" />
@@ -487,16 +487,16 @@ export default function AIStudio3() {
               )}
               
               <CardHeader className="p-3 relative z-10 h-full flex flex-col">
-                <div className="flex items-center gap-2 mb-1.5">
+                <div className="flex items-center gap-2.5 mb-1.5">
                   <div className={cn(
-                    "p-1.5 transition-all duration-300",
+                    "p-2 transition-all duration-300",
                     agent.featured 
-                      ? "bg-primary/20 text-primary group-hover:bg-primary/30 group-hover:scale-110" 
-                      : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary group-hover:scale-110"
+                      ? "bg-gradient-to-br from-primary/25 to-primary/5 text-primary shadow-md shadow-primary/10 group-hover:from-primary/35 group-hover:to-primary/15 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20" 
+                      : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm group-hover:from-primary/15 group-hover:to-primary/5 group-hover:text-primary group-hover:scale-110 group-hover:shadow-md group-hover:shadow-primary/15"
                   )}
-                  style={{ borderRadius: '10px' }}
+                  style={{ borderRadius: '12px' }}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5 drop-shadow-sm" />
                   </div>
                   <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors truncate flex-1 min-w-0">
                     {agent.name}
