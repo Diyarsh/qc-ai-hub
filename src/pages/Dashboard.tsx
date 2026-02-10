@@ -35,18 +35,6 @@ interface QuickAgent {
 // Quick access agents from AI Studio
 const quickAgents: QuickAgent[] = [
   {
-    id: "LLM-Ultra",
-    name: "LLM-Ultra",
-    description: "Суверенная модель для корпоративного сектора",
-    icon: Sparkles,
-    instructions: "Высокоточная многоязычная модель для корпоративных задач.",
-    placeholder: "Сформируй краткую сводку по рынку",
-    category: ["language"],
-    type: "agent",
-    tags: ["Казахский", "Русский", "Английский"],
-    isLocal: true,
-  },
-  {
     id: "Doc AI",
     name: "Doc AI",
     description: "Анализ и извлечение данных из документов",
