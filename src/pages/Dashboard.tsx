@@ -266,23 +266,23 @@ export default function Dashboard() {
                                 placeholder: agent.placeholder 
                               } 
                             })} 
-                            className="card-glow bg-muted/30 hover:bg-muted/50 border-border/50 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[160px] h-[110px] relative"
+                            className="card-glow bg-muted/30 hover:bg-muted/50 border-border/50 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[160px] h-[120px] relative"
                             style={{ borderRadius: '18px' }}
                           >
-                            <CardContent className="p-3 h-full flex flex-col items-center justify-center gap-2 text-center overflow-hidden">
+                            <CardContent className="p-3 h-full flex flex-col items-center justify-center gap-2.5 text-center overflow-hidden">
                               <div 
-                                className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 text-primary group-hover:from-primary/30 group-hover:to-primary/10 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300 flex-shrink-0"
-                                style={{ borderRadius: '14px' }}
+                                className="p-3 bg-gradient-to-br from-primary/25 via-primary/10 to-primary/5 text-primary group-hover:scale-110 transition-all duration-300 flex-shrink-0"
+                                style={{ 
+                                  borderRadius: '14px',
+                                  boxShadow: '0 4px 12px -2px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)'
+                                }}
                               >
-                                <Icon className="h-6 w-6 drop-shadow-sm" />
+                                <Icon className="h-7 w-7" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
                       </div>
                               <div className="min-w-0 w-full overflow-hidden">
                                 <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate w-full">
                                   {agent.name}
                                 </CardTitle>
-                                <CardDescription className="text-[9px] leading-tight mt-0.5 line-clamp-1 truncate w-full">
-                                  {agent.description}
-                        </CardDescription>
                     </div>
                   </CardContent>
                 </Card>

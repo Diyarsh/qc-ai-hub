@@ -438,11 +438,11 @@ export default function AIStudio3() {
           ) : isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
               {[...Array(10)].map((_, index) => (
-                <Card key={index} className="overflow-hidden h-[140px]" style={{ borderRadius: '20px' }}>
-              <CardHeader className="p-3 h-full flex flex-col">
-                    <div className="flex items-center gap-2.5 mb-1.5">
-                      <div className="skeleton h-9 w-9" style={{ borderRadius: '12px' }} />
-                      <div className="skeleton h-4 w-20 rounded" />
+                <Card key={index} className="overflow-hidden h-[160px]" style={{ borderRadius: '20px' }}>
+              <CardHeader className="p-3.5 h-full flex flex-col">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="skeleton h-12 w-12" style={{ borderRadius: '14px' }} />
+                      <div className="skeleton h-4 w-24 rounded" />
                     </div>
                     <div className="skeleton h-3 w-full rounded mb-1 flex-1" />
                     <div className="skeleton h-3 w-3/4 rounded mb-2" />
@@ -462,7 +462,7 @@ export default function AIStudio3() {
             <Card
                   key={agent.id}
               className={cn(
-                "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[140px]",
+                "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[160px]",
                 "bg-muted/30 hover:bg-muted/50 border-border/50",
                 "hover:scale-[1.02] hover:shadow-lg",
                 agent.featured && "ring-1 ring-primary/40"
@@ -486,17 +486,20 @@ export default function AIStudio3() {
                 />
               )}
               
-              <CardHeader className="p-3 relative z-10 h-full flex flex-col">
-                <div className="flex items-center gap-2.5 mb-1.5">
+              <CardHeader className="p-3.5 relative z-10 h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-2">
                   <div className={cn(
-                    "p-2 transition-all duration-300",
+                    "relative p-2.5 transition-all duration-300",
                     agent.featured 
-                      ? "bg-gradient-to-br from-primary/25 to-primary/5 text-primary shadow-md shadow-primary/10 group-hover:from-primary/35 group-hover:to-primary/15 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20" 
-                      : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm group-hover:from-primary/15 group-hover:to-primary/5 group-hover:text-primary group-hover:scale-110 group-hover:shadow-md group-hover:shadow-primary/15"
+                      ? "bg-gradient-to-br from-primary/30 via-primary/15 to-primary/5 text-primary group-hover:scale-110" 
+                      : "bg-gradient-to-br from-muted-foreground/15 via-muted/60 to-muted/30 text-muted-foreground group-hover:from-primary/20 group-hover:via-primary/10 group-hover:to-primary/5 group-hover:text-primary group-hover:scale-110"
                   )}
-                  style={{ borderRadius: '12px' }}
+                  style={{ 
+                    borderRadius: '14px',
+                    boxShadow: '0 4px 12px -2px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)'
+                  }}
                   >
-                    <Icon className="h-5 w-5 drop-shadow-sm" />
+                    <Icon className="h-7 w-7" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
                   </div>
                   <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors truncate flex-1 min-w-0">
                     {agent.name}

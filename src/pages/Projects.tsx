@@ -128,7 +128,7 @@ export default function Projects() {
                     "group relative overflow-hidden transition-all duration-300 cursor-pointer",
                     "bg-muted/30 hover:bg-muted/50 border-border/50",
                     "hover:scale-[1.02] hover:shadow-lg",
-                    "h-[140px]"
+                    "h-[160px]"
                   )}
                   style={{ borderRadius: '20px' }}
                 >
@@ -148,16 +148,19 @@ export default function Projects() {
                           trigger={
                             <div 
                               className={cn(
-                                "p-2 transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm",
-                                "bg-gradient-to-br from-primary/20 to-primary/5 text-primary group-hover:from-primary/30 group-hover:to-primary/10 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-primary/15",
+                                "p-2.5 transition-all duration-300 flex-shrink-0 cursor-pointer",
+                                "bg-gradient-to-br from-primary/25 via-primary/10 to-primary/5 text-primary group-hover:scale-110",
                                 editingIconId === project.id && "ring-2 ring-primary"
                               )}
-                              style={{ borderRadius: '12px' }}
+                              style={{ 
+                                borderRadius: '14px',
+                                boxShadow: '0 4px 12px -2px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)'
+                              }}
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}
                             >
-                              <ProjectIcon className="h-5 w-5 drop-shadow-sm" />
+                              <ProjectIcon className="h-7 w-7" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
                             </div>
                           }
                         />
