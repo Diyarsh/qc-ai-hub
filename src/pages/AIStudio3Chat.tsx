@@ -16,6 +16,7 @@ import { AgentChatService } from "@/services/agent-chat.service";
 import { AgentChatMessage } from "@/types/agent-chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Disclaimer } from "@/components/chat/Disclaimer";
+import { FileDropOverlay } from "@/components/chat/FileDropOverlay";
 
 export default function AIStudio3Chat() {
   const {
@@ -343,6 +344,7 @@ export default function AIStudio3Chat() {
                 onSend={() => handleSend()}
                 onAttachClick={() => setIsAttachModalOpen(true)}
                 disabled={isLoading}
+                canSendWithoutText={attachedFiles.length > 0}
               />
               <div className="pb-1">
                 <Disclaimer />
@@ -352,6 +354,11 @@ export default function AIStudio3Chat() {
         </div>
       </main>
 
+      <FileDropOverlay
+        onFilesDropped={(files) => setAttachedFiles(prev => [...prev, ...files])}
+        enabled={!isLoading}
+      />
+
       {/* Modal для прикрепления файлов */}
       <Modal
         isOpen={isAttachModalOpen}
@@ -360,6 +367,7 @@ export default function AIStudio3Chat() {
         size="md"
       >
         <FileUpload
+          key={isAttachModalOpen ? "open" : "closed"}
           onFilesSelected={(files) => {
             setAttachedFiles(prev => [...prev, ...files]);
             setIsAttachModalOpen(false);

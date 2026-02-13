@@ -14,6 +14,7 @@ import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { Badge } from "@/shared/components/Badge";
 import { Disclaimer } from "@/components/chat/Disclaimer";
 import { MessageBubble } from "@/components/chat/MessageBubble";
+import { FileDropOverlay } from "@/components/chat/FileDropOverlay";
 import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 function formatRelativeTime(date: Date): string {
@@ -496,6 +497,7 @@ export default function ProjectChat() {
               }}
               onAttachClick={() => setIsAttachModalOpen(true)}
               disabled={isLoading}
+              canSendWithoutText={attachedFiles.length > 0}
               examples={[
                 "Задайте вопрос по файлам проекта",
                 "Попросите сгенерировать сводку по документам",
@@ -510,7 +512,12 @@ export default function ProjectChat() {
       </div>
 
       <ProjectSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
-      
+
+      <FileDropOverlay
+        onFilesDropped={(files) => setAttachedFiles(prev => [...prev, ...files])}
+        enabled={!isLoading}
+      />
+
       {/* Modal для прикрепления файлов */}
       <Modal
         isOpen={isAttachModalOpen}
@@ -519,6 +526,7 @@ export default function ProjectChat() {
         size="md"
       >
         <FileUpload
+          key={isAttachModalOpen ? "open" : "closed"}
           onFilesSelected={(files) => {
             setAttachedFiles(prev => [...prev, ...files]);
             setIsAttachModalOpen(false);

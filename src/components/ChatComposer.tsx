@@ -13,6 +13,8 @@ interface ChatComposerProps {
   onAttachClick?: () => void;
   disabled?: boolean;
   className?: string;
+  /** Разрешить отправку без текста (например, только с файлами) */
+  canSendWithoutText?: boolean;
 }
 
 export function ChatComposer({
@@ -24,7 +26,8 @@ export function ChatComposer({
   onSend,
   onAttachClick,
   disabled,
-  className
+  className,
+  canSendWithoutText = false,
 }: ChatComposerProps) {
   const [exampleIndex, setExampleIndex] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -81,7 +84,7 @@ export function ChatComposer({
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       const text = value.trim();
-      if (text.length > 0 && !disabled) {
+      if ((text.length > 0 || canSendWithoutText) && !disabled) {
         onSend(text);
         // Reset textarea height after sending
         if (textareaRef.current) {
@@ -90,11 +93,11 @@ export function ChatComposer({
         }
       }
     }
-  }, [onSend, value, disabled, minHeight]);
+  }, [onSend, value, disabled, minHeight, canSendWithoutText]);
 
   const handleClickSend = useCallback(() => {
     const text = value.trim();
-    if (text.length > 0 && !disabled) {
+    if ((text.length > 0 || canSendWithoutText) && !disabled) {
       onSend(text);
       // Reset textarea height after sending
       if (textareaRef.current) {
@@ -102,7 +105,7 @@ export function ChatComposer({
         textareaRef.current.style.overflowY = 'hidden';
       }
     }
-  }, [onSend, value, disabled, minHeight]);
+  }, [onSend, value, disabled, minHeight, canSendWithoutText]);
 
   // Auto-focus on mount
   useEffect(() => {

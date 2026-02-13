@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, FileText, Languages, Code, BarChart3, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, FileText, Languages, Code, BarChart3, Plus, X, File, Mic, FileCheck } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -11,8 +12,12 @@ import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Disclaimer } from "@/components/chat/Disclaimer";
+import { FileDropOverlay } from "@/components/chat/FileDropOverlay";
+import { Modal } from "@/shared/components/Modal";
+import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import aiHubLogo from "@/assets/ai-hub.gif";
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
 type AgentType = "agent" | "developer";
@@ -30,57 +35,53 @@ interface QuickAgent {
   isLocal?: boolean;
   featured?: boolean;
   gradient?: string;
+  iconColor?: string;
 }
 
 // Quick access agents from AI Studio
 const quickAgents: QuickAgent[] = [
   {
-    id: "Doc AI",
-    name: "Doc AI",
-    description: "Анализ и извлечение данных из документов",
-    icon: FileText,
-    instructions: "Анализ документов РК. Извлекай ключевые положения.",
-    placeholder: "Извлеки ключевые требования из договора",
+    id: "Transcriber",
+    name: "Транскрибатор",
+    description: "Преобразование аудио и видео в текст",
+    icon: Mic,
+    instructions: "Специалист по транскрибации. Преобразуй аудио и видео записи в точный текст, сохраняя структуру и пунктуацию.",
+    placeholder: "Расшифруй прикрепленную аудиозапись",
     category: ["documents"],
     type: "agent",
-    tags: ["Госдокументы", "Правовые акты"],
+    tags: ["Аудио", "Видео"],
     isLocal: true,
+    gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
+    iconColor: "text-purple-500",
+  },
+  {
+    id: "Summarizer",
+    name: "Суммаризатор",
+    description: "Автоматическое создание кратких сводок из текстов",
+    icon: FileCheck,
+    instructions: "Специалист по суммаризации текстов. Создавай краткие и информативные сводки, выделяй ключевые моменты и основные выводы.",
+    placeholder: "Создай краткую сводку из прикрепленного документа",
+    category: ["documents"],
+    type: "agent",
+    tags: ["Документы", "Анализ"],
+    isLocal: true,
+    featured: true,
+    gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
+    iconColor: "text-blue-500",
   },
   {
     id: "Translation Master",
     name: "Translation Master",
-    description: "Профессиональный переводчик",
+    description: "Профессиональный переводчик с поддержкой множества языков",
     icon: Languages,
-    instructions: "Профессиональный переводчик с множеством языков.",
-    placeholder: "Переведи текст на казахский",
+    instructions: "Профессиональный переводчик. Обеспечивай точный перевод с сохранением контекста и стиля оригинала.",
+    placeholder: "Переведи техническую документацию с английского на казахский",
     category: ["language"],
     type: "agent",
-    tags: ["Перевод", "Многоязычность"],
+    tags: ["Казахский", "Русский", "Английский", "+15 языков"],
     isLocal: true,
-  },
-  {
-    id: "Code Assistant",
-    name: "Code Assistant",
-    description: "Помощник программиста",
-    icon: Code,
-    instructions: "Инженер-программист. Пиши код с комментариями.",
-    placeholder: "Напиши функцию на TypeScript",
-    category: ["code"],
-    type: "agent",
-    tags: ["Программирование", "Код"],
-    isLocal: true,
-  },
-  {
-    id: "Data Analyst",
-    name: "Data Analyst",
-    description: "Анализ данных и бизнес-метрик",
-    icon: BarChart3,
-    instructions: "Аналитик данных. Анализируй и визуализируй.",
-    placeholder: "Проанализируй продажи за квартал",
-    category: ["assistant"],
-    type: "agent",
-    tags: ["Аналитика", "Данные"],
-    isLocal: true,
+    gradient: "from-indigo-500/20 via-blue-500/10 to-transparent",
+    iconColor: "text-indigo-500",
   },
 ];
 export default function Dashboard() {
@@ -90,9 +91,11 @@ export default function Dashboard() {
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackDetails?: string; isRegenerated?: boolean }[]>([]);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackDetails?: string; isRegenerated?: boolean }[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -122,6 +125,7 @@ export default function Dashboard() {
     // Clear current chat
     setMessages([]);
     setInput("");
+    setAttachedFiles([]);
   }, [messages]);
 
   // Listen for new chat event from sidebar
@@ -144,26 +148,29 @@ export default function Dashboard() {
 
   const handleSend = async (text: string) => {
     const prompt = text.trim();
-    if (!prompt || isLoading) return;
+    if ((!prompt && attachedFiles.length === 0) || isLoading) return;
     
     // Check if this is a new chat (no messages yet)
     const isNewChat = messages.length === 0;
+    const displayText = prompt || `Прикреплено ${attachedFiles.length} файл(ов)`;
     
     setIsLoading(true);
     
     // Add user message immediately
-    const userMsg = { id: Math.random().toString(36).slice(2), role: 'user' as const, text: prompt };
+    const userMsg = { id: Math.random().toString(36).slice(2), role: 'user' as const, text: displayText, files: [...attachedFiles] };
     const loadingMsgId = Math.random().toString(36).slice(2);
     const loadingMsg = { id: loadingMsgId, role: 'assistant' as const, text: '...', isLoading: true };
     
+    const filesToSend = [...attachedFiles];
     setMessages(prev => [...prev, userMsg, loadingMsg]);
     setInput("");
+    setAttachedFiles([]);
     
     // Save to history immediately when first message is sent in a new chat
     if (isNewChat) {
       try {
         const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-        ls.unshift({ text: prompt, time: '2 часа назад', type: 'chat', model: 'AI' });
+        ls.unshift({ text: displayText, time: '2 часа назад', type: 'chat', model: 'AI' });
         localStorage.setItem('dashboard.history', JSON.stringify(ls.slice(0, 100)));
         window.dispatchEvent(new CustomEvent('dashboard.history.updated'));
       } catch {}
@@ -171,12 +178,16 @@ export default function Dashboard() {
     
     try {
       // Convert messages to format expected by AI service
+      const fileInfo = filesToSend.length > 0 
+        ? `\n\nПрикреплено файлов: ${filesToSend.length}\n${filesToSend.map(f => `- ${f.name}`).join('\n')}`
+        : '';
+      const fullContent = (prompt || displayText) + fileInfo;
       const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
         ...messages.filter(m => !m.isLoading).map(m => ({
           role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
-          content: m.text,
+          content: m.text + (m.files?.length ? `\n\nПрикреплено: ${m.files.map(f => f.name).join(', ')}` : ''),
         })),
-        { role: 'user' as const, content: prompt },
+        { role: 'user' as const, content: fullContent },
       ];
       
       // Call AI service
@@ -221,28 +232,46 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full p-6 pb-0">
-            <div className="w-full max-w-3xl mx-auto">
+          <ScrollArea className="h-full p-6 pb-0 bg-gray-50/50 dark:bg-gray-950/50">
+            <div className="w-full max-w-3xl mx-auto flex flex-col min-h-[calc(100vh-68px-48px)]">
         {messages.length === 0 ? (
           // Начальное состояние: контент по центру вертикально
-                <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] py-8">
-                  <h2 className="text-4xl font-semibold text-center mb-8">AI-HUB</h2>
+                <div className="flex flex-col items-center justify-center flex-1 py-8">
+                  <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-4" />
 
               {/* Central Input - по центру страницы */}
-                  <div className="relative mb-8 w-full">
+                  <div className="relative mb-8 w-full space-y-2">
+                {attachedFiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {attachedFiles.map((file, index) => (
+                      <Badge key={index} variant="default" className="flex items-center gap-2 px-2 py-1">
+                        <File className="h-3 w-3" />
+                        <span className="text-xs max-w-[150px] truncate">{file.name}</span>
+                        <button
+                          onClick={() => setAttachedFiles(prev => prev.filter((_, i) => i !== index))}
+                          className="ml-1 hover:opacity-70"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
                 <ChatComposer
                   value={input}
                   onChange={setInput}
                   onSend={handleSend}
+                  onAttachClick={() => setIsAttachModalOpen(true)}
                   examples={examplePrompts}
                   disabled={isLoading}
+                  canSendWithoutText={attachedFiles.length > 0}
                 />
               </div>
 
                   {/* Quick Access Agent Cards - Static */}
                   <div className="w-full">
-                    <div className="flex flex-wrap justify-center gap-3">
-                      {quickAgents.map((agent) => {
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3 max-w-2xl mx-auto justify-items-center">
+                      {quickAgents.map((agent, index) => {
                         const Icon = agent.icon;
                         return (
                           <Card 
@@ -254,26 +283,39 @@ export default function Dashboard() {
                                 placeholder: agent.placeholder 
                               } 
                             })} 
-                            className="card-glow bg-muted/30 hover:bg-muted/50 border-border/50 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg group flex-shrink-0 w-[160px] h-[120px] relative"
-                            style={{ borderRadius: '18px' }}
+                            className={cn(
+                              "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group",
+                              "bg-muted/30 hover:bg-muted/50 border-border/50",
+                              "hover:scale-[1.02] hover:shadow-lg",
+                              "w-full max-w-[200px]"
+                            )}
+                            style={{
+                              borderRadius: '16px',
+                              height: '90px',
+                            }}
                           >
-                            <CardContent className="p-3 h-full flex flex-col items-center justify-center gap-2.5 text-center overflow-hidden">
-                              <div 
-                                className="p-3 bg-gradient-to-br from-primary/25 via-primary/10 to-primary/5 text-primary group-hover:scale-110 transition-all duration-300 flex-shrink-0"
-                                style={{ 
-                                  borderRadius: '14px',
-                                  boxShadow: '0 4px 12px -2px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)'
-                                }}
-                              >
-                                <Icon className="h-7 w-7" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
-                      </div>
-                              <div className="min-w-0 w-full overflow-hidden">
-                                <CardTitle className="text-[11px] font-medium group-hover:text-primary transition-colors truncate w-full">
+                            {/* Gradient background */}
+                            {agent.gradient && (
+                              <div className={cn(
+                                "card-gradient absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
+                                agent.gradient,
+                                "opacity-0 group-hover:opacity-100"
+                              )} 
+                              style={{ borderRadius: '16px' }}
+                              />
+                            )}
+                            
+                            <CardHeader className="p-3 relative z-10 h-full flex items-center justify-center">
+                              <div className="flex flex-col items-center justify-center gap-2">
+                                <div className="relative flex-shrink-0 transition-all duration-300 flex items-center justify-center group-hover:scale-110">
+                                  <Icon className={cn("h-7 w-7", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
+                                </div>
+                                <CardTitle className="text-xs font-semibold text-center group-hover:text-primary transition-colors">
                                   {agent.name}
                                 </CardTitle>
-                    </div>
-                  </CardContent>
-                </Card>
+                              </div>
+                            </CardHeader>
+                          </Card>
                         );
                       })}
                     </div>
@@ -295,7 +337,7 @@ export default function Dashboard() {
         ) : (
                 // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
           <>
-                  <h2 className="text-4xl font-semibold text-center mb-8 pt-4">AI-HUB</h2>
+                  <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-8 pt-4" />
 
                   {/* Messages Display */}
                   <div className="space-y-4 pb-0">
@@ -309,6 +351,7 @@ export default function Dashboard() {
                           role={msg.role}
                           messageId={msg.id}
                           isLoading={msg.isLoading}
+                          files={msg.files?.map(f => ({ name: f.name, type: f.type }))}
                           feedback={msg.feedback}
                           feedbackDetails={msg.feedbackDetails}
                           onCopy={msg.role === 'assistant' ? () => handleCopy(msg.id) : undefined}
@@ -339,12 +382,30 @@ export default function Dashboard() {
         {messages.length > 0 && (
           <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
             <div className="w-full max-w-3xl mx-auto space-y-2">
+              {attachedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {attachedFiles.map((file, index) => (
+                    <Badge key={index} variant="default" className="flex items-center gap-2 px-2 py-1">
+                      <File className="h-3 w-3" />
+                      <span className="text-xs max-w-[150px] truncate">{file.name}</span>
+                      <button
+                        onClick={() => setAttachedFiles(prev => prev.filter((_, i) => i !== index))}
+                        className="ml-1 hover:opacity-70"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
                 <ChatComposer
                   value={input}
                   onChange={setInput}
                   onSend={handleSend}
+                  onAttachClick={() => setIsAttachModalOpen(true)}
                   examples={examplePrompts}
                   disabled={isLoading}
+                  canSendWithoutText={attachedFiles.length > 0}
                 />
               <div className="pb-1">
                 <Disclaimer />
@@ -353,5 +414,28 @@ export default function Dashboard() {
           </div>
         )}
       </main>
+
+      <FileDropOverlay
+        onFilesDropped={(files) => setAttachedFiles(prev => [...prev, ...files])}
+        enabled={!isLoading}
+      />
+
+      <Modal
+        isOpen={isAttachModalOpen}
+        onClose={() => setIsAttachModalOpen(false)}
+        title="Прикрепить файлы"
+        size="md"
+      >
+        <FileUpload
+          key={isAttachModalOpen ? "open" : "closed"}
+          onFilesSelected={(files) => {
+            setAttachedFiles(prev => [...prev, ...files]);
+            setIsAttachModalOpen(false);
+          }}
+          acceptedTypes={[".pdf", ".docx", ".doc", ".txt", ".md", ".csv", ".xlsx", ".xls", ".png", ".jpg", ".jpeg"]}
+          multiple={true}
+          maxSizeMB={50}
+        />
+      </Modal>
     </div>;
 }

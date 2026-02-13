@@ -52,13 +52,17 @@ export function FileUpload({
     });
     const newFiles = multiple ? [...selectedFiles, ...validFiles] : validFiles;
     setSelectedFiles(newFiles);
-    onFilesSelected(newFiles);
+  };
+
+  const handleConfirm = () => {
+    if (selectedFiles.length > 0) {
+      onFilesSelected(selectedFiles);
+      setSelectedFiles([]);
+    }
   };
 
   const removeFile = (index: number) => {
-    const newFiles = selectedFiles.filter((_, i) => i !== index);
-    setSelectedFiles(newFiles);
-    onFilesSelected(newFiles);
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -114,6 +118,9 @@ export function FileUpload({
               </Button>
             </div>
           ))}
+          <Button className="w-full mt-4" onClick={handleConfirm}>
+            Прикрепить {selectedFiles.length} файл{selectedFiles.length === 1 ? "" : selectedFiles.length >= 2 && selectedFiles.length <= 4 ? "а" : "ов"}
+          </Button>
         </div>
       )}
     </div>

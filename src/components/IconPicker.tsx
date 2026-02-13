@@ -73,12 +73,6 @@ export function IconPicker({ selectedIcon, onIconSelect, trigger, open: controll
       setInternalOpen(value);
     }
   };
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  
-  const categories = ["All", ...Array.from(new Set(iconLibrary.map(icon => icon.category)))];
-  const filteredIcons = selectedCategory === "All" 
-    ? iconLibrary 
-    : iconLibrary.filter(icon => icon.category === selectedCategory);
 
   const handleIconClick = (icon: LucideIcon) => {
     onIconSelect(icon);
@@ -93,23 +87,9 @@ export function IconPicker({ selectedIcon, onIconSelect, trigger, open: controll
           <DialogTitle>Выберите иконку проекта</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          {/* Категории */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-          
           {/* Сетка иконок */}
           <div className="grid grid-cols-5 gap-3 max-h-[400px] overflow-y-auto">
-            {filteredIcons.map((item, index) => {
+            {iconLibrary.map((item, index) => {
               const Icon = item.icon;
               const isSelected = selectedIcon === Icon;
               return (

@@ -20,7 +20,9 @@ import {
   Kanban,
   Grid3x3,
   Factory,
-  Users
+  Users,
+  Mic,
+  FileCheck
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -46,22 +48,24 @@ interface Agent {
   icon: LucideIcon;
   featured?: boolean;
   gradient?: string;
+  iconColor?: string;
 }
 
 const agents: Agent[] = [
   {
-    id: "LLM-Ultra",
-    name: "LLM-Ultra",
-    description: "Суверенная модель для корпоративного сектора",
-    category: ["language"],
+    id: "Summarizer",
+    name: "Суммаризатор",
+    description: "Автоматическое создание кратких сводок из текстов",
+    category: ["documents"],
     type: "agent",
-    instructions: "Высокоточная многоязычная модель для корпоративных задач. Отвечай кратко, ссылайся на источники, используй деловой стиль.",
-    placeholder: "Сформируй краткую сводку по рынку за Q3 2025",
-    tags: ["Казахский", "Русский", "Английский", "+1"],
+    instructions: "Специалист по суммаризации текстов. Создавай краткие и информативные сводки, выделяй ключевые моменты и основные выводы.",
+    placeholder: "Создай краткую сводку из прикрепленного документа",
+    tags: ["Документы", "Анализ"],
     isLocal: true,
-    icon: Sparkles,
+    icon: FileCheck,
     featured: true,
     gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
+    iconColor: "text-blue-500",
   },
   {
     id: "Assistant Pro",
@@ -75,6 +79,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Briefcase,
     gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
+    iconColor: "text-purple-500",
   },
   {
     id: "Doc AI",
@@ -88,23 +93,25 @@ const agents: Agent[] = [
     isLocal: true,
     icon: FileText,
     gradient: "from-green-500/20 via-emerald-500/10 to-transparent",
+    iconColor: "text-green-500",
   },
   {
-    id: "Long-Name-Test",
-    name: "Суверенная модель для корпоративного сектора с поддержкой множества языков и расширенными возможностями",
-    description: "Высокоточная многоязычная модель искусственного интеллекта, специально разработанная для корпоративного сектора с расширенными возможностями обработки естественного языка и поддержкой более 50 языков, включая редкие диалекты и специализированные терминологии",
-    category: ["language"],
+    id: "Transcriber",
+    name: "Транскрибатор",
+    description: "Преобразование аудио и видео в текст",
+    category: ["documents"],
     type: "agent",
-    instructions: "Высокоточная многоязычная модель для корпоративных задач.",
-    placeholder: "Тестовый промпт",
-    tags: ["Тест"],
+    instructions: "Специалист по транскрибации. Преобразуй аудио и видео записи в точный текст, сохраняя структуру и пунктуацию.",
+    placeholder: "Расшифруй прикрепленную аудиозапись",
+    tags: ["Аудио", "Видео"],
     isLocal: true,
-    icon: Sparkles,
-    gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
+    icon: Mic,
+    gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
+    iconColor: "text-purple-500",
   },
   {
     id: "Long-Desc-Test",
-    name: "Корпоративный интеллектуальный ассистент",
+    name: "Корп. ассистент",
     description: "Мощный корпоративный ассистент, предназначенный для автоматизации внутренних процессов предприятий, управления документами, планирования задач и координации работы команд с использованием передовых технологий искусственного интеллекта и машинного обучения для повышения эффективности бизнес-операций",
     category: ["assistant"],
     type: "agent",
@@ -114,6 +121,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Briefcase,
     gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
+    iconColor: "text-purple-500",
   },
   {
     id: "Code Assistant",
@@ -127,6 +135,7 @@ const agents: Agent[] = [
     isLocal: false,
     icon: Code,
     gradient: "from-orange-500/20 via-amber-500/10 to-transparent",
+    iconColor: "text-orange-500",
   },
   {
     id: "Translation Master",
@@ -140,6 +149,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Languages,
     gradient: "from-indigo-500/20 via-blue-500/10 to-transparent",
+    iconColor: "text-indigo-500",
   },
   {
     id: "Data Analyst",
@@ -153,6 +163,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: BarChart3,
     gradient: "from-teal-500/20 via-cyan-500/10 to-transparent",
+    iconColor: "text-teal-500",
   },
   {
     id: "Legal Advisor",
@@ -166,6 +177,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Scale,
     gradient: "from-red-500/20 via-rose-500/10 to-transparent",
+    iconColor: "text-red-500",
   },
   {
     id: "Content Creator",
@@ -179,6 +191,7 @@ const agents: Agent[] = [
     isLocal: false,
     icon: PenTool,
     gradient: "from-pink-500/20 via-fuchsia-500/10 to-transparent",
+    iconColor: "text-pink-500",
   },
   {
     id: "Financial Advisor",
@@ -192,6 +205,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: DollarSign,
     gradient: "from-yellow-500/20 via-amber-500/10 to-transparent",
+    iconColor: "text-amber-500",
   },
   {
     id: "Customer Support",
@@ -205,6 +219,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Headphones,
     gradient: "from-violet-500/20 via-purple-500/10 to-transparent",
+    iconColor: "text-violet-500",
   },
   {
     id: "Research Assistant",
@@ -218,6 +233,7 @@ const agents: Agent[] = [
     isLocal: false,
     icon: GraduationCap,
     gradient: "from-slate-500/20 via-gray-500/10 to-transparent",
+    iconColor: "text-slate-600",
   },
   {
     id: "Security Auditor",
@@ -231,6 +247,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Shield,
     gradient: "from-emerald-500/20 via-green-500/10 to-transparent",
+    iconColor: "text-emerald-500",
   },
   {
     id: "Project Manager",
@@ -244,6 +261,7 @@ const agents: Agent[] = [
     isLocal: true,
     icon: Kanban,
     gradient: "from-blue-500/20 via-indigo-500/10 to-transparent",
+    iconColor: "text-blue-600",
   },
 ];
 
@@ -462,7 +480,7 @@ export default function AIStudio3() {
             <Card
                   key={agent.id}
               className={cn(
-                "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[160px]",
+                "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[150px]",
                 "bg-muted/30 hover:bg-muted/50 border-border/50",
                 "hover:scale-[1.02] hover:shadow-lg",
                 agent.featured && "ring-1 ring-primary/40"
@@ -486,57 +504,44 @@ export default function AIStudio3() {
                 />
               )}
               
-              <CardHeader className="p-3.5 relative z-10 h-full flex flex-col">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={cn(
-                    "relative p-2.5 transition-all duration-300",
-                    agent.featured 
-                      ? "bg-gradient-to-br from-primary/30 via-primary/15 to-primary/5 text-primary group-hover:scale-110" 
-                      : "bg-gradient-to-br from-muted-foreground/15 via-muted/60 to-muted/30 text-muted-foreground group-hover:from-primary/20 group-hover:via-primary/10 group-hover:to-primary/5 group-hover:text-primary group-hover:scale-110"
-                  )}
-                  style={{ 
-                    borderRadius: '14px',
-                    boxShadow: '0 4px 12px -2px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)'
-                  }}
-                  >
-                    <Icon className="h-7 w-7" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
+              <CardHeader className="p-4 relative z-10 h-full flex flex-col gap-0 space-y-0">
+                <div className="flex gap-2.5 flex-1 min-h-0 items-start -mb-1">
+                  <div className="relative flex-shrink-0 transition-all duration-300 flex items-center justify-center group-hover:scale-110">
+                    <Icon className={cn("h-9 w-9", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
                   </div>
-                  <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors truncate flex-1 min-w-0">
-                    {agent.name}
-                  </CardTitle>
+                  <div className="flex flex-col flex-1 min-w-0 gap-1.5 pt-0.5">
+                    <CardTitle className="text-sm font-semibold leading-tight group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden">
+                      {agent.name}
+                    </CardTitle>
+                    <CardDescription 
+                      className="text-xs flex-1 min-w-0 text-muted-foreground leading-relaxed overflow-hidden"
+                      style={{
+                        lineHeight: '1.35em',
+                        maxHeight: '2.7em'
+                      }}
+                    >
+                      {agent.description}
+                    </CardDescription>
+                  </div>
                 </div>
-                <CardDescription 
-                  className="text-xs mb-2 flex-1 min-w-0"
-                  style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    lineHeight: '1.3em',
-                    maxHeight: '2.6em'
-                  }}
-                >
-                  {agent.description}
-                </CardDescription>
-                <div className="flex flex-wrap gap-1 mt-auto">
+                <div className="flex flex-nowrap gap-1.5 mt-auto pt-1 overflow-hidden min-w-0">
+                  {agent.tags.slice(0, 1).map((tag, tagIndex) => (
+                    <Badge key={tagIndex} variant="outline" className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap" style={{ borderRadius: '8px' }}>
+                      {tag}
+                    </Badge>
+                  ))}
                   <Badge
                     variant="outline"
                     className={cn(
-                      "text-[10px] px-1.5 py-0",
+                      "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto",
                       agent.isLocal
                         ? "bg-green-500/20 dark:bg-green-500/30 text-green-700 dark:text-green-300 border-green-400/50 dark:border-green-500/50"
                         : "bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50"
                     )}
-                    style={{ borderRadius: '6px' }}
+                    style={{ borderRadius: '8px' }}
                   >
                     {agent.isLocal ? "Локальный" : "Внешний"}
                   </Badge>
-                  {agent.tags.slice(0, 1).map((tag, tagIndex) => (
-                    <Badge key={tagIndex} variant="outline" className="text-[10px] px-1.5 py-0" style={{ borderRadius: '6px' }}>
-                      {tag}
-                    </Badge>
-                  ))}
                 </div>
               </CardHeader>
             </Card>
