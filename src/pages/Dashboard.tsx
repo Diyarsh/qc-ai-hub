@@ -230,9 +230,15 @@ export default function Dashboard() {
       <PageHeader />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full p-6 pb-0 bg-gray-50/50 dark:bg-gray-950/50">
+      <main className="flex-1 flex flex-col min-h-0 relative">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl animate-breathe" />
+          <div className="absolute bottom-0 -left-20 w-[400px] h-[400px] bg-accent/6 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] bg-purple-500/5 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '4s' }} />
+        </div>
+        <div className="flex-1 overflow-hidden relative z-10">
+          <ScrollArea className="h-full p-6 pb-0">
             <div className="w-full max-w-3xl mx-auto flex flex-col min-h-[calc(100vh-68px-48px)]">
         {messages.length === 0 ? (
           // Начальное состояние: контент по центру вертикально
@@ -285,30 +291,33 @@ export default function Dashboard() {
                             })} 
                             className={cn(
                               "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group",
-                              "bg-muted/30 hover:bg-muted/50 border-border/50",
-                              "hover:scale-[1.02] hover:shadow-lg",
+                              "bg-card/60 backdrop-blur-sm border-border/30",
+                              "hover:scale-[1.04] hover:shadow-xl hover:shadow-primary/10",
                               "w-full max-w-[200px]"
                             )}
                             style={{
                               borderRadius: '16px',
-                              height: '90px',
+                              height: '100px',
                             }}
                           >
-                            {/* Gradient background */}
+                            {/* Always-visible gradient background */}
                             {agent.gradient && (
                               <div className={cn(
-                                "card-gradient absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
+                                "absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
                                 agent.gradient,
-                                "opacity-0 group-hover:opacity-100"
+                                "opacity-40 group-hover:opacity-80"
                               )} 
                               style={{ borderRadius: '16px' }}
                               />
                             )}
+                            {/* Top accent line */}
+                            <div className="absolute top-0 left-2 right-2 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent group-hover:via-primary/70 transition-all duration-300" />
                             
                             <CardHeader className="p-3 relative z-10 h-full flex items-center justify-center">
                               <div className="flex flex-col items-center justify-center gap-2">
-                                <div className="relative flex-shrink-0 transition-all duration-300 flex items-center justify-center group-hover:scale-110">
-                                  <Icon className={cn("h-7 w-7", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
+                                <div className="relative flex-shrink-0 transition-all duration-500 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-0.5">
+                                  <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                  <Icon className={cn("h-8 w-8 relative z-10", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
                                 </div>
                                 <CardTitle className="text-xs font-semibold text-center group-hover:text-primary transition-colors">
                                   {agent.name}

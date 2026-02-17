@@ -356,8 +356,14 @@ export default function AIStudio3() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
+      <main className="flex-1 overflow-hidden relative">
+        {/* Decorative background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-blue-500/6 rounded-full blur-3xl animate-breathe" />
+          <div className="absolute top-1/2 -right-20 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
+          <div className="absolute -bottom-20 left-1/3 w-[350px] h-[350px] bg-accent/5 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '3s' }} />
+        </div>
+        <ScrollArea className="h-full relative z-10">
           <div className="max-w-7xl mx-auto space-y-6 p-6">
           {/* Search Section */}
           <div className="relative">
@@ -481,9 +487,9 @@ export default function AIStudio3() {
                   key={agent.id}
               className={cn(
                 "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[150px]",
-                "bg-muted/30 hover:bg-muted/50 border-border/50",
-                "hover:scale-[1.02] hover:shadow-lg",
-                agent.featured && "ring-1 ring-primary/40"
+                "bg-card/60 backdrop-blur-sm border-border/30",
+                "hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/10",
+                agent.featured && "ring-1 ring-primary/40 shadow-md shadow-primary/5"
               )}
               style={{
                 animationDelay: `${index * 30}ms`,
@@ -493,21 +499,24 @@ export default function AIStudio3() {
               }}
               onClick={(e) => handleCardClick(e, agent)}
             >
-              {/* Gradient background */}
+              {/* Always-visible gradient background */}
               {agent.gradient && (
                 <div className={cn(
-                  "card-gradient absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
+                  "absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
                   agent.gradient,
-                  "opacity-0 group-hover:opacity-100"
+                  "opacity-30 group-hover:opacity-70"
                 )} 
                 style={{ borderRadius: '20px' }}
                 />
               )}
+              {/* Top accent line */}
+              <div className="absolute top-0 left-3 right-3 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent group-hover:via-primary/60 transition-all duration-300" />
               
               <CardHeader className="p-4 relative z-10 h-full flex flex-col gap-0 space-y-0">
                 <div className="flex gap-2.5 flex-1 min-h-0 items-start -mb-1">
-                  <div className="relative flex-shrink-0 transition-all duration-300 flex items-center justify-center group-hover:scale-110">
-                    <Icon className={cn("h-9 w-9", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
+                  <div className="relative flex-shrink-0 transition-all duration-500 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-0.5">
+                    <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <Icon className={cn("h-9 w-9 relative z-10", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
                   </div>
                   <div className="flex flex-col flex-1 min-w-0 gap-1.5 pt-0.5">
                     <CardTitle className="text-sm font-semibold leading-tight group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden">
