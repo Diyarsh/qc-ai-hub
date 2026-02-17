@@ -102,8 +102,14 @@ export default function Projects() {
       <PageHeader title={t('projects.my')} />
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 p-6 relative">
+        {/* Decorative background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-20 right-0 w-[400px] h-[400px] bg-green-500/5 rounded-full blur-3xl animate-breathe" />
+          <div className="absolute bottom-0 -left-20 w-[350px] h-[350px] bg-primary/6 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-indigo-500/4 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '3s' }} />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           {/* Tabs */}
           <div className="flex items-center justify-between pb-4 mb-6 border-b">
             <div className="flex items-center gap-4">
@@ -131,13 +137,17 @@ export default function Projects() {
                   onClick={() => editingId !== project.id && editingIconId !== project.id && navigate('/project-chat', { state: { projectName: project.name } })} 
                   className={cn(
                     "group relative overflow-hidden transition-all duration-300 cursor-pointer card-glow",
-                    "bg-muted/30 hover:bg-muted/50 border-border/50",
-                    "hover:scale-[1.02] hover:shadow-lg",
+                    "bg-card/60 backdrop-blur-sm border-border/30",
+                    "hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/10",
                     "h-[150px]"
                   )}
                   style={{ borderRadius: '20px' }}
                 >
-                  <CardContent className="p-4 h-full flex flex-col gap-0">
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-60 group-hover:opacity-100 transition-opacity duration-300" style={{ borderRadius: '20px' }} />
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-3 right-3 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent group-hover:via-primary/60 transition-all duration-300" />
+                  <CardContent className="p-4 h-full flex flex-col gap-0 relative z-10">
                     <div className="flex gap-2.5 flex-1 min-h-0 items-start -mb-1">
                       <IconPicker
                         selectedIcon={project.icon}
@@ -152,12 +162,13 @@ export default function Projects() {
                         trigger={
                           <div 
                             className={cn(
-                              "relative flex-shrink-0 transition-all duration-300 flex items-center justify-center cursor-pointer group-hover:scale-110",
+                              "relative flex-shrink-0 transition-all duration-500 flex items-center justify-center cursor-pointer group-hover:scale-110 group-hover:-translate-y-0.5",
                               editingIconId === project.id && "ring-2 ring-primary"
                             )}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <ProjectIcon className={cn("h-9 w-9", project.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }} />
+                                  <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                  <ProjectIcon className={cn("h-9 w-9 relative z-10", project.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
                           </div>
                         }
                       />
