@@ -11,7 +11,7 @@ const adminMenu = [
   { id: 'llm-models', label: 'LLM Модели', icon: Database, path: '/admin/llm-models', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'ai-agents', label: 'AI Агенты', icon: Brain, path: '/admin/ai-agents', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'knowledge', label: 'База знаний', icon: BookOpen, path: '/admin/knowledge', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
-  { id: 'reports', label: 'QA - Контроль качества', icon: FileText, path: '/admin/reports', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
+  { id: 'reports', label: 'Обратная связь агентов', icon: FileText, path: '/admin/reports', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'companies', label: 'Компании', icon: Briefcase, path: '/admin/companies', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'departments', label: 'Департаменты', icon: Building2, path: '/admin/departments', roles: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"] },
   { id: 'system', label: 'Система', icon: Cog, path: '/admin/system', roles: ["ROLE_SUPER_ADMIN"] },
@@ -19,15 +19,25 @@ const adminMenu = [
 
 export function AdminSidebar({ role }: AdminSidebarProps) {
   return (
-    <aside className="w-64 h-screen bg-card text-foreground flex flex-col border-r border-border shadow">
-      <div className="flex items-center h-16 px-6 font-bold text-lg tracking-tight border-b border-border text-foreground">Админ-панель</div>
-      <nav className="flex-1 px-2 py-4">
-        {adminMenu.filter(item => item.roles.includes(role)).map(({ id, label, icon: Icon, path }) => (
-          <NavLink to={path} key={id}
-            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-md my-1 transition-all duration-150 ${isActive ? "bg-muted text-primary" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground"}`}
+    <aside className="w-64 shrink-0 h-screen flex flex-col border-r border-border bg-card text-card-foreground shadow-sm">
+      <div className="flex items-center h-16 px-6 font-semibold text-base tracking-tight border-b border-border text-foreground">
+        Админ-панель
+      </div>
+      <nav className="flex-1 overflow-y-auto px-2 py-4">
+        {adminMenu.filter((item) => item.roles.includes(role)).map(({ id, label, icon: Icon, path }) => (
+          <NavLink
+            to={path}
+            key={id}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-3 rounded-lg my-0.5 transition-all duration-200 ${
+                isActive
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+              }`
+            }
           >
-            <Icon className="w-5 h-5" />
-            <span>{label}</span>
+            <Icon className="w-5 h-5 shrink-0" />
+            <span className="truncate">{label}</span>
           </NavLink>
         ))}
       </nav>

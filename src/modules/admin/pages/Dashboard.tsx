@@ -69,7 +69,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="AI-агенты" value={agents} icon={Brain} color="blue" />
         <StatCard label="LLM-модели" value={models} icon={Database} color="green" />
         <StatCard label="База знаний" value={knowledge} icon={Users} color="orange" />
@@ -77,49 +77,49 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6 bg-card border-border">
-          <h2 className="font-semibold mb-4 text-foreground">Quick Actions</h2>
+        <Card className="p-6 rounded-xl border border-border bg-card text-card-foreground">
+          <h2 className="font-semibold mb-4 text-foreground">Быстрые действия</h2>
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
-              className="h-auto flex-col py-4 bg-card hover:bg-muted"
+              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
               onClick={() => handleQuickAction("Create Agent")}
             >
               <Plus className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Create Agent</span>
+              <span className="text-xs text-foreground">Создать агента</span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto flex-col py-4 bg-card hover:bg-muted"
+              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
               onClick={() => handleQuickAction("Add Model")}
             >
               <Database className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Add Model</span>
+              <span className="text-xs text-foreground">Добавить модель</span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto flex-col py-4 bg-card hover:bg-muted"
+              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
               onClick={() => handleQuickAction("Upload Document")}
             >
               <Upload className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Upload Document</span>
+              <span className="text-xs text-foreground">Загрузить документ</span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto flex-col py-4 bg-card hover:bg-muted"
+              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
               onClick={() => handleQuickAction("Refresh Cache")}
             >
               <RefreshCw className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Refresh Cache</span>
+              <span className="text-xs text-foreground">Обновить кэш</span>
             </Button>
           </div>
         </Card>
 
-        <Card className="p-6 bg-card border-border">
-          <h2 className="font-semibold mb-4 text-foreground">Recent Activity</h2>
+        <Card className="p-6 rounded-xl border border-border bg-card text-card-foreground">
+          <h2 className="font-semibold mb-4 text-foreground">Последняя активность</h2>
           <div className="space-y-3 max-h-64 overflow-y-auto">
             {mockActivities.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-3 p-2 rounded hover:bg-muted/50">
+              <div key={activity.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <div className="mt-0.5">{getActivityIcon(activity.type)}</div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground">{activity.message}</p>
@@ -139,12 +139,12 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card className="p-6 bg-card border-border">
+      <Card className="p-6 rounded-xl border border-border bg-card text-card-foreground">
         <h2 className="font-semibold mb-4 text-foreground">Статус сервисов</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {mockServices.map((service) => (
             <div key={service.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border">
-              <Server className="w-5 h-5 text-muted-foreground" />
+              <Server className="w-5 h-5 text-muted-foreground shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate text-foreground">{service.name}</p>
                 <div className="flex items-center gap-2 mt-1">
