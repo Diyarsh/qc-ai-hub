@@ -1,168 +1,213 @@
 import { useState } from "react";
-import { StatCard } from "../components/StatCard";
-import { BarChart3, Brain, Database, Users, Server, Plus, RefreshCw, Upload, Clock, UserPlus, Settings, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/shared/components/Badge";
-import { useToast } from "@/shared/components/Toast";
-import { mockAIAgents } from "./AIAgents/mockData";
-import { mockLLMModels } from "./LLMModels/mockData";
+import { LayoutGrid, List, Search, ChevronDown, ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-interface ServiceStatus {
+interface DashboardItem {
+  id: string;
   name: string;
-  status: string;
-  uptime?: string;
+  tags: string[];
+  starred?: boolean;
+  category?: string;
+  viewPath?: string;
 }
 
-const mockServices: ServiceStatus[] = [
-  { name: "Consul", status: "UP", uptime: "99.97%" },
-  { name: "Database", status: "UP", uptime: "99.99%" },
-  { name: "agentservice", status: "UP", uptime: "99.95%" },
-  { name: "documentservice", status: "UP", uptime: "99.92%" },
-  { name: "chatservice", status: "UP", uptime: "99.98%" },
-  { name: "llmrouter", status: "UP", uptime: "99.94%" },
-  { name: "semanticcontextservice", status: "WARNING", uptime: "98.5%" },
+const mockDashboards: DashboardItem[] = [
+  { id: "1", name: "Alertmanager / Overview", tags: ["alertmanager-mixin"], category: "Shared with me", viewPath: "/admin/dashboard/alertmanager" },
+  { id: "2", name: "CoreDNS", tags: ["coredns", "dns"], category: "Shared with me" },
+  { id: "3", name: "etcd", tags: ["etcd-mixin"], category: "Shared with me" },
+  { id: "4", name: "Grafana Overview", tags: [], category: "Grafana Overview", starred: true },
+  { id: "5", name: "Kubernetes / API server", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "6", name: "Kubernetes / Compute Resources / Multi-Cluster", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "7", name: "Kubernetes / Compute Resources / Cluster", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "8", name: "Kubernetes / Compute Resources / Namespace (Pods)", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "9", name: "Kubernetes / Compute Resources / Namespace (Workloads)", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "10", name: "Kubernetes / Compute Resources / Node (Pods)", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "11", name: "Kubernetes / Compute Resources / Pod", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "12", name: "Kubernetes / Compute Resources / Workload", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "13", name: "Kubernetes / Controller Manager", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "14", name: "Kubernetes / Kubelet", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "15", name: "Kubernetes / Networking / Cluster", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "16", name: "Kubernetes / Networking / Namespace (Pods)", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "17", name: "Kubernetes / Networking / Namespace (Workload)", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "18", name: "Kubernetes / Networking / Pod", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "19", name: "Kubernetes / Networking / Workload", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "20", name: "Kubernetes / Persistent Volumes", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "21", name: "Kubernetes / Proxy", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "22", name: "Kubernetes / Scheduler", tags: ["kubernetes-mixin"], category: "Grafana Overview" },
+  { id: "23", name: "Node Exporter / AIX", tags: ["node-exporter-mixin"], category: "Grafana Overview" },
+  { id: "24", name: "Node Exporter / MacOS", tags: ["node-exporter-mixin"], category: "Grafana Overview" },
+  { id: "25", name: "Node Exporter / Nodes", tags: ["node-exporter-mixin"], category: "Grafana Overview" },
+  { id: "26", name: "Node Exporter / USE Method / Cluster", tags: ["node-exporter-mixin"], category: "Grafana Overview" },
+  { id: "27", name: "Node Exporter / USE Method / Node", tags: ["node-exporter-mixin"], category: "Grafana Overview" },
+  { id: "28", name: "Prometheus / Overview", tags: ["prometheus-mixin"], category: "Grafana Overview" },
+  { id: "29", name: "Spring Boot Observability", tags: [], category: "Grafana Overview" },
 ];
 
-interface Activity {
-  id: number;
-  type: "create" | "update" | "delete" | "system";
-  entity: string;
-  message: string;
-  time: string;
-}
+const allTags = Array.from(new Set(mockDashboards.flatMap((d) => d.tags)));
 
-const mockActivities: Activity[] = [
-  { id: 1, type: "create", entity: "User", message: "Создан пользователь john.doe", time: "2 минуты назад" },
-  { id: 2, type: "update", entity: "LLM Model", message: "Обновлена модель GPT-4 Turbo", time: "15 минут назад" },
-  { id: 3, type: "create", entity: "AI Agent", message: "Создан агент Customer Support", time: "1 час назад" },
-  { id: 4, type: "delete", entity: "Knowledge", message: "Удален документ Old Manual", time: "2 часа назад" },
-  { id: 5, type: "system", entity: "System", message: "Обновление конфигурации выполнено", time: "3 часа назад" },
-  { id: 6, type: "update", entity: "User", message: "Изменены роли пользователя admin", time: "5 часов назад" },
-  { id: 7, type: "create", entity: "LLM Model", message: "Добавлена модель DeepSeek Chat", time: "1 день назад" },
-  { id: 8, type: "update", entity: "AI Agent", message: "Обновлен system prompt агента Code Assistant", time: "1 день назад" },
-];
-
-const getActivityIcon = (type: string) => {
-  switch (type) {
-    case "create":
-      return <Plus className="h-4 w-4 text-green-500" />;
-    case "update":
-      return <Settings className="h-4 w-4 text-blue-500" />;
-    case "delete":
-      return <Trash2 className="h-4 w-4 text-red-500" />;
-    default:
-      return <RefreshCw className="h-4 w-4 text-orange-500" />;
-  }
+const tagColors: Record<string, string> = {
+  "alertmanager-mixin": "bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-400/50",
+  "coredns": "bg-pink-500/20 text-pink-600 dark:text-pink-400 border-pink-400/50",
+  "dns": "bg-green-500/20 text-green-600 dark:text-green-400 border-green-400/50",
+  "etcd-mixin": "bg-red-500/20 text-red-600 dark:text-red-400 border-red-400/50",
+  "kubernetes-mixin": "bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-400/50",
+  "node-exporter-mixin": "bg-green-500/20 text-green-600 dark:text-green-400 border-green-400/50",
+  "prometheus-mixin": "bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/50",
 };
 
-export default function Dashboard() {
-  const { showToast } = useToast();
-  const agents = mockAIAgents.length;
-  const models = mockLLMModels.length;
-  const knowledge = 12;
-  const uptime = "720 ч";
+function getTagClass(tag: string) {
+  return tagColors[tag] ?? "bg-primary/10 text-primary border-primary/20";
+}
 
-  const handleQuickAction = (action: string) => {
-    showToast(`Действие "${action}" выполнено`, "success");
-  };
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [starredOnly, setStarredOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<"name" | "recent">("name");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [filterTag, setFilterTag] = useState<string | null>(null);
+
+  const filtered = mockDashboards.filter((d) => {
+    const matchSearch = !search || d.name.toLowerCase().includes(search.toLowerCase());
+    const matchStarred = !starredOnly || d.starred;
+    const matchTag = !filterTag || d.tags.includes(filterTag);
+    return matchSearch && matchStarred && matchTag;
+  });
+
+  const sorted = [...filtered].sort((a, b) =>
+    sortBy === "name" ? a.name.localeCompare(b.name) : 0
+  );
+
+  const byCategory = sorted.reduce<Record<string, DashboardItem[]>>((acc, d) => {
+    const cat = d.category ?? "General";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(d);
+    return acc;
+  }, {});
+  const categories = Object.keys(byCategory);
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="AI-агенты" value={agents} icon={Brain} color="blue" />
-        <StatCard label="LLM-модели" value={models} icon={Database} color="green" />
-        <StatCard label="База знаний" value={knowledge} icon={Users} color="orange" />
-        <StatCard label="Аптайм" value={uptime} icon={BarChart3} color="red" />
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+          Дашборды
+        </h1>
+        <p className="mt-1 text-muted-foreground">
+          Создавайте и управляйте дашбордами для визуализации данных
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6 rounded-xl border border-border bg-card text-card-foreground">
-          <h2 className="font-semibold mb-4 text-foreground">Быстрые действия</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
-              onClick={() => handleQuickAction("Create Agent")}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Поиск дашбордов и папок"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <select
+              value={filterTag ?? ""}
+              onChange={(e) => setFilterTag(e.target.value || null)}
+              className="h-9 rounded-md border border-input bg-background px-3 py-1.5 text-sm appearance-none pr-8"
             >
-              <Plus className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Создать агента</span>
+              <option value="">Фильтр по тегу</option>
+              {allTags.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={starredOnly}
+              onChange={(e) => setStarredOnly(e.target.checked)}
+              className="rounded border-input"
+            />
+            <span className="text-sm text-muted-foreground">Избранные</span>
+          </label>
+          <div className="flex rounded-md border border-input overflow-hidden">
+            <Button
+              variant={viewMode === "list" ? "secondary" : "ghost"}
+              size="sm"
+              className="rounded-none"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
             </Button>
             <Button
-              variant="outline"
-              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
-              onClick={() => handleQuickAction("Add Model")}
+              variant={viewMode === "grid" ? "secondary" : "ghost"}
+              size="sm"
+              className="rounded-none"
+              onClick={() => setViewMode("grid")}
             >
-              <Database className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Добавить модель</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
-              onClick={() => handleQuickAction("Upload Document")}
-            >
-              <Upload className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Загрузить документ</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto flex-col py-4 rounded-lg border-border hover:bg-muted/50"
-              onClick={() => handleQuickAction("Refresh Cache")}
-            >
-              <RefreshCw className="h-5 w-5 mb-2 text-foreground" />
-              <span className="text-xs text-foreground">Обновить кэш</span>
+              <LayoutGrid className="h-4 w-4" />
             </Button>
           </div>
-        </Card>
+          <div className="relative">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "name" | "recent")}
+              className="h-9 rounded-md border border-input bg-background px-3 py-1.5 text-sm appearance-none pr-8"
+            >
+              <option value="name">Сортировка: Имя</option>
+              <option value="recent">Сортировка: Недавние</option>
+            </select>
+            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
+        </div>
+      </div>
 
-        <Card className="p-6 rounded-xl border border-border bg-card text-card-foreground">
-          <h2 className="font-semibold mb-4 text-foreground">Последняя активность</h2>
-          <div className="space-y-3 max-h-64 overflow-y-auto">
-            {mockActivities.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="mt-0.5">{getActivityIcon(activity.type)}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground">{activity.message}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="default" className="text-xs">
-                      {activity.entity}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {activity.time}
-                    </span>
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-3 border-b border-border bg-muted/30 text-sm font-medium text-foreground">
+          <div className="w-4" />
+          <div>Название</div>
+          <div>Теги</div>
+        </div>
+        {categories.map((cat) => (
+          <Collapsible key={cat} defaultOpen={true} className="group">
+            <CollapsibleTrigger className="w-full grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 border-b border-border hover:bg-muted/20 transition-colors cursor-pointer text-left">
+              <ChevronRight className="h-4 w-4 text-muted-foreground self-center group-data-[state=open]:rotate-90 transition-transform" />
+              <div className="font-medium text-foreground">{cat}</div>
+              <div />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              {byCategory[cat].map((d) => (
+                <div
+                  key={d.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => d.viewPath && navigate(d.viewPath)}
+                  onKeyDown={(e) => d.viewPath && (e.key === "Enter" || e.key === " ") && navigate(d.viewPath)}
+                  className="grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 pl-12 border-b border-border last:border-b-0 hover:bg-muted/20 transition-colors cursor-pointer items-center text-sm"
+                >
+                  <LayoutGrid className="h-4 w-4 text-muted-foreground" />
+                  <div className="font-medium text-foreground">{d.name}</div>
+                  <div className="flex flex-wrap gap-1 justify-end">
+                    {d.tags.map((t) => (
+                      <span
+                        key={t}
+                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium border ${getTagClass(t)}`}
+                      >
+                        {t}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+        ))}
       </div>
-
-      <Card className="p-6 rounded-xl border border-border bg-card text-card-foreground">
-        <h2 className="font-semibold mb-4 text-foreground">Статус сервисов</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {mockServices.map((service) => (
-            <div key={service.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border">
-              <Server className="w-5 h-5 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate text-foreground">{service.name}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge
-                    variant={service.status === "UP" ? "success" : service.status === "DOWN" ? "error" : "warning"}
-                    className="text-xs"
-                  >
-                    {service.status}
-                  </Badge>
-                  {service.uptime && (
-                    <span className="text-xs text-muted-foreground">{service.uptime}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
     </div>
   );
 }

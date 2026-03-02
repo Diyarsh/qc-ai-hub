@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AdminLayout } from "./components/AdminLayout";
 import Dashboard from "./pages/Dashboard";
+import AlertmanagerOverview from "./pages/DashboardView/AlertmanagerOverview";
 import Users from "./pages/Users/index";
 import LLMModels from "./pages/LLMModels/index";
 import AIAgents from "./pages/AIAgents/index";
@@ -32,6 +33,7 @@ export default function AdminApp() {
     <AdminLayout role={role}>
       <Routes>
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="dashboard/alertmanager" element={<AlertmanagerOverview />} />
         <Route path="users" element={<Users />} />
         <Route path="llm-models" element={<LLMModels />} />
         <Route path="ai-agents" element={<AIAgents />} />

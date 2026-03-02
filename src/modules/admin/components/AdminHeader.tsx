@@ -24,8 +24,7 @@ export function AdminHeader() {
   const currentTheme = mounted ? (theme || "light") : "light";
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between h-16 px-4 sm:px-6 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="font-semibold text-lg text-foreground tracking-tight">QC AI-HUB Admin</div>
+    <header className="sticky top-0 z-50 flex items-center justify-end h-16 px-4 sm:px-6 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="flex items-center gap-2 sm:gap-3">
         <span className="rounded-full bg-primary/10 text-primary px-3 py-1 font-medium text-xs border border-primary/20">
           ADMIN
