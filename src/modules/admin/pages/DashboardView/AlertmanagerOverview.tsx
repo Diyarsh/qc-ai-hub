@@ -52,7 +52,7 @@ const notificationsData = timeLabels.map((t, i) => {
   return base;
 });
 
-const CHART_COLORS = {
+const CHART_COLORS_MAP = {
   green: "hsl(142, 76%, 36%)",
   yellow: "hsl(45, 93%, 47%)",
   red: "hsl(0, 84%, 60%)",
@@ -60,6 +60,8 @@ const CHART_COLORS = {
   purple: "hsl(262, 83%, 58%)",
   orange: "hsl(25, 95%, 53%)",
 };
+
+const CHART_COLORS = Object.values(CHART_COLORS_MAP);
 
 export default function AlertmanagerOverview() {
   const [alertsOpen, setAlertsOpen] = useState(true);
@@ -164,7 +166,7 @@ export default function AlertmanagerOverview() {
                   <Area
                     type="stepAfter"
                     dataKey="alerts"
-                    stroke={CHART_COLORS.green}
+                    stroke={CHART_COLORS_MAP.green}
                     fill="url(#alertsGradient)"
                     strokeWidth={2}
                   />

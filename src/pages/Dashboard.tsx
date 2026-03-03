@@ -18,6 +18,7 @@ import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import aiHubLogo from "@/assets/ai-hub.gif";
+import { PlatformUpdatesBanner } from "@/components/PlatformUpdatesBanner";
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
 type AgentType = "agent" | "developer";
@@ -243,7 +244,8 @@ export default function Dashboard() {
         {messages.length === 0 ? (
           // Начальное состояние: контент по центру вертикально
                 <div className="flex flex-col items-center justify-center flex-1 py-8">
-                  <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-4" />
+                   <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-4" />
+                   <PlatformUpdatesBanner />
 
               {/* Central Input - по центру страницы */}
                   <div className="relative mb-8 w-full space-y-2">
