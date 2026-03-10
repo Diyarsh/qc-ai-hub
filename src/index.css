@@ -55,44 +55,45 @@
     --sidebar-ring: 38 55% 58%;
   }
 
-  /* Light theme colors */
+  /* Light theme — Samruk-Kazyna inspired */
   .light {
     --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --foreground: 220 35% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 220 35% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 220 35% 12%;
 
-    --primary: 229 100% 64%;
-    --primary-foreground: 210 40% 98%;
+    /* Deeper bronze-gold for light mode */
+    --primary: 35 50% 42%;
+    --primary-foreground: 38 20% 97%;
 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 35 15% 95%;
+    --secondary-foreground: 220 30% 15%;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 35 10% 95%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --accent: 35 15% 93%;
+    --accent-foreground: 220 30% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 229 100% 64%;
+    --border: 35 12% 89%;
+    --input: 35 12% 89%;
+    --ring: 35 50% 42%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 229 100% 64%;
+    --sidebar-background: 35 8% 97%;
+    --sidebar-foreground: 220 25% 20%;
+    --sidebar-primary: 35 50% 42%;
+    --sidebar-primary-foreground: 38 20% 97%;
+    --sidebar-accent: 35 10% 94%;
+    --sidebar-accent-foreground: 220 25% 15%;
+    --sidebar-border: 35 12% 89%;
+    --sidebar-ring: 35 50% 42%;
   }
 }
 
