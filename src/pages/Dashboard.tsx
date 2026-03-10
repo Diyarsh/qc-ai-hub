@@ -67,8 +67,8 @@ const quickAgents: QuickAgent[] = [
     tags: ["Документы", "Анализ"],
     isLocal: true,
     featured: true,
-    gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
-    iconColor: "text-blue-500",
+    gradient: "from-primary/20 via-primary/10 to-transparent",
+    iconColor: "text-primary",
   },
   {
     id: "Translation Master",
