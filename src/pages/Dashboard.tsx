@@ -81,8 +81,8 @@ const quickAgents: QuickAgent[] = [
     type: "agent",
     tags: ["Казахский", "Русский", "Английский", "+15 языков"],
     isLocal: true,
-    gradient: "from-indigo-500/20 via-blue-500/10 to-transparent",
-    iconColor: "text-indigo-500",
+    gradient: "from-primary/20 via-primary/10 to-transparent",
+    iconColor: "text-primary",
   },
 ];
 export default function Dashboard() {
