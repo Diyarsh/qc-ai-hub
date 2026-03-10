@@ -245,7 +245,7 @@ export default function Dashboard() {
           // Начальное состояние: контент по центру вертикально
                 <div className="flex flex-col items-center justify-center flex-1 py-8">
                    <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-4" />
-                   <PlatformUpdatesBanner />
+                   
 
               {/* Central Input - по центру страницы */}
                   <div className="relative mb-8 w-full space-y-2">
