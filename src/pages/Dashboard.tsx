@@ -52,8 +52,8 @@ const quickAgents: QuickAgent[] = [
     type: "agent",
     tags: ["Аудио", "Видео"],
     isLocal: true,
-    gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
-    iconColor: "text-purple-500",
+    gradient: "from-primary/20 via-primary/10 to-transparent",
+    iconColor: "text-primary",
   },
   {
     id: "Summarizer",
@@ -67,8 +67,8 @@ const quickAgents: QuickAgent[] = [
     tags: ["Документы", "Анализ"],
     isLocal: true,
     featured: true,
-    gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
-    iconColor: "text-blue-500",
+    gradient: "from-primary/20 via-primary/10 to-transparent",
+    iconColor: "text-primary",
   },
   {
     id: "Translation Master",
@@ -81,8 +81,8 @@ const quickAgents: QuickAgent[] = [
     type: "agent",
     tags: ["Казахский", "Русский", "Английский", "+15 языков"],
     isLocal: true,
-    gradient: "from-indigo-500/20 via-blue-500/10 to-transparent",
-    iconColor: "text-indigo-500",
+    gradient: "from-primary/20 via-primary/10 to-transparent",
+    iconColor: "text-primary",
   },
 ];
 export default function Dashboard() {
