@@ -9,6 +9,7 @@ import { UserSettingsDialog } from "@/components/UserSettingsDialog";
 import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { NotificationsPopover } from "@/components/NotificationsPopover";
 
 interface PageHeaderProps {
   title?: string;
@@ -64,6 +65,10 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
         
         <div className="relative z-30">
           <DevModeToggle compact />
+        </div>
+        
+        <div className="relative z-30">
+          <NotificationsPopover />
         </div>
         
         {/* User Profile */}
