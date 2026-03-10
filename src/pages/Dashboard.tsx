@@ -352,7 +352,10 @@ export default function Dashboard() {
         ) : (
                 // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
           <>
-                  <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-8 pt-4" />
+                  <div className="flex items-center gap-3 mb-8 pt-4">
+                    <img src={aiHubSkLogo} alt="AI-HUB" className="h-8 w-8" />
+                    <span className="text-lg text-muted-foreground">Сәлем, Роман!</span>
+                  </div>
 
                   {/* Messages Display */}
                   <div className="space-y-4 pb-0">
