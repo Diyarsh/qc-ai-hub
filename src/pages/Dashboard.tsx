@@ -18,7 +18,7 @@ import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import aiHubLogo from "@/assets/ai-hub.gif";
-import { PlatformUpdatesBanner } from "@/components/PlatformUpdatesBanner";
+
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
 type AgentType = "agent" | "developer";
