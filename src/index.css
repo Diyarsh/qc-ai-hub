@@ -163,8 +163,8 @@
 }
 
 .card-glow:hover {
-  box-shadow: 0 8px 24px -4px rgba(129, 166, 255, 0.25),
-              0 0 0 1px rgba(129, 166, 255, 0.15);
+  box-shadow: 0 8px 24px -4px rgba(184, 150, 90, 0.25),
+              0 0 0 1px rgba(184, 150, 90, 0.15);
 }
 
 /* Apple-style squircle cards */
