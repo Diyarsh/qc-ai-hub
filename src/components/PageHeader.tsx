@@ -67,6 +67,10 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
           <DevModeToggle compact />
         </div>
         
+        <div className="relative z-30">
+          <NotificationsPopover />
+        </div>
+        
         {/* User Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
