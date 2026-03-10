@@ -17,7 +17,7 @@ import { Modal } from "@/shared/components/Modal";
 import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
-import aiHubLogo from "@/assets/ai-hub.gif";
+import aiHubSkLogo from "@/assets/logo-ai-hub-sk.svg";
 
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
@@ -244,7 +244,11 @@ export default function Dashboard() {
         {messages.length === 0 ? (
           // Начальное состояние: контент по центру вертикально
                 <div className="flex flex-col items-center justify-center flex-1 py-8">
-                   <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-4" />
+                   <div className="flex items-center gap-3 mb-2">
+                     <img src={aiHubSkLogo} alt="AI-HUB" className="h-8 w-8" />
+                     <span className="text-lg text-muted-foreground">Сәлем, Роман!</span>
+                   </div>
+                   <h1 className="text-3xl font-semibold text-foreground mb-4">С чего начнем?</h1>
                    
 
               {/* Central Input - по центру страницы */}
@@ -348,7 +352,10 @@ export default function Dashboard() {
         ) : (
                 // После отправки: сообщения сверху, поле ввода внизу (фиксировано)
           <>
-                  <img src={aiHubLogo} alt="AI-HUB" className="h-28 mb-8 pt-4" />
+                  <div className="flex items-center gap-3 mb-8 pt-4">
+                    <img src={aiHubSkLogo} alt="AI-HUB" className="h-8 w-8" />
+                    <span className="text-lg text-muted-foreground">Сәлем, Роман!</span>
+                  </div>
 
                   {/* Messages Display */}
                   <div className="space-y-4 pb-0">
