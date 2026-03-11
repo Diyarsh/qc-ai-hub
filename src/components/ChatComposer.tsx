@@ -27,7 +27,9 @@ export function ChatComposer({
   onChange,
   onSend,
   onAttachClick,
+  onStop,
   disabled,
+  isLoading,
   className,
   canSendWithoutText = false,
 }: ChatComposerProps) {
