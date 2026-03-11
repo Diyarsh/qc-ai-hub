@@ -288,8 +288,10 @@ export default function Dashboard() {
                   onChange={setInput}
                   onSend={handleSend}
                   onAttachClick={() => setIsAttachModalOpen(true)}
+                  onStop={handleStop}
                   examples={examplePrompts}
                   disabled={isLoading}
+                  isLoading={isLoading}
                   canSendWithoutText={attachedFiles.length > 0}
                 />
               </div>
