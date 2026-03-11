@@ -141,11 +141,12 @@ async function sendOpenAICompatibleRequest(
  * Mock response for demo mode (when no API key is configured)
  * Returns detailed, realistic responses for demonstration purposes
  */
-function getMockResponse(messages: ChatMessage[]): ChatResponse {
+async function getMockResponse(messages: ChatMessage[]): Promise<ChatResponse> {
   const lastUserMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
-  const query = lastUserMessage.toLowerCase();
   
-  // Detailed responses for demo mode
+  // Simulate AI thinking delay (2-4 seconds)
+  await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
+  
   let mockResponse = getDetailedMockResponse(lastUserMessage);
   
   return {

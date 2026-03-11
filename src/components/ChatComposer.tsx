@@ -169,15 +169,15 @@ export function ChatComposer({
       {isLoading && onStop ? (
         <Button
           type="button"
-          variant="destructive"
+          variant="outline"
           size="icon"
-          className="absolute bottom-2 right-2 h-8 w-8 z-20 rounded-lg"
+          className="absolute bottom-2 right-2 h-8 w-8 z-20 rounded-lg border-primary/50 bg-primary/10 hover:bg-primary/20 text-primary"
           onClick={(e) => {
             e.stopPropagation();
             onStop();
           }}
         >
-          <Square className="h-3.5 w-3.5 fill-current" />
+          <Square className="h-3 w-3 fill-current" />
         </Button>
       ) : (
         <Button
