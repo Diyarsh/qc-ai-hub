@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Paperclip, Send } from "lucide-react";
+import { Paperclip, Send, Square } from "lucide-react";
 
 interface ChatComposerProps {
   value: string;
