@@ -130,6 +130,19 @@ export default function AIStudio3Chat() {
     // This callback is kept for compatibility but doesn't need to do anything
   }, []);
   
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const handleStop = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    setMessages(prev => prev.map(msg => 
+      msg.isLoading ? { ...msg, text: 'Генерация остановлена', isLoading: false } : msg
+    ));
+  }, []);
+
   const handleSend = async (textOverride?: string) => {
     const text = (textOverride ?? message).trim();
     if ((!text && attachedFiles.length === 0) || isLoading) return;
