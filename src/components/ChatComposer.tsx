@@ -165,20 +165,35 @@ export function ChatComposer({
         <Paperclip className="h-4 w-4" />
       </Button>
 
-      {/* Send (bottom-right) */}
-      <Button
-        type="button"
-        variant="default"
-        size="icon"
-        className="absolute bottom-2 right-2 h-8 w-8 z-20"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleClickSend();
-        }}
-        disabled={disabled}
-      >
-        <Send className="h-4 w-4" />
-      </Button>
+      {/* Send / Stop (bottom-right) */}
+      {isLoading && onStop ? (
+        <Button
+          type="button"
+          variant="destructive"
+          size="icon"
+          className="absolute bottom-2 right-2 h-8 w-8 z-20 rounded-lg"
+          onClick={(e) => {
+            e.stopPropagation();
+            onStop();
+          }}
+        >
+          <Square className="h-3.5 w-3.5 fill-current" />
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          variant="default"
+          size="icon"
+          className="absolute bottom-2 right-2 h-8 w-8 z-20"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClickSend();
+          }}
+          disabled={disabled}
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
