@@ -147,6 +147,20 @@ export default function Dashboard() {
     // This callback is kept for compatibility but doesn't need to do anything
   }, []);
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const handleStop = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    // Replace loading message with stopped message
+    setMessages(prev => prev.map(msg => 
+      msg.isLoading ? { ...msg, text: 'Генерация остановлена', isLoading: false } : msg
+    ));
+  }, []);
+
   const handleSend = async (text: string) => {
     const prompt = text.trim();
     if ((!prompt && attachedFiles.length === 0) || isLoading) return;
@@ -274,8 +288,10 @@ export default function Dashboard() {
                   onChange={setInput}
                   onSend={handleSend}
                   onAttachClick={() => setIsAttachModalOpen(true)}
+                  onStop={handleStop}
                   examples={examplePrompts}
                   disabled={isLoading}
+                  isLoading={isLoading}
                   canSendWithoutText={attachedFiles.length > 0}
                 />
               </div>
@@ -421,8 +437,10 @@ export default function Dashboard() {
                   onChange={setInput}
                   onSend={handleSend}
                   onAttachClick={() => setIsAttachModalOpen(true)}
+                  onStop={handleStop}
                   examples={examplePrompts}
                   disabled={isLoading}
+                  isLoading={isLoading}
                   canSendWithoutText={attachedFiles.length > 0}
                 />
               <div className="pb-1">

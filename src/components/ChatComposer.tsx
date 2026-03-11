@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Paperclip, Send } from "lucide-react";
+import { Paperclip, Send, Square } from "lucide-react";
 
 interface ChatComposerProps {
   value: string;
@@ -11,7 +11,9 @@ interface ChatComposerProps {
   onChange: (value: string) => void;
   onSend: (value: string) => void;
   onAttachClick?: () => void;
+  onStop?: () => void;
   disabled?: boolean;
+  isLoading?: boolean;
   className?: string;
   /** Разрешить отправку без текста (например, только с файлами) */
   canSendWithoutText?: boolean;
@@ -25,7 +27,9 @@ export function ChatComposer({
   onChange,
   onSend,
   onAttachClick,
+  onStop,
   disabled,
+  isLoading,
   className,
   canSendWithoutText = false,
 }: ChatComposerProps) {
@@ -161,20 +165,35 @@ export function ChatComposer({
         <Paperclip className="h-4 w-4" />
       </Button>
 
-      {/* Send (bottom-right) */}
-      <Button
-        type="button"
-        variant="default"
-        size="icon"
-        className="absolute bottom-2 right-2 h-8 w-8 z-20"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleClickSend();
-        }}
-        disabled={disabled}
-      >
-        <Send className="h-4 w-4" />
-      </Button>
+      {/* Send / Stop (bottom-right) */}
+      {isLoading && onStop ? (
+        <Button
+          type="button"
+          variant="destructive"
+          size="icon"
+          className="absolute bottom-2 right-2 h-8 w-8 z-20 rounded-lg"
+          onClick={(e) => {
+            e.stopPropagation();
+            onStop();
+          }}
+        >
+          <Square className="h-3.5 w-3.5 fill-current" />
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          variant="default"
+          size="icon"
+          className="absolute bottom-2 right-2 h-8 w-8 z-20"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClickSend();
+          }}
+          disabled={disabled}
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
