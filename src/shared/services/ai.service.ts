@@ -46,6 +46,8 @@ export async function sendChatMessage(
   // If no API key is configured, return mock response for demo
   if (!apiKey) {
     console.warn('No AI API key configured. Using mock response. Add VITE_OPENAI_API_KEY to .env file for real AI responses.');
+    // Simulate network delay so the loading/stop button is visible
+    await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
     return getMockResponse(messages);
   }
 
