@@ -11,7 +11,9 @@ interface ChatComposerProps {
   onChange: (value: string) => void;
   onSend: (value: string) => void;
   onAttachClick?: () => void;
+  onStop?: () => void;
   disabled?: boolean;
+  isLoading?: boolean;
   className?: string;
   /** Разрешить отправку без текста (например, только с файлами) */
   canSendWithoutText?: boolean;
