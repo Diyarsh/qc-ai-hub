@@ -356,7 +356,9 @@ export default function AIStudio3Chat() {
                 onChange={setMessage}
                 onSend={() => handleSend()}
                 onAttachClick={() => setIsAttachModalOpen(true)}
+                onStop={handleStop}
                 disabled={isLoading}
+                isLoading={isLoading}
                 canSendWithoutText={attachedFiles.length > 0}
               />
               <div className="pb-1">
