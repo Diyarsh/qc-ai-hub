@@ -457,13 +457,13 @@ export default function AIStudio3() {
                   ))}
                   <Badge
                     variant="outline"
-                    className={cn(
-                      "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto",
-                      agent.isLocal
-                        ? "bg-green-500/20 dark:bg-green-500/30 text-green-700 dark:text-green-300 border-green-400/50 dark:border-green-500/50"
-                        : "bg-blue-500/20 dark:bg-blue-500/30 text-blue-700 dark:text-blue-300 border-blue-400/50 dark:border-blue-500/50"
-                    )}
-                    style={{ borderRadius: '8px' }}
+                    className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto"
+                    style={{
+                      borderRadius: '8px',
+                      backgroundColor: agent.isLocal ? 'rgba(140,121,97,0.15)' : 'rgba(0,40,69,0.15)',
+                      color: agent.isLocal ? '#8C7961' : (document.documentElement.classList.contains('dark') ? '#6ba3d6' : '#002845'),
+                      borderColor: agent.isLocal ? 'rgba(140,121,97,0.4)' : 'rgba(0,40,69,0.4)',
+                    }}
                   >
                     {agent.isLocal ? "Локальный" : "Внешний"}
                   </Badge>
