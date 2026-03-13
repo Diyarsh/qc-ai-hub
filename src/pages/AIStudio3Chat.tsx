@@ -124,6 +124,69 @@ export default function AIStudio3Chat() {
     loadSession(sessionId);
   };
 
+  const handleExportReport = useCallback(() => {
+    if (messages.length === 0) return;
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    // Collect user questions and assistant answers
+    const userMessages = messages.filter(m => m.role === 'user' && !m.isLoading);
+    const assistantMessages = messages.filter(m => m.role === 'assistant' && !m.isLoading);
+
+    const question = userMessages.map(m => m.text).join('\n\n');
+    const shortAnswer = assistantMessages.length > 0 ? assistantMessages[0].text.slice(0, 300) : '';
+    const fullAnswer = assistantMessages.map(m => m.text).join('\n\n---\n\n');
+
+    const report = `ЗАКЛЮЧЕНИЕ
+ИИ-агента по правовому сопровождению деятельности АО «Самрук-Қазына»
+
+г. Астана                                                           ${dateStr}
+
+═══════════════════════════════════════════════════════════════
+
+Агент:                    ${agent || 'AI-ассистент'}
+
+Наименование вопроса:     ${question.slice(0, 200)}
+
+───────────────────────────────────────────────────────────────
+
+КРАТКИЙ ОТВЕТ:
+${shortAnswer}
+
+───────────────────────────────────────────────────────────────
+
+ПОДРОБНЫЙ ОТВЕТ:
+${fullAnswer}
+
+───────────────────────────────────────────────────────────────
+
+ИСТОЧНИКИ:
+1. Источники НПА
+2. Источники ВНД
+
+───────────────────────────────────────────────────────────────
+
+ВЫВОДЫ:
+Проекты представленных документов по вопросу соответствуют нормам и требованиям
+нормативных правовых актов Республики Казахстан и внутренних нормативных документов
+АО «Самрук-Қазына»
+
+═══════════════════════════════════════════════════════════════
+Дата формирования: ${dateStr}
+Сформировано автоматически платформой QC AI-HUB
+`;
+
+    const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Заключение_ИИ_${dateStr.replace(/\./g, '-')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Отчёт выгружен', 'success');
+  }, [messages, agent, showToast]);
+
   // Handle copy message text (callback for MessageBubble, no toast needed)
   const handleCopy = useCallback((messageId: string) => {
     // MessageBubble handles copying and visual feedback internally
