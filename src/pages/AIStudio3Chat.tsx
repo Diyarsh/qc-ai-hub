@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, ChevronLeft, ChevronRight, X, File } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, X, File, FileDown } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChatComposer } from "@/components/ChatComposer";
