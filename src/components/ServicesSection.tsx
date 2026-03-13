@@ -30,9 +30,9 @@ export const ServicesSection = () => {
       title: t('services.self-service.title'),
       description: t('services.self-service.description'),
       icon: Cpu,
-      gradient: "bg-gradient-to-br from-violet-500 via-purple-500 to-purple-700",
-      glowColor: "bg-violet-500",
-      accentBorder: "border-violet-500/30",
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      glowColor: "bg-primary",
+      accentBorder: "border-primary/30",
       features: [
         t('services.self-service.feature1'),
         t('services.self-service.feature2'),
@@ -43,9 +43,9 @@ export const ServicesSection = () => {
       title: t('services.ai-service.title'),
       description: t('services.ai-service.description'),
       icon: Users,
-      gradient: "bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-700",
-      glowColor: "bg-cyan-500",
-      accentBorder: "border-cyan-500/30",
+      gradient: "bg-gradient-to-br from-accent via-primary/80 to-primary",
+      glowColor: "bg-accent",
+      accentBorder: "border-accent/30",
       features: [
         t('services.ai-service.feature1'),
         t('services.ai-service.feature2'),
@@ -58,8 +58,8 @@ export const ServicesSection = () => {
     <section className="py-24 bg-gradient-to-b from-muted/30 via-muted/50 to-muted/30 relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-accent/10 rounded-full blur-3xl" />
         {/* Grid pattern */}
         <div className="absolute inset-0 opacity-[0.02]" style={{
           backgroundImage: `linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)`,

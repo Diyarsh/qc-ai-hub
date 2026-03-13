@@ -28,25 +28,25 @@ export const AdvantagesSection = () => {
       icon: Shield,
       title: t('advantages.sovereignty.title'),
       description: t('advantages.sovereignty.description'),
-      gradient: "bg-gradient-to-br from-blue-500 to-blue-700",
-      iconColor: "text-white",
-      accentColor: "from-blue-500/20 to-blue-600/5"
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      iconColor: "text-primary-foreground",
+      accentColor: "from-primary/20 to-accent/5"
     },
     {
       icon: Zap,
       title: t('advantages.scalability.title'),
       description: t('advantages.scalability.description'),
-      gradient: "bg-gradient-to-br from-amber-400 to-orange-600",
-      iconColor: "text-white",
-      accentColor: "from-amber-500/20 to-orange-600/5"
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      iconColor: "text-primary-foreground",
+      accentColor: "from-primary/20 to-accent/5"
     },
     {
       icon: Lock,
       title: t('advantages.security.title'),
       description: t('advantages.security.description'),
-      gradient: "bg-gradient-to-br from-emerald-500 to-teal-700",
-      iconColor: "text-white",
-      accentColor: "from-emerald-500/20 to-teal-600/5"
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      iconColor: "text-primary-foreground",
+      accentColor: "from-primary/20 to-accent/5"
     }
   ];
 
@@ -54,7 +54,7 @@ export const AdvantagesSection = () => {
     <section className="py-24 bg-background relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       </div>
       

@@ -36,21 +36,21 @@ export const PlatformSection = () => {
       icon: Server,
       title: t('platform.compute.title'),
       description: t('platform.compute.description'),
-      gradient: "bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600",
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
       number: "01"
     },
     {
       icon: Database,
       title: t('platform.data.title'),
       description: t('platform.data.description'),
-      gradient: "bg-gradient-to-br from-indigo-400 via-blue-500 to-indigo-600",
+      gradient: "bg-gradient-to-br from-accent via-primary/80 to-primary",
       number: "02"
     },
     {
       icon: Shield,
       title: t('platform.infrastructure.title'),
       description: t('platform.infrastructure.description'),
-      gradient: "bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600",
+      gradient: "bg-gradient-to-br from-primary/90 via-accent to-primary",
       number: "03"
     }
   ];
