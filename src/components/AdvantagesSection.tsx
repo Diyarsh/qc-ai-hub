@@ -28,25 +28,25 @@ export const AdvantagesSection = () => {
       icon: Shield,
       title: t('advantages.sovereignty.title'),
       description: t('advantages.sovereignty.description'),
-      gradient: "bg-gradient-to-br from-blue-500 to-blue-700",
-      iconColor: "text-white",
-      accentColor: "from-blue-500/20 to-blue-600/5"
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      iconColor: "text-primary-foreground",
+      accentColor: "from-primary/20 to-accent/5"
     },
     {
       icon: Zap,
       title: t('advantages.scalability.title'),
       description: t('advantages.scalability.description'),
-      gradient: "bg-gradient-to-br from-amber-400 to-orange-600",
-      iconColor: "text-white",
-      accentColor: "from-amber-500/20 to-orange-600/5"
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      iconColor: "text-primary-foreground",
+      accentColor: "from-primary/20 to-accent/5"
     },
     {
       icon: Lock,
       title: t('advantages.security.title'),
       description: t('advantages.security.description'),
-      gradient: "bg-gradient-to-br from-emerald-500 to-teal-700",
-      iconColor: "text-white",
-      accentColor: "from-emerald-500/20 to-teal-600/5"
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      iconColor: "text-primary-foreground",
+      accentColor: "from-primary/20 to-accent/5"
     }
   ];
 
