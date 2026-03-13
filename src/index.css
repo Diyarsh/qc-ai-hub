@@ -8,36 +8,36 @@
 
 @layer base {
   :root {
-    /* Dark theme — Samruk-Kazyna inspired */
-    --background: 220 25% 7%;
-    --foreground: 38 20% 92%;
+    /* Dark theme — Samruk-Kazyna Pantone 295C navy + Pantone 7504C warm gold */
+    --background: 207 60% 6%;
+    --foreground: 33 15% 92%;
 
-    --card: 220 22% 10%;
-    --card-foreground: 38 20% 92%;
+    --card: 207 45% 9%;
+    --card-foreground: 33 15% 92%;
 
-    --popover: 220 22% 10%;
-    --popover-foreground: 38 20% 92%;
+    --popover: 207 45% 9%;
+    --popover-foreground: 33 15% 92%;
 
-    /* Gold accent for dark mode */
-    --primary: 38 55% 58%;
-    --primary-foreground: 220 30% 6%;
+    /* Pantone 7504C gold — lightened for dark mode readability */
+    --primary: 33 28% 56%;
+    --primary-foreground: 207 60% 6%;
 
-    --secondary: 220 20% 13%;
-    --secondary-foreground: 38 20% 92%;
+    --secondary: 207 30% 12%;
+    --secondary-foreground: 33 15% 92%;
 
-    --muted: 220 18% 13%;
-    --muted-foreground: 220 15% 60%;
+    --muted: 207 25% 12%;
+    --muted-foreground: 207 15% 58%;
 
-    /* Warm gold accent */
-    --accent: 32 45% 48%;
-    --accent-foreground: 38 20% 95%;
+    /* Warm accent derived from 7504C */
+    --accent: 30 22% 46%;
+    --accent-foreground: 33 15% 95%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 15% 17%;
-    --input: 220 15% 17%;
-    --ring: 38 55% 58%;
+    --border: 207 20% 16%;
+    --input: 207 20% 16%;
+    --ring: 33 28% 56%;
 
     --radius: 0.75rem;
     --radius-sm: 0.5rem;
@@ -45,55 +45,55 @@
     --radius-lg: 1.25rem;
     --radius-xl: 1.5rem;
 
-    --sidebar-background: 220 28% 5%;
-    --sidebar-foreground: 38 20% 92%;
-    --sidebar-primary: 38 55% 58%;
-    --sidebar-primary-foreground: 220 30% 6%;
-    --sidebar-accent: 220 20% 12%;
-    --sidebar-accent-foreground: 38 20% 92%;
-    --sidebar-border: 220 18% 16%;
-    --sidebar-ring: 38 55% 58%;
+    --sidebar-background: 207 65% 4%;
+    --sidebar-foreground: 33 15% 92%;
+    --sidebar-primary: 33 28% 56%;
+    --sidebar-primary-foreground: 207 60% 6%;
+    --sidebar-accent: 207 30% 11%;
+    --sidebar-accent-foreground: 33 15% 92%;
+    --sidebar-border: 207 25% 15%;
+    --sidebar-ring: 33 28% 56%;
   }
 
-  /* Light theme — Samruk-Kazyna inspired */
+  /* Light theme — Samruk-Kazyna Pantone 7504C + 295C */
   .light {
     --background: 0 0% 100%;
-    --foreground: 220 35% 12%;
+    --foreground: 207 50% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 35% 12%;
+    --card-foreground: 207 50% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 35% 12%;
+    --popover-foreground: 207 50% 12%;
 
-    /* Deeper bronze-gold for light mode */
-    --primary: 35 50% 42%;
-    --primary-foreground: 38 20% 97%;
+    /* Pantone 7504C exact: #8C7961 → 30° 18% 46% */
+    --primary: 30 18% 46%;
+    --primary-foreground: 33 15% 97%;
 
-    --secondary: 35 15% 95%;
-    --secondary-foreground: 220 30% 15%;
+    --secondary: 30 10% 95%;
+    --secondary-foreground: 207 40% 15%;
 
-    --muted: 35 10% 95%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 30 8% 95%;
+    --muted-foreground: 207 10% 45%;
 
-    --accent: 35 15% 93%;
-    --accent-foreground: 220 30% 15%;
+    --accent: 30 12% 92%;
+    --accent-foreground: 207 40% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 35 12% 89%;
-    --input: 35 12% 89%;
-    --ring: 35 50% 42%;
+    --border: 30 10% 88%;
+    --input: 30 10% 88%;
+    --ring: 30 18% 46%;
 
-    --sidebar-background: 35 8% 97%;
-    --sidebar-foreground: 220 25% 20%;
-    --sidebar-primary: 35 50% 42%;
-    --sidebar-primary-foreground: 38 20% 97%;
-    --sidebar-accent: 35 10% 94%;
-    --sidebar-accent-foreground: 220 25% 15%;
-    --sidebar-border: 35 12% 89%;
-    --sidebar-ring: 35 50% 42%;
+    --sidebar-background: 30 6% 97%;
+    --sidebar-foreground: 207 35% 18%;
+    --sidebar-primary: 30 18% 46%;
+    --sidebar-primary-foreground: 33 15% 97%;
+    --sidebar-accent: 30 8% 94%;
+    --sidebar-accent-foreground: 207 35% 15%;
+    --sidebar-border: 30 10% 88%;
+    --sidebar-ring: 30 18% 46%;
   }
 }
 
@@ -103,12 +103,12 @@
   }
 
   html {
-    font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+    font-family: 'Arial', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   body {
     @apply bg-background text-foreground font-sans;
-    font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+    font-family: 'Arial', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   #root {

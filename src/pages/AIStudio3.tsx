@@ -275,9 +275,9 @@ export default function AIStudio3() {
       <main className="flex-1 overflow-hidden relative">
         {/* Decorative background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-blue-500/6 rounded-full blur-3xl animate-breathe" />
-          <div className="absolute top-1/2 -right-20 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
-          <div className="absolute -bottom-20 left-1/3 w-[350px] h-[350px] bg-accent/5 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '3s' }} />
+          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-primary/6 rounded-full blur-3xl animate-breathe" />
+          <div className="absolute top-1/2 -right-20 w-[400px] h-[400px] bg-accent/5 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
+          <div className="absolute -bottom-20 left-1/3 w-[350px] h-[350px] bg-primary/4 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '3s' }} />
         </div>
         <ScrollArea className="h-full relative z-10">
           <div className="max-w-7xl mx-auto space-y-6 p-6">
