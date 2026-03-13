@@ -43,9 +43,9 @@ export const ServicesSection = () => {
       title: t('services.ai-service.title'),
       description: t('services.ai-service.description'),
       icon: Users,
-      gradient: "bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-700",
-      glowColor: "bg-cyan-500",
-      accentBorder: "border-cyan-500/30",
+      gradient: "bg-gradient-to-br from-accent via-primary/80 to-primary",
+      glowColor: "bg-accent",
+      accentBorder: "border-accent/30",
       features: [
         t('services.ai-service.feature1'),
         t('services.ai-service.feature2'),
