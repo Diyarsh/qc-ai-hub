@@ -30,9 +30,9 @@ export const ServicesSection = () => {
       title: t('services.self-service.title'),
       description: t('services.self-service.description'),
       icon: Cpu,
-      gradient: "bg-gradient-to-br from-violet-500 via-purple-500 to-purple-700",
-      glowColor: "bg-violet-500",
-      accentBorder: "border-violet-500/30",
+      gradient: "bg-gradient-to-br from-primary via-primary/80 to-accent",
+      glowColor: "bg-primary",
+      accentBorder: "border-primary/30",
       features: [
         t('services.self-service.feature1'),
         t('services.self-service.feature2'),
