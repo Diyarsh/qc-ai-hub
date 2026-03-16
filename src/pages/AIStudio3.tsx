@@ -432,65 +432,65 @@ export default function AIStudio3() {
               }}
               onClick={(e) => handleCardClick(e, agent)}
             >
-              {/* Always-visible gradient background */}
-              {agent.gradient && (
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
-                  agent.gradient,
-                  "opacity-30 group-hover:opacity-70"
-                )} 
-                style={{ borderRadius: '20px' }}
-                />
-              )}
-              {/* Top accent line */}
-              <div className="absolute top-0 left-3 right-3 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent group-hover:via-primary/60 transition-all duration-300" />
-              
-              <CardHeader className="p-4 relative z-10 h-full flex flex-col gap-0 space-y-0">
-                <div className="flex gap-2.5 flex-1 min-h-0 items-start -mb-1">
-                  <div className="relative flex-shrink-0 transition-all duration-500 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-0.5">
-                    <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <Icon className={cn("h-9 w-9 relative z-10", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
+              {/* Front - preview (visible by default, hidden on hover) */}
+              <div className="absolute inset-0 z-10 transition-opacity duration-300 group-hover:opacity-0 group-hover:pointer-events-none">
+                {agent.gradient && (
+                  <div className={cn(
+                    "absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
+                    agent.gradient,
+                    "opacity-30 group-hover:opacity-70"
+                  )} style={{ borderRadius: '20px' }} />
+                )}
+                <div className="absolute top-0 left-3 right-3 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent group-hover:via-primary/60 transition-all duration-300" />
+                <CardHeader className="p-4 relative z-10 h-full flex flex-col gap-0 space-y-0">
+                  <div className="flex gap-2.5 flex-1 min-h-0 items-start -mb-1">
+                    <div className="relative flex-shrink-0 transition-all duration-500 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-0.5">
+                      <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <Icon className={cn("h-9 w-9 relative z-10", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
+                    </div>
+                    <div className="flex flex-col flex-1 min-w-0 gap-1.5 pt-0.5">
+                      <CardTitle className="text-sm font-semibold leading-tight group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden">
+                        {agent.name}
+                      </CardTitle>
+                      <CardDescription
+                        className="text-xs flex-1 min-w-0 text-muted-foreground leading-relaxed overflow-hidden"
+                        style={{ lineHeight: '1.35em', maxHeight: '2.7em' }}
+                      >
+                        {agent.description}
+                      </CardDescription>
+                    </div>
                   </div>
-                  <div className="flex flex-col flex-1 min-w-0 gap-1.5 pt-0.5">
-                    <CardTitle className="text-sm font-semibold leading-tight group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden">
-                      {agent.name}
-                    </CardTitle>
-                    <CardDescription 
-                      className="text-xs flex-1 min-w-0 text-muted-foreground leading-relaxed overflow-hidden"
-                      style={{
-                        lineHeight: '1.35em',
-                        maxHeight: '2.7em'
-                      }}
-                    >
-                      {agent.description}
-                    </CardDescription>
-                  </div>
-                </div>
-                <div className="flex flex-nowrap gap-1.5 mt-auto pt-1 overflow-hidden min-w-0">
-                  {agent.tags.slice(0, 1).map((tag, tagIndex) => (
+                  <div className="flex flex-nowrap gap-1.5 mt-auto pt-1 overflow-hidden min-w-0">
+                    {agent.tags.slice(0, 1).map((tag, tagIndex) => (
+                      <Badge key={tagIndex} variant="outline" className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap" style={{ borderRadius: 8 }}>
+                        {tag}
+                      </Badge>
+                    ))}
                     <Badge
-                      key={tagIndex}
                       variant="outline"
-                      className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap"
+                      className={cn(
+                        "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto",
+                        agent.isLocal
+                          ? "bg-emerald-600/15 text-emerald-700 dark:bg-[#166534]/25 dark:text-[#bbf7d0] border-emerald-600/40 dark:border-[#22c55e]/40"
+                          : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
+                      )}
                       style={{ borderRadius: 8 }}
                     >
-                      {tag}
+                      {agent.isLocal ? "Локальный" : "Внешний"}
                     </Badge>
-                  ))}
-                  <Badge
-                    variant="outline"
-                    className={cn(
-                      "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto",
-                      agent.isLocal
-                        ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#166534]/25 dark:text-[#bbf7d0] border-[#6B8C61]/40 dark:border-[#22c55e]/40"
-                        : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
-                    )}
-                    style={{ borderRadius: 8 }}
-                  >
-                    {agent.isLocal ? "Локальный" : "Внешний"}
-                  </Badge>
-                </div>
-              </CardHeader>
+                  </div>
+                </CardHeader>
+              </div>
+
+              {/* Back - only description (hidden by default, visible on hover) */}
+              <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover:z-10 flex flex-col p-4 bg-card/95 backdrop-blur-sm">
+                {agent.gradient && (
+                  <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50", agent.gradient)} style={{ borderRadius: '20px' }} />
+                )}
+                <p className="relative z-10 text-xs text-muted-foreground leading-relaxed overflow-y-auto flex-1 min-h-0 pr-1">
+                  {agent.description}
+                </p>
+              </div>
             </Card>
               )})}
                 </div>
