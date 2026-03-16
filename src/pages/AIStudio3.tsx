@@ -51,6 +51,23 @@ interface Agent {
   iconColor?: string;
 }
 
+const TengeIcon: LucideIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M5 5h14" />
+    <path d="M7 9h10" />
+    <path d="M12 9v10" />
+  </svg>
+);
+
 const agents: Agent[] = [
   {
     id: "Transcriber",
@@ -161,7 +178,7 @@ const agents: Agent[] = [
     placeholder: "Найди ключевые финансовые метрики в отчете",
     tags: ["Финансы", "Метрики"],
     isLocal: true,
-    icon: DollarSign,
+    icon: TengeIcon,
     gradient: "from-primary/20 via-primary/10 to-transparent",
     iconColor: "text-primary",
   },
@@ -451,48 +468,22 @@ export default function AIStudio3() {
                 </div>
                 <div className="flex flex-nowrap gap-1.5 mt-auto pt-1 overflow-hidden min-w-0">
                   {agent.tags.slice(0, 1).map((tag, tagIndex) => (
-                    <Badge key={tagIndex} variant="outline" className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap" style={{ borderRadius: '8px' }}>
+                    <Badge
+                      key={tagIndex}
+                      variant="outline"
+                      className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap rounded-lg"
+                    >
                       {tag}
                     </Badge>
                   ))}
                   <Badge
                     variant="outline"
-<<<<<<< Updated upstream
                     className={cn(
                       "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto rounded-lg",
                       agent.isLocal
-                        ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#4A7A3F]/20 dark:text-[#8FBC8F] border-[#6B8C61]/40 dark:border-[#4A7A3F]/40"
+                        ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#6B8C61]/40 dark:border-[#0E7490]/40"
                         : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
                     )}
-=======
-                    className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto"
-                    style={{
-                      borderRadius: '8px',
-                      // Light mode: transparent bg, dark emerald/blue text
-                      // Dark mode: cyan accent for both tags
-                      backgroundColor: agent.isLocal
-                        ? (document.documentElement.classList.contains('dark')
-                            ? 'rgba(56, 189, 248, 0.26)'
-                            : 'rgba(16,185,129,0.15)')
-                        : (document.documentElement.classList.contains('dark')
-                            ? 'rgba(56, 189, 248, 0.28)'
-                            : 'rgba(0,38,115,0.15)'),
-                      color: agent.isLocal
-                        ? (document.documentElement.classList.contains('dark')
-                            ? '#38BDF8'
-                            : '#059669')
-                        : (document.documentElement.classList.contains('dark')
-                            ? '#38BDF8'
-                            : '#002673'),
-                      borderColor: agent.isLocal
-                        ? (document.documentElement.classList.contains('dark')
-                            ? 'rgba(56, 189, 248, 0.85)'
-                            : 'rgba(16,185,129,0.5)')
-                        : (document.documentElement.classList.contains('dark')
-                            ? 'rgba(56, 189, 248, 0.85)'
-                            : 'rgba(0,38,115,0.5)'),
-                    }}
->>>>>>> Stashed changes
                   >
                     {agent.isLocal ? "Локальный" : "Внешний"}
                   </Badge>
