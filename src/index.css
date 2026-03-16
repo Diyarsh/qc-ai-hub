@@ -8,25 +8,25 @@
 
 @layer base {
   :root {
-    /* Dark theme — Samruk-Kazyna Pantone 295C navy + Pantone 7504C warm gold */
-    --background: 207 60% 6%;
+    /* Dark theme — based on Pantone 295C navy #002845 */
+    --background: 205 100% 10%;
     --foreground: 33 15% 92%;
 
-    --card: 207 45% 9%;
+    --card: 205 80% 12%;
     --card-foreground: 33 15% 92%;
 
-    --popover: 207 45% 9%;
+    --popover: 205 80% 12%;
     --popover-foreground: 33 15% 92%;
 
     /* Pantone 7504C gold — lightened for dark mode readability */
     --primary: 33 28% 56%;
-    --primary-foreground: 207 60% 6%;
+    --primary-foreground: 205 100% 8%;
 
-    --secondary: 207 30% 12%;
+    --secondary: 205 60% 15%;
     --secondary-foreground: 33 15% 92%;
 
-    --muted: 207 25% 12%;
-    --muted-foreground: 207 15% 58%;
+    --muted: 205 50% 15%;
+    --muted-foreground: 205 20% 58%;
 
     /* Warm accent derived from 7504C */
     --accent: 30 22% 46%;
@@ -35,8 +35,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 207 20% 16%;
-    --input: 207 20% 16%;
+    --border: 205 40% 18%;
+    --input: 205 40% 18%;
     --ring: 33 28% 56%;
 
     --radius: 0.75rem;
@@ -45,13 +45,13 @@
     --radius-lg: 1.25rem;
     --radius-xl: 1.5rem;
 
-    --sidebar-background: 207 65% 4%;
+    --sidebar-background: 205 100% 7%;
     --sidebar-foreground: 33 15% 92%;
     --sidebar-primary: 33 28% 56%;
-    --sidebar-primary-foreground: 207 60% 6%;
-    --sidebar-accent: 207 30% 11%;
+    --sidebar-primary-foreground: 205 100% 8%;
+    --sidebar-accent: 205 60% 13%;
     --sidebar-accent-foreground: 33 15% 92%;
-    --sidebar-border: 207 25% 15%;
+    --sidebar-border: 205 45% 16%;
     --sidebar-ring: 33 28% 56%;
   }
 
