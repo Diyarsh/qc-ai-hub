@@ -104,7 +104,7 @@ export function IconPicker({ selectedIcon, onIconSelect, trigger, open: controll
                       : "border-border/50"
                   )}
                 >
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-6 w-6 text-[#997a5c]" />
                   <span className="text-xs text-muted-foreground">{item.name}</span>
                 </button>
               );

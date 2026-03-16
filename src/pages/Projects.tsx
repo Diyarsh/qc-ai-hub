@@ -32,21 +32,18 @@ const initialProjects: Project[] = [{
   description: "Ежедневные задачи и заметки",
   fileCount: 12,
   icon: FileText,
-  iconColor: "text-green-500",
 }, {
   id: 2,
   name: "КПД 1-ый квартал",
   description: "Ключевые показатели эффективности за первый квартал",
   fileCount: 8,
   icon: MessageSquare,
-  iconColor: "text-indigo-500",
 }, {
   id: 3,
   name: "КПД годовой",
   description: "Годовые ключевые показатели эффективности",
   fileCount: 15,
   icon: BarChart3,
-  iconColor: "text-teal-500",
 }];
 
 export default function Projects() {
@@ -167,8 +164,11 @@ export default function Projects() {
                             )}
                             onClick={(e) => e.stopPropagation()}
                           >
-                                  <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                  <ProjectIcon className={cn("h-9 w-9 relative z-10", project.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
+                                  <div className="absolute inset-0 rounded-full bg-[#997a5c]/18 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                  <ProjectIcon
+                                    className={cn("h-9 w-9 relative z-10", project.iconColor || "text-[#997a5c]")}
+                                    style={{ filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.2))" }}
+                                  />
                           </div>
                         }
                       />

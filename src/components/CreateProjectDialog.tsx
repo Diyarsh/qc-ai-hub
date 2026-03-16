@@ -23,6 +23,7 @@ export function CreateProjectDialog({
   const [files, setFiles] = useState<File[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<LucideIcon>(Sparkles);
   const navigate = useNavigate();
+  const SelectedIcon = selectedIcon;
   const handleTitleInput = (e: React.FormEvent<HTMLSpanElement>) => {
     const value = e.currentTarget.textContent ?? "";
     setProjectName(value);
@@ -68,11 +69,22 @@ export function CreateProjectDialog({
     setSelectedIcon(Sparkles);
   };
   return <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[520px]">
         {step === 1 ? <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
+                <IconPicker
+                  selectedIcon={selectedIcon}
+                  onIconSelect={setSelectedIcon}
+                  trigger={
+                    <button
+                      type="button"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-background/80 hover:bg-accent/60 transition-colors cursor-pointer"
+                    >
+                      <SelectedIcon className="h-6 w-6 text-primary" />
+                    </button>
+                  }
+                />
                 <span
                   contentEditable
                   suppressContentEditableWarning
@@ -84,21 +96,12 @@ export function CreateProjectDialog({
                   {projectName || "Название проекта"}
                 </span>
               </DialogTitle>
-              <DialogDescription className="sr-only">
+              <DialogDescription className="text-sm text-muted-foreground">
                 Создайте новый проект с названием и инструкциями
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-6 py-4">
               {/* Project name is edited inline in the title above */}
-              
-              <div className="space-y-2">
-                <Label>Иконка проекта</Label>
-                <IconPicker
-                  selectedIcon={selectedIcon}
-                  onIconSelect={setSelectedIcon}
-                />
-              </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="description">Описание</Label>
                 <Input id="description" placeholder="Добавьте описание проекта" />

@@ -471,7 +471,8 @@ export default function AIStudio3() {
                     <Badge
                       key={tagIndex}
                       variant="outline"
-                      className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap rounded-lg"
+                      className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap"
+                      style={{ borderRadius: 8 }}
                     >
                       {tag}
                     </Badge>
@@ -479,11 +480,12 @@ export default function AIStudio3() {
                   <Badge
                     variant="outline"
                     className={cn(
-                      "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto rounded-lg",
+                      "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto",
                       agent.isLocal
-                        ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#6B8C61]/40 dark:border-[#0E7490]/40"
+                        ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#166534]/25 dark:text-[#bbf7d0] border-[#6B8C61]/40 dark:border-[#22c55e]/40"
                         : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
                     )}
+                    style={{ borderRadius: 8 }}
                   >
                     {agent.isLocal ? "Локальный" : "Внешний"}
                   </Badge>
