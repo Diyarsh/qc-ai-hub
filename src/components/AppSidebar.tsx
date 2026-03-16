@@ -380,11 +380,11 @@ export function AppSidebar() {
       <SidebarFooter className="p-2 mt-auto">
         <div className={`flex items-center ${collapsed ? "justify-center" : "justify-start gap-2"} px-2 py-2`}>
           {/* Samruk Kazyna logo */}
-          <div className="h-8 flex items-center justify-center flex-shrink-0">
+          <div className="h-12 flex items-center justify-center flex-shrink-0">
             <img 
               src={collapsed ? skLogo : samrukKazynaLogo} 
               alt="Samruk Kazyna" 
-              className="h-8 w-auto object-contain"
+              className="h-12 w-auto object-contain"
             />
           </div>
         </div>
