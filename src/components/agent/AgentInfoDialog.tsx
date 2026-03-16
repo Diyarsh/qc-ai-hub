@@ -133,8 +133,8 @@ export function AgentInfoDialog({
                   className={cn(
                     "text-xs w-fit",
                     agent.isLocal
-                      ? "bg-[#8C7961]/15 text-[#8C7961] dark:text-[#BFA88A] border-[#8C7961]/40"
-                      : "bg-[#002845]/15 text-[#002845] dark:text-[#6BA3D6] border-[#002845]/40"
+                      ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#4A7A3F]/20 dark:text-[#8FBC8F] border-[#6B8C61]/40 dark:border-[#4A7A3F]/40"
+                      : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
                   )}
                 >
                   {agent.isLocal ? "Локальный" : "Внешний"}
