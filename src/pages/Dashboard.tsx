@@ -18,6 +18,7 @@ import { FileUpload } from "@/shared/components/Forms/FileUpload";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import aiHubSkLogo from "@/assets/logo-ai-hub-sk.svg";
+import skaiLogotype from "@/assets/SKAI Logotype.svg";
 
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
@@ -258,11 +259,11 @@ export default function Dashboard() {
         {messages.length === 0 ? (
           // Начальное состояние: контент по центру вертикально
                 <div className="flex flex-col items-center justify-center flex-1 py-8">
-                   <div className="flex items-center gap-3 mb-2">
-                     <img src={aiHubSkLogo} alt="AI-HUB" className="h-8 w-8" />
-                     <span className="text-lg text-muted-foreground">Сәлем, Роман!</span>
-                   </div>
-                   <h1 className="text-3xl font-semibold text-foreground mb-4">С чего начнем?</h1>
+                  <img
+                    src={skaiLogotype}
+                    alt="SKAI"
+                    className="mb-4 h-24"
+                  />
                    
 
               {/* Central Input - по центру страницы */}
