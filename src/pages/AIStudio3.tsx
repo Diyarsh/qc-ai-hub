@@ -457,12 +457,42 @@ export default function AIStudio3() {
                   ))}
                   <Badge
                     variant="outline"
+<<<<<<< Updated upstream
                     className={cn(
                       "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto rounded-lg",
                       agent.isLocal
                         ? "bg-[#6B8C61]/15 text-[#6B8C61] dark:bg-[#4A7A3F]/20 dark:text-[#8FBC8F] border-[#6B8C61]/40 dark:border-[#4A7A3F]/40"
                         : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
                     )}
+=======
+                    className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto"
+                    style={{
+                      borderRadius: '8px',
+                      // Light mode: transparent bg, dark emerald/blue text
+                      // Dark mode: cyan accent for both tags
+                      backgroundColor: agent.isLocal
+                        ? (document.documentElement.classList.contains('dark')
+                            ? 'rgba(56, 189, 248, 0.26)'
+                            : 'rgba(16,185,129,0.15)')
+                        : (document.documentElement.classList.contains('dark')
+                            ? 'rgba(56, 189, 248, 0.28)'
+                            : 'rgba(0,38,115,0.15)'),
+                      color: agent.isLocal
+                        ? (document.documentElement.classList.contains('dark')
+                            ? '#38BDF8'
+                            : '#059669')
+                        : (document.documentElement.classList.contains('dark')
+                            ? '#38BDF8'
+                            : '#002673'),
+                      borderColor: agent.isLocal
+                        ? (document.documentElement.classList.contains('dark')
+                            ? 'rgba(56, 189, 248, 0.85)'
+                            : 'rgba(16,185,129,0.5)')
+                        : (document.documentElement.classList.contains('dark')
+                            ? 'rgba(56, 189, 248, 0.85)'
+                            : 'rgba(0,38,115,0.5)'),
+                    }}
+>>>>>>> Stashed changes
                   >
                     {agent.isLocal ? "Локальный" : "Внешний"}
                   </Badge>
