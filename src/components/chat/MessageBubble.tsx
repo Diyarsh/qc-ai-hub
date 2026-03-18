@@ -40,6 +40,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   feedbackDetails,
   onFeedbackChange,
 }) => {
+  const OTHER_TAG = "Другое";
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [comment, setComment] = useState(feedbackDetails || "");
@@ -54,6 +55,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     setComment(savedComment);
     if (savedComment.trim().length > 0) {
       setShowCommentField(true);
+      setSelectedTags((prev) => (prev.includes(OTHER_TAG) ? prev : [...prev, OTHER_TAG]));
     }
   }, [feedbackDetails]);
 
@@ -247,54 +249,80 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {/* Блок отзыва: теги + поле комментария + Сохранить / Пропустить */}
       {role === 'assistant' && !isLoading && needsComment && !submitted && (
         <div ref={commentContainerRef} className="absolute left-0 right-0 -bottom-3 translate-y-full mt-4 bg-card border border-border rounded-xl px-4 py-3 shadow-lg space-y-3 z-50 ring-1 ring-black/5">
-          <p className="text-xs font-medium text-muted-foreground">Опишите проблему</p>
+          <p className="text-xs font-medium text-muted-foreground">Выберите причины</p>
           {/* Quick feedback tags */}
           <div className="flex flex-wrap gap-2">
             {[
-              'Найден не тот документ',
-              'Ответ неполный',
-              'Ответ слишком общий',
-              'Агент придумал то, чего нет в базе',
-              'Ответ устарел',
-            ].map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Тоггл нескольких тегов, не записываем их в текстовое поле
-                  setSelectedTags(prev => {
-                    const exists = prev.includes(tag);
-                    const next = exists ? prev.filter(t => t !== tag) : [...prev, tag];
-                    if (feedback && (feedback === 'partially-correct' || feedback === 'incorrect')) {
-                      onFeedbackChange?.(feedback, next, comment.trim());
-                    }
-                    return next;
-                  });
-                }}
-                className={cn(
-                  "text-sm px-3 py-1.5 rounded-full border transition-colors",
-                  selectedTags.includes(tag)
-                    ? "bg-primary/80 text-primary-foreground border-primary/80"
-                    : "bg-muted text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
-                )}
-              >
-                {tag}
-              </button>
-            ))}
+              { label: 'Выбран нерелевантный источник', hint: 'документ не соответствует вопросу' },
+              { label: 'Ответ содержит неполную информацию', hint: 'упущены важные детали' },
+              { label: 'Ответ общий', hint: 'нет конкретики по вопросу' },
+              { label: 'Ответ содержит информацию, отсутствующую в источниках', hint: 'галлюцинация' },
+              { label: 'Ответ основан на устаревшей или неактуальной информации' },
+              { label: OTHER_TAG },
+            ].map((tagItem) => {
+              const tag = tagItem.label;
+              const tagButton = (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Тоггл нескольких тегов, не записываем их в текстовое поле
+                    setSelectedTags(prev => {
+                      const exists = prev.includes(tag);
+                      const next = exists ? prev.filter(t => t !== tag) : [...prev, tag];
+                      if (exists && tag === OTHER_TAG) {
+                        setComment("");
+                      }
+                      if (feedback && (feedback === 'partially-correct' || feedback === 'incorrect')) {
+                        onFeedbackChange?.(feedback, next, exists && tag === OTHER_TAG ? "" : comment.trim());
+                      }
+                      return next;
+                    });
+                  }}
+                  className={cn(
+                    "text-sm px-3 py-1.5 rounded-full border transition-colors",
+                    selectedTags.includes(tag)
+                      ? "bg-primary/80 text-primary-foreground border-primary/80"
+                      : "bg-muted text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
+                  )}
+                >
+                  {tag}
+                </button>
+              );
+
+              if (!tagItem.hint) {
+                return <React.Fragment key={tag}>{tagButton}</React.Fragment>;
+              }
+
+              return (
+                <div key={tag} className="relative group">
+                  {tagButton}
+                  <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -translate-y-[calc(100%+8px)] hidden group-hover:block z-[120]">
+                    <div className="w-max max-w-[360px] rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md text-center whitespace-normal break-words">
+                      {tagItem.hint}
+                    </div>
+                  </div>
+                </div>
+              );
+
+            })}
           </div>
-          <Textarea
-            value={comment}
-            onChange={(e) => handleCommentChange(e.target.value)}
-            placeholder="Или опишите своими словами..."
-            rows={2}
-            className="text-xs focus-visible:ring-0 focus-visible:ring-offset-0 resize-none bg-background/50 w-full"
-            maxLength={500}
-            onFocus={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          />
+          {(selectedTags.includes(OTHER_TAG) || comment.trim().length > 0) && (
+            <Textarea
+              value={comment}
+              onChange={(e) => handleCommentChange(e.target.value)}
+              placeholder="Другое — опишите своими словами..."
+              rows={2}
+              className="text-xs focus-visible:ring-0 focus-visible:ring-offset-0 resize-none bg-background/50 w-full"
+              maxLength={500}
+              onFocus={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] text-muted-foreground">{comment.length}/500</span>
+            <span className="text-[10px] text-muted-foreground">
+              {(selectedTags.includes(OTHER_TAG) || comment.trim().length > 0) ? `${comment.length}/500` : ""}
+            </span>
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
