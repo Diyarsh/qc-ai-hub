@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import aiHubSkLogo from "@/assets/logo-ai-hub-sk.svg";
 
 interface MessageBubbleProps {
   text: string;
@@ -155,25 +156,34 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       </div>
       )}
       {/* Message Content */}
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          code({node, className, children, ...props}: any) {
-            const match = /language-(\w+)/.exec(className || '');
-            const inline = !match;
-            return !inline && match ? (
-              <SyntaxHighlighter style={atomDark as any} language={match[1]} PreTag="div">
-                {String(children).replace(/\n$/, '')}
-              </SyntaxHighlighter>
-            ) : (
-              <code className={className} {...props}>{children}</code>
-            );
-          },
-          a({href, children, ...props}) {
-            return <a href={href} className="text-primary underline" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
-          }
-        }}
-      >{isLoading && streaming ? `${text}▍` : text}</ReactMarkdown>
+      {role === "assistant" && isLoading ? (
+        <div className="flex items-center gap-2 py-1">
+          <img src={aiHubSkLogo} alt="AI-HUB" className="h-5 w-5 animate-spin" />
+          <span className="text-xs text-muted-foreground">Генерирую ответ…</span>
+        </div>
+      ) : (
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            code({node, className, children, ...props}: any) {
+              const match = /language-(\w+)/.exec(className || '');
+              const inline = !match;
+              return !inline && match ? (
+                <SyntaxHighlighter style={atomDark as any} language={match[1]} PreTag="div">
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              ) : (
+                <code className={className} {...props}>{children}</code>
+              );
+            },
+            a({href, children, ...props}) {
+              return <a href={href} className="text-primary underline" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+            }
+          }}
+        >
+          {isLoading && streaming ? `${text}▍` : text}
+        </ReactMarkdown>
+      )}
       {/* File Previews */}
       {files?.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">

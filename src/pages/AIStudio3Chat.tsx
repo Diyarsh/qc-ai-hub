@@ -233,7 +233,7 @@ ${fullAnswer}
     const loadingMsg = {
       id: loadingMsgId,
       role: 'assistant' as const,
-      text: '...',
+      text: '',
       isLoading: true,
     };
     

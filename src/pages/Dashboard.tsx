@@ -175,7 +175,7 @@ export default function Dashboard() {
     // Add user message immediately
     const userMsg = { id: Math.random().toString(36).slice(2), role: 'user' as const, text: displayText, files: [...attachedFiles] };
     const loadingMsgId = Math.random().toString(36).slice(2);
-    const loadingMsg = { id: loadingMsgId, role: 'assistant' as const, text: '...', isLoading: true };
+    const loadingMsg = { id: loadingMsgId, role: 'assistant' as const, text: '', isLoading: true };
     
     const filesToSend = [...attachedFiles];
     setMessages(prev => [...prev, userMsg, loadingMsg]);
