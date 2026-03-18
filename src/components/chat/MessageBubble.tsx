@@ -43,6 +43,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [comment, setComment] = useState(feedbackDetails || "");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showCommentField, setShowCommentField] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const feedbackContainerRef = useRef<HTMLDivElement>(null);
@@ -88,13 +89,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       // Если кликнули на уже выбранную оценку, снимаем её
       onFeedbackChange?.(null, [], "");
       setComment("");
+      setSelectedTags([]);
       setShowCommentField(false);
       setSubmitted(false);
     } else {
       // Выбираем новую оценку
-      onFeedbackChange?.(value, [], comment.trim());
+      onFeedbackChange?.(value, selectedTags, comment.trim());
       if (value === 'correct') {
         setComment("");
+        setSelectedTags([]);
         setShowCommentField(false);
         setSubmitted(true);
       } else {
@@ -107,13 +110,13 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   const handleCommentChange = (newComment: string) => {
     setComment(newComment);
     if (feedback && (feedback === 'partially-correct' || feedback === 'incorrect')) {
-      onFeedbackChange?.(feedback, [], newComment);
+      onFeedbackChange?.(feedback, selectedTags, newComment);
     }
   };
 
   const completeFeedback = () => {
     if (feedback) {
-      onFeedbackChange?.(feedback, [], comment.trim());
+      onFeedbackChange?.(feedback, selectedTags, comment.trim());
       setSubmitted(true);
     }
   };
@@ -132,19 +135,16 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   const hasComment = role === 'assistant' && !isLoading && needsComment && !submitted;
 
   // Синхронизация ширины контейнера комментария с контейнером отзывов
-  useEffect(() => {
-    if (feedbackContainerRef.current && commentContainerRef.current) {
-      const feedbackWidth = feedbackContainerRef.current.offsetWidth;
-      commentContainerRef.current.style.width = `${feedbackWidth}px`;
-    }
-  }, [hasComment, feedback, showCommentField]);
   
   return (
-    <div className={`${role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl"} relative rounded-2xl px-4 py-3 text-sm ${hasFeedback || hasComment ? "mb-20" : "mb-2"} ${
+    <div className={cn(
+      role === "user" ? "max-w-[85%] ml-auto" : "w-full max-w-3xl",
+      "relative rounded-2xl px-4 py-3 text-sm",
+      needsComment && !submitted ? "mb-[420px]" : (hasFeedback || hasComment ? "mb-20" : "mb-2"),
       role === "user"
         ? "bg-muted text-foreground border border-border/50 shadow-sm"
         : "bg-card border border-border/50 shadow-sm"
-    }`}>
+    )}>
       {/* Message Actions - only for user messages */}
       {role === 'user' && (onEdit || onDelete) && (
       <div className="flex gap-2 mb-1 justify-end text-muted-foreground">
@@ -244,15 +244,49 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       )}
 
-      {/* Блок отзыва: текст + поле комментария + Сохранить / Пропустить */}
+      {/* Блок отзыва: теги + поле комментария + Сохранить / Пропустить */}
       {role === 'assistant' && !isLoading && needsComment && !submitted && (
-        <div ref={commentContainerRef} className="absolute -bottom-3 right-4 translate-y-full mt-1 bg-muted/80 border border-border/50 rounded-xl px-2 py-1.5 shadow-sm space-y-1.5 z-50">
+        <div ref={commentContainerRef} className="absolute left-0 right-0 -bottom-3 translate-y-full mt-4 bg-card border border-border rounded-xl px-4 py-3 shadow-lg space-y-3 z-50 ring-1 ring-black/5">
+          <p className="text-xs font-medium text-muted-foreground">Опишите проблему</p>
+          {/* Quick feedback tags */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              'Найден не тот документ',
+              'Ответ неполный',
+              'Ответ слишком общий',
+              'Агент придумал то, чего нет в базе',
+              'Ответ устарел',
+            ].map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Тоггл нескольких тегов, не записываем их в текстовое поле
+                  setSelectedTags(prev => {
+                    const exists = prev.includes(tag);
+                    const next = exists ? prev.filter(t => t !== tag) : [...prev, tag];
+                    if (feedback && (feedback === 'partially-correct' || feedback === 'incorrect')) {
+                      onFeedbackChange?.(feedback, next, comment.trim());
+                    }
+                    return next;
+                  });
+                }}
+                className={cn(
+                  "text-sm px-3 py-1.5 rounded-full border transition-colors",
+                  selectedTags.includes(tag)
+                    ? "bg-primary/80 text-primary-foreground border-primary/80"
+                    : "bg-muted text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
+                )}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
           <Textarea
             value={comment}
             onChange={(e) => handleCommentChange(e.target.value)}
-            placeholder={feedback === 'partially-correct'
-              ? 'Опишите, что неверно или что можно улучшить...'
-              : 'Опишите, что неверно в ответе...'}
+            placeholder="Или опишите своими словами..."
             rows={2}
             className="text-xs focus-visible:ring-0 focus-visible:ring-offset-0 resize-none bg-background/50 w-full"
             maxLength={500}

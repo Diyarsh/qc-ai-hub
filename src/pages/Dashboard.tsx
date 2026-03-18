@@ -375,7 +375,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* Messages Display */}
-                  <div className="space-y-4 pb-0">
+                  <div className="space-y-4 pb-24">
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
@@ -415,7 +415,7 @@ export default function Dashboard() {
 
         {/* Input at bottom - только когда есть сообщения */}
         {messages.length > 0 && (
-          <div className="sticky bottom-0 px-4 pb-4 pt-0 z-10 bg-background/95 backdrop-blur-sm relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
+          <div className="sticky bottom-0 px-4 pb-4 pt-8 z-10 bg-background/95 backdrop-blur-sm border-t border-border/60 relative before:absolute before:inset-x-0 before:-top-8 before:h-8 before:bg-gradient-to-t before:from-background/95 before:to-transparent before:backdrop-blur-sm before:pointer-events-none">
             <div className="w-full max-w-3xl mx-auto space-y-2">
               {attachedFiles.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-2">
