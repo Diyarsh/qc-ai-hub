@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Spotlight } from "@/components/ui/spotlight";
-import { SplineScene } from "@/components/ui/splite";
 import { useLanguage } from "@/contexts/LanguageContext";
+import skaiAvatar from "@/assets/skai-ava.png";
+import skaiLogotype from "@/assets/SKAI Logotype.svg";
 
 interface HeroSectionProps {
   onLoginClick: () => void;
@@ -31,25 +32,23 @@ export const HeroSection = ({
           
           <div className="flex flex-col lg:flex-row h-full min-h-[600px]">
             {/* Left content */}
-            <div className="flex-1 p-8 lg:p-12 xl:p-16 relative z-10 flex flex-col justify-center">
+            <div className="flex-1 p-8 lg:p-12 xl:p-16 relative z-10 flex flex-col justify-center items-center text-center">
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-medium text-primary bg-primary/10 rounded-full w-fit border border-primary/20">
                 <Sparkles className="w-4 h-4" />
                 {t('hero.subtitle')}
               </div>
               
-              {/* Title with gradient */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
-                  AI-HUB
-                </span>
+              {/* SKAI logotype */}
+              <h1 className="mb-6">
+                <img src={skaiLogotype} alt="SKAI" className="h-20 md:h-24 lg:h-28 w-auto mx-auto" />
               </h1>
               
-              <p className="text-lg md:text-xl text-muted-foreground max-w-lg mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-8 leading-relaxed mx-auto">
                 {t('hero.description')}
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
                 <Button 
                   variant="hero" 
                   size="lg" 
@@ -65,9 +64,15 @@ export const HeroSection = ({
               
             </div>
 
-            {/* Right content - 3D Scene */}
+            {/* Right content - SKAI avatar */}
             <div className="flex-1 relative min-h-[400px] lg:min-h-[600px] opacity-100" style={{ visibility: 'visible' }}>
-              <SplineScene scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" className="w-full h-full" />
+              <div className="w-full h-full flex items-end justify-center px-6 lg:px-10 pt-6 pb-0">
+                <img
+                  src={skaiAvatar}
+                  alt="SKAI"
+                  className="max-h-[560px] w-auto object-contain drop-shadow-2xl self-end"
+                />
+              </div>
             </div>
           </div>
         </Card>

@@ -186,9 +186,9 @@ export const LoginForm = ({ onClose, onLogin }: LoginFormProps) => {
           </CardHeader>
           <CardContent className="pt-6">
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login" className="text-sm sm:text-base">{t('auth.loginTab')}</TabsTrigger>
-                <TabsTrigger value="register" className="text-sm sm:text-base">{t('auth.registerTab')}</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 mb-6 h-11 p-1">
+                <TabsTrigger value="login" className="w-full h-full text-sm sm:text-base leading-none">{t('auth.loginTab')}</TabsTrigger>
+                <TabsTrigger value="register" className="w-full h-full text-sm sm:text-base leading-none">{t('auth.registerTab')}</TabsTrigger>
               </TabsList>
             
             <TabsContent value="login" className="mt-0">

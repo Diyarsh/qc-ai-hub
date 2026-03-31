@@ -8,7 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import aiHubSkLogo from "@/assets/logo-ai-hub-sk.svg";
+import skaiAvatar from "@/assets/skai-ava.png";
 
 interface MessageBubbleProps {
   text: string;
@@ -158,7 +158,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {/* Message Content */}
       {role === "assistant" && isLoading ? (
         <div className="flex items-center gap-2 py-1">
-          <img src={aiHubSkLogo} alt="AI-HUB" className="h-5 w-5 animate-spin" />
+          <img src={skaiAvatar} alt="SKAI" className="h-6 w-6 rounded-full object-cover animate-pulse" />
           <span className="text-xs text-muted-foreground">Генерирую ответ…</span>
         </div>
       ) : (
