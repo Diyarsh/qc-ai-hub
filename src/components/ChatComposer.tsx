@@ -145,7 +145,7 @@ export function ChatComposer({
           e.currentTarget.focus();
         }}
         disabled={disabled}
-        className="resize-none border-0 bg-transparent p-3 pr-12 pl-11 text-sm placeholder:text-left focus-visible:ring-0 focus-visible:ring-offset-0 relative z-10 w-full"
+        className="resize-none border-0 bg-transparent pt-3 pr-12 pb-12 pl-3 text-sm placeholder:text-left focus-visible:ring-0 focus-visible:ring-offset-0 relative z-10 w-full"
         style={{ minHeight: `${minHeight}px`, maxHeight: `${maxHeight}px` }}
         autoFocus={!disabled}
       />

@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, LogOut, Shield } from "lucide-react";
+import { Sun, Moon, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import aiHubLogo from "@/assets/logo-ai-hub-sk.svg";
 
 export function AdminHeader() {
   const navigate = useNavigate();
@@ -39,8 +40,8 @@ export function AdminHeader() {
           {currentTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
         <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="gap-2">
-          <Shield className="h-4 w-4" />
-          Платформа
+          <img src={aiHubLogo} alt="AI-HUB" className="h-4 w-4 rounded-sm object-contain" />
+          AI-HUB
         </Button>
         <Button
           variant="ghost"
