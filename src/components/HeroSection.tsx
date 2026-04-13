@@ -5,6 +5,8 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { useLanguage } from "@/contexts/LanguageContext";
 import skaiAvatar from "@/assets/skai-ava.png";
 import skaiLogotype from "@/assets/SKAI Logotype.svg";
+import skaiLogotypeDark from "@/assets/SKAI-dark-mode.svg";
+import { useTheme } from "next-themes";
 
 interface HeroSectionProps {
   onLoginClick: () => void;
@@ -13,6 +15,8 @@ export const HeroSection = ({
   onLoginClick
 }: HeroSectionProps) => {
   const { t } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const activeSkaiLogotype = resolvedTheme === "dark" ? skaiLogotypeDark : skaiLogotype;
   
   return <section className="relative min-h-screen flex items-center justify-center bg-background py-12 overflow-hidden">
       {/* Animated background gradients */}
@@ -41,7 +45,7 @@ export const HeroSection = ({
               
               {/* SKAI logotype */}
               <h1 className="mb-6">
-                <img src={skaiLogotype} alt="SKAI" className="h-20 md:h-24 lg:h-28 w-auto mx-auto" />
+                <img src={activeSkaiLogotype} alt="SKAI" className="h-20 md:h-24 lg:h-28 w-auto mx-auto" />
               </h1>
               
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-8 leading-relaxed mx-auto">

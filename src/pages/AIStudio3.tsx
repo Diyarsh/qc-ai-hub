@@ -395,15 +395,16 @@ export default function AIStudio3() {
           ) : isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
               {[...Array(10)].map((_, index) => (
-                <Card key={index} className="overflow-hidden h-[160px]" style={{ borderRadius: '20px' }}>
-              <CardHeader className="p-3.5 h-full flex flex-col">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="skeleton h-12 w-12" style={{ borderRadius: '14px' }} />
-                      <div className="skeleton h-4 w-24 rounded" />
+                <Card key={index} className="overflow-hidden" style={{ borderRadius: '20px' }}>
+              <CardHeader className="p-3 flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <div className="skeleton h-10 w-10" style={{ borderRadius: '14px' }} />
+                      <div className="skeleton h-4 w-28 rounded flex-1" />
                     </div>
-                    <div className="skeleton h-3 w-full rounded mb-1 flex-1" />
-                    <div className="skeleton h-3 w-3/4 rounded mb-2" />
-                    <div className="flex flex-wrap gap-1 mt-auto">
+                    <div className="skeleton h-3 w-full rounded mb-1" />
+                    <div className="skeleton h-3 w-full rounded mb-1" />
+                    <div className="skeleton h-3 w-4/5 rounded mb-2" />
+                    <div className="flex flex-wrap gap-1">
                       <div className="skeleton h-4 w-14" style={{ borderRadius: '6px' }} />
                       <div className="skeleton h-4 w-12" style={{ borderRadius: '6px' }} />
                 </div>
@@ -419,7 +420,7 @@ export default function AIStudio3() {
             <Card
                   key={agent.id}
               className={cn(
-                "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group h-[150px]",
+                "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group",
                 "bg-card/60 backdrop-blur-sm border-border/30",
                 "hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/10",
                 agent.featured && "ring-1 ring-primary/40 shadow-md shadow-primary/5"
@@ -432,62 +433,65 @@ export default function AIStudio3() {
               }}
               onClick={(e) => handleCardClick(e, agent)}
             >
-              {/* Front - preview (visible by default, hidden on hover) */}
-              <div className="absolute inset-0 z-10 transition-opacity duration-300 group-hover:opacity-0 group-hover:pointer-events-none">
-                {agent.gradient && (
-                  <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
+              {agent.gradient && (
+                <div
+                  className={cn(
+                    "pointer-events-none absolute inset-0 bg-gradient-to-br transition-opacity duration-300",
                     agent.gradient,
-                    "opacity-30 group-hover:opacity-70"
-                  )} style={{ borderRadius: '20px' }} />
-                )}
-                <div className="absolute top-0 left-3 right-3 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent group-hover:via-primary/60 transition-all duration-300" />
-                <CardHeader className="p-4 relative z-10 h-full flex flex-col gap-0 space-y-0">
-                  <div className="flex gap-2.5 flex-1 min-h-0 items-start -mb-1">
-                    <div className="relative flex-shrink-0 transition-all duration-500 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-0.5">
-                      <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      <Icon className={cn("h-9 w-9 relative z-10", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
-                    </div>
-                    <div className="flex flex-col flex-1 min-w-0 gap-1.5 pt-0.5">
-                      <CardTitle className="text-sm font-semibold leading-tight group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden">
-                        {agent.name}
-                      </CardTitle>
-                      <CardDescription
-                        className="text-xs flex-1 min-w-0 text-muted-foreground leading-relaxed overflow-hidden"
-                        style={{ lineHeight: '1.35em', maxHeight: '2.7em' }}
-                      >
-                        {agent.description}
-                      </CardDescription>
-                    </div>
-                  </div>
-                  <div className="flex flex-nowrap gap-1.5 mt-auto pt-1 overflow-hidden min-w-0">
-                    {agent.tags.slice(0, 1).map((tag, tagIndex) => (
-                      <Badge key={tagIndex} variant="outline" className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap" style={{ borderRadius: 8 }}>
-                        {tag}
-                      </Badge>
-                    ))}
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap ml-auto",
-                        agent.isLocal
-                          ? "bg-emerald-600/15 text-emerald-700 dark:bg-[#166534]/25 dark:text-[#bbf7d0] border-emerald-600/40 dark:border-[#22c55e]/40"
-                          : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
-                      )}
-                      style={{ borderRadius: 8 }}
-                    >
-                      {agent.isLocal ? "Локальный" : "Внешний"}
-                    </Badge>
-                  </div>
-                </CardHeader>
-              </div>
+                    "opacity-30 group-hover:opacity-50"
+                  )}
+                  style={{ borderRadius: '20px' }}
+                />
+              )}
+              <div className="pointer-events-none absolute top-0 left-3 right-3 z-[1] h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent group-hover:via-primary/60 transition-all duration-300" />
 
-              {/* Back - only description (hidden by default, visible on hover) */}
-              <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover:z-10 flex flex-col p-4 bg-card/95 backdrop-blur-sm">
+              {/* Front — в потоке: высота карточки = контент + одинаковые p-3 сверху и снизу */}
+              <CardHeader className="relative z-[2] flex flex-col gap-1.5 space-y-0 p-3 transition-opacity duration-300 group-hover:pointer-events-none group-hover:opacity-0">
+                <div className="flex gap-2.5 items-start">
+                  <div className="relative flex-shrink-0 transition-all duration-500 flex items-center justify-center group-hover:scale-105 group-hover:-translate-y-0.5">
+                    <div className="absolute inset-0 rounded-full bg-primary/10 blur-md scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <Icon className={cn("h-10 w-10 relative z-10", agent.iconColor || "text-primary")} style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))' }} />
+                  </div>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-0.5">
+                    <CardTitle className="text-sm font-bold leading-snug group-hover:text-primary transition-colors break-words hyphens-auto">
+                      {agent.name}
+                    </CardTitle>
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 overflow-hidden">
+                      {agent.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex min-w-0 items-center justify-between gap-1.5 overflow-hidden border-t border-border/30 pt-1.5">
+                  {agent.tags.slice(0, 1).map((tag, tagIndex) => (
+                    <Badge key={tagIndex} variant="outline" className="text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap" style={{ borderRadius: 8 }}>
+                      {tag}
+                    </Badge>
+                  ))}
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "text-xs font-medium px-2.5 py-1 flex-shrink-0 whitespace-nowrap",
+                      agent.isLocal
+                        ? "bg-emerald-600/15 text-emerald-700 dark:bg-[#166534]/25 dark:text-[#bbf7d0] border-emerald-600/40 dark:border-[#22c55e]/40"
+                        : "bg-[#002845]/15 text-[#002845] dark:bg-[#0E7490]/20 dark:text-[#67E8F9] border-[#002845]/40 dark:border-[#0E7490]/40"
+                    )}
+                    style={{ borderRadius: 8 }}
+                  >
+                    {agent.isLocal ? "Локальный" : "Внешний"}
+                  </Badge>
+                </div>
+              </CardHeader>
+
+              {/* Back - description with title (hidden by default, visible on hover) */}
+              <div className="absolute inset-0 z-10 flex flex-col bg-card/95 p-3 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
                 {agent.gradient && (
                   <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50", agent.gradient)} style={{ borderRadius: '20px' }} />
                 )}
-                <p className="relative z-10 text-xs text-muted-foreground leading-relaxed overflow-y-auto flex-1 min-h-0 pr-1">
+                <div className="relative z-10 mb-2 flex items-start gap-2">
+                  <Icon className={cn("mt-0.5 h-5 w-5 flex-shrink-0", agent.iconColor || "text-primary")} />
+                  <span className="text-sm font-semibold leading-snug break-words">{agent.name}</span>
+                </div>
+                <p className="relative z-10 min-h-0 flex-1 overflow-y-auto pr-1 text-xs leading-relaxed text-muted-foreground">
                   {agent.description}
                 </p>
               </div>

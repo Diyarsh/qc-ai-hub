@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import logoDark from "@/assets/QC_Black_icon.svg";
 import logoLight from "@/assets/QC_White_icon.svg";
 import samrukKazynaLogo from "@/assets/samruk-kazyna.svg";
+import samrukKazynaLogoDark from "@/assets/SK-logo-dark mode.svg";
 import { useEffect, useState } from "react";
 
 interface NavigationProps {
@@ -43,7 +44,7 @@ export const Navigation = ({ onLoginClick }: NavigationProps) => {
           </div>
           <div className="flex items-center justify-center h-10">
             <img 
-              src={samrukKazynaLogo} 
+              src={currentTheme === "dark" ? samrukKazynaLogoDark : samrukKazynaLogo} 
               alt="Samruk Kazyna" 
               className="h-10 w-auto object-contain"
             />
