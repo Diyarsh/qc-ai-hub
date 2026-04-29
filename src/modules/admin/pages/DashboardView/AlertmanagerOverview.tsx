@@ -70,12 +70,12 @@ export default function AlertmanagerOverview() {
   return (
     <div className="space-y-6">
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground" aria-label="Breadcrumb">
-        <Link to="/admin/dashboard" className="hover:text-foreground transition-colors">
-          Home
+        <Link to="/admin/analytics" className="hover:text-foreground transition-colors">
+          Админ-панель
         </Link>
         <span>/</span>
-        <Link to="/admin/dashboard" className="hover:text-foreground transition-colors">
-          Dashboards
+        <Link to="/admin/monitoring" className="hover:text-foreground transition-colors">
+          Мониторинг
         </Link>
         <span>/</span>
         <span className="font-medium text-foreground">Alertmanager / Overview</span>

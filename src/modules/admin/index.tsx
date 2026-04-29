@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AdminLayout } from "./components/AdminLayout";
-import Dashboard from "./pages/Dashboard";
+import Analytics from "./pages/Analytics";
+import Monitoring from "./pages/Monitoring";
 import AlertmanagerOverview from "./pages/DashboardView/AlertmanagerOverview";
 import Users from "./pages/Users/index";
 import LLMModels from "./pages/LLMModels/index";
@@ -10,40 +11,114 @@ import Knowledge from "./pages/Knowledge";
 import Reports from "./pages/Reports/index";
 import Companies from "./pages/Companies/index";
 import Departments from "./pages/Departments/index";
-import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
+import { AdminRoleProvider } from "@/contexts/AdminRoleContext";
+import { RoleGuardedRoute } from "./components/RoleGuardedRoute";
+import { NoAccess } from "./components/NoAccess";
+import { AdminDefaultRedirect } from "./components/AdminDefaultRedirect";
 
 export default function AdminApp() {
-  // Для демо-прототипа временно отключаем проверку прав - все видят админку
-  // const { isAdmin, isSuperAdmin, loading } = useAuth();
-  // 
-  // if (loading) {
-  //   return <div className="flex items-center justify-center h-screen">Загрузка...</div>;
-  // }
-  // 
-  // if (!isAdmin && !isSuperAdmin) {
-  //   return <Navigate to="/dashboard" replace />;
-  // }
-  // 
-  // const role = isSuperAdmin ? "ROLE_SUPER_ADMIN" : "ROLE_ADMIN";
-  
-  // Временно для демо - всем доступна админка
-  const role = "ROLE_ADMIN";
-  
   return (
-    <AdminLayout role={role}>
-      <Routes>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="dashboard/alertmanager" element={<AlertmanagerOverview />} />
-        <Route path="users" element={<Users />} />
-        <Route path="llm-models" element={<LLMModels />} />
-        <Route path="ai-agents" element={<AIAgents />} />
-        <Route path="knowledge" element={<Knowledge />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="companies" element={<Companies />} />
-        <Route path="departments" element={<Departments />} />
-        <Route path="system" element={<System />} />
-        <Route path="*" element={<Navigate to="dashboard" replace />} />
-      </Routes>
-    </AdminLayout>
+    <AdminRoleProvider>
+      <AdminLayout>
+        <Routes>
+          <Route
+            path="analytics"
+            element={
+              <RoleGuardedRoute permission="analytics">
+                <Analytics />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="monitoring"
+            element={
+              <RoleGuardedRoute permission="monitoring">
+                <Monitoring />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="monitoring/alertmanager"
+            element={
+              <RoleGuardedRoute permission="monitoring">
+                <AlertmanagerOverview />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route path="dashboard" element={<Navigate to="/admin/analytics" replace />} />
+          <Route
+            path="dashboard/alertmanager"
+            element={<Navigate to="/admin/monitoring/alertmanager" replace />}
+          />
+          <Route
+            path="users"
+            element={
+              <RoleGuardedRoute permission="users">
+                <Users />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="llm-models"
+            element={
+              <RoleGuardedRoute permission="llmModels">
+                <LLMModels />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="ai-agents"
+            element={
+              <RoleGuardedRoute permission="viewAIAgents">
+                <AIAgents />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="knowledge"
+            element={
+              <RoleGuardedRoute permission="viewKnowledge">
+                <Knowledge />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <RoleGuardedRoute permission="reports">
+                <Reports />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="companies"
+            element={
+              <RoleGuardedRoute permission="companies">
+                <Companies />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="departments"
+            element={
+              <RoleGuardedRoute permission="departments">
+                <Departments />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route
+            path="system"
+            element={
+              <RoleGuardedRoute permission="llmModels">
+                <System />
+              </RoleGuardedRoute>
+            }
+          />
+          <Route path="no-access" element={<NoAccess />} />
+          <Route path="" element={<AdminDefaultRedirect />} />
+          <Route path="*" element={<AdminDefaultRedirect />} />
+        </Routes>
+      </AdminLayout>
+    </AdminRoleProvider>
   );
 }

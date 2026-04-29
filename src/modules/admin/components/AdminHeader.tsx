@@ -5,6 +5,7 @@ import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import aiHubLogo from "@/assets/logo-ai-hub-sk.svg";
+import { RoleSelector } from "./RoleSelector";
 
 export function AdminHeader() {
   const navigate = useNavigate();
@@ -27,9 +28,7 @@ export function AdminHeader() {
   return (
     <header className="sticky top-0 z-50 flex items-center justify-end h-16 px-4 sm:px-6 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="flex items-center gap-2 sm:gap-3">
-        <span className="rounded-full bg-primary/10 text-primary px-3 py-1 font-medium text-xs border border-primary/20">
-          ADMIN
-        </span>
+        <RoleSelector />
         <Button
           variant="ghost"
           size="icon"
