@@ -46,9 +46,9 @@ export const ADMIN_ROLES: Record<AdminRoleId, AdminRoleDefinition> = {
     description: "Администратор от команды разработки",
     scopeLabel: "Без ограничений",
     icon: Crown,
-    accent: "text-[#ab824b]",
+    accent: "text-[#A17436]",
     badgeClass:
-      "bg-[#ab824b]/10 text-[#ab824b] border-[#ab824b]/30",
+      "bg-[#A17436]/10 text-[#A17436] border-[#A17436]/30",
     permissions: {
       companies: "all",
       departments: "all",

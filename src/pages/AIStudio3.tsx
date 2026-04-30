@@ -22,7 +22,8 @@ import {
   Factory,
   Users,
   Mic,
-  FileCheck
+  FileCheck,
+  Presentation
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -69,6 +70,21 @@ const TengeIcon: LucideIcon = (props) => (
 );
 
 const agents: Agent[] = [
+  {
+    id: "Presentation-Agent",
+    name: "Создатель презентаций",
+    description: "Превращает документ (.txt, .md, .docx, .pdf) в презентацию в стиле QazCloud Brand Guidelines (синяя палитра, типографика, тональность) и экспортирует PPTX/PDF под выбранный бренд.",
+    category: ["documents"],
+    type: "agent",
+    instructions: "Specialized presentation builder. Принимает исходный текст, бренд-профиль и цель — выдаёт готовый outline + PPTX + PDF.",
+    placeholder: "Загрузи документ и собери питч под QazCloud за минуту",
+    tags: ["PPTX", "PDF", "Branding"],
+    isLocal: false,
+    icon: Presentation,
+    featured: true,
+    gradient: "from-primary/30 via-primary/15 to-transparent",
+    iconColor: "text-primary",
+  },
   {
     id: "Transcriber",
     name: "Транскрибатор",
@@ -276,6 +292,7 @@ export default function AIStudio3() {
     navigate('/ai-studio-3-chat', {
       state: {
         agent: agent.name,
+        agentId: agent.id,
         instructions: agent.instructions,
         placeholder: agent.placeholder,
       }

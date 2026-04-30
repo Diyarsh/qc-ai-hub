@@ -4,6 +4,7 @@ import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { AdvantagesSection } from "@/components/AdvantagesSection";
 import { ServicesSection } from "@/components/ServicesSection";
+import { AIHubShowcase } from "@/components/AIHubShowcase";
 import { PlatformSection } from "@/components/PlatformSection";
 import { LoginForm } from "@/components/LoginForm";
 import { Footer } from "@/components/Footer";
@@ -23,6 +24,7 @@ const Index = () => {
       <HeroSection onLoginClick={() => setShowLogin(true)} />
       <AdvantagesSection />
       <ServicesSection />
+      <AIHubShowcase />
       <PlatformSection />
       <Footer />
       

@@ -6,6 +6,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import AIStudio3 from "./pages/AIStudio3";
 import AIStudio3Chat from "./pages/AIStudio3Chat";
+import PresentationAgent from "./pages/PresentationAgent";
 import History from "./pages/History";
 import HistoryChat from "./pages/HistoryChat";
 import Projects from "./pages/Projects";
@@ -36,6 +37,7 @@ const App = () => (
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/ai-studio-3" element={<AIStudio3 />} />
                     <Route path="/ai-studio-3-chat" element={<AIStudio3Chat />} />
+                    <Route path="/agents/presentation" element={<PresentationAgent />} />
                     <Route path="/history" element={<History />} />
                     <Route path="/history-chat/:id" element={<HistoryChat />} />
                     <Route path="/projects" element={<Projects />} />

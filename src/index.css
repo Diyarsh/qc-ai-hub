@@ -18,8 +18,8 @@
     --popover: 207 45% 9%;
     --popover-foreground: 33 15% 92%;
 
-    /* Pantone 7504C gold — lightened for dark mode readability */
-    --primary: 33 28% 56%;
+    /* Bronze accent: #A17436 */
+    --primary: 35 50% 42%;
     --primary-foreground: 207 60% 6%;
 
     --secondary: 207 30% 12%;
@@ -37,7 +37,7 @@
 
     --border: 207 20% 16%;
     --input: 207 20% 16%;
-    --ring: 33 28% 56%;
+    --ring: 35 50% 42%;
 
     --radius: 0.75rem;
     --radius-sm: 0.5rem;
@@ -47,12 +47,12 @@
 
     --sidebar-background: 207 65% 4%;
     --sidebar-foreground: 33 15% 92%;
-    --sidebar-primary: 33 28% 56%;
+    --sidebar-primary: 35 50% 42%;
     --sidebar-primary-foreground: 207 60% 6%;
     --sidebar-accent: 207 30% 11%;
     --sidebar-accent-foreground: 33 15% 92%;
     --sidebar-border: 207 25% 15%;
-    --sidebar-ring: 33 28% 56%;
+    --sidebar-ring: 35 50% 42%;
   }
 
   /* Light theme — Samruk-Kazyna Pantone 7504C + 295C */
@@ -66,8 +66,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 207 50% 12%;
 
-    /* Pantone 7504C exact: #8C7961 → 30° 18% 46% */
-    --primary: 30 18% 46%;
+    /* Bronze accent: #A17436 */
+    --primary: 35 50% 42%;
     --primary-foreground: 33 15% 97%;
 
     --secondary: 30 10% 95%;
@@ -84,16 +84,16 @@
 
     --border: 30 10% 88%;
     --input: 30 10% 88%;
-    --ring: 30 18% 46%;
+    --ring: 35 50% 42%;
 
     --sidebar-background: 30 6% 97%;
     --sidebar-foreground: 207 35% 18%;
-    --sidebar-primary: 30 18% 46%;
+    --sidebar-primary: 35 50% 42%;
     --sidebar-primary-foreground: 33 15% 97%;
     --sidebar-accent: 30 8% 94%;
     --sidebar-accent-foreground: 207 35% 15%;
     --sidebar-border: 30 10% 88%;
-    --sidebar-ring: 30 18% 46%;
+    --sidebar-ring: 35 50% 42%;
   }
 }
 

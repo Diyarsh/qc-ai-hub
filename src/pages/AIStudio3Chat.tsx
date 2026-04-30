@@ -17,16 +17,44 @@ import { AgentChatMessage } from "@/types/agent-chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { Disclaimer } from "@/components/chat/Disclaimer";
 import { FileDropOverlay } from "@/components/chat/FileDropOverlay";
+import { PresentationAgentPanel } from "@/components/presentation/PresentationAgentPanel";
 
-export default function AIStudio3Chat() {
+export interface AIStudio3ChatProps {
+  /** Прямой вход по `/agents/presentation` без state из каталога */
+  presentationMode?: boolean;
+}
+
+type ChatNavState = {
+  agent?: string;
+  agentId?: string;
+  placeholder?: string;
+  initialMessage?: string;
+  sessionId?: string;
+  instructions?: string;
+};
+
+export default function AIStudio3Chat({
+  presentationMode = false,
+}: AIStudio3ChatProps = {}) {
   const {
     t
   } = useLanguage();
   const { showToast } = useToast();
   const location = useLocation();
-  const agent = (location.state as any)?.agent as string | undefined;
-  const placeholder = (location.state as any)?.placeholder as string | undefined;
-  const initialMessage = (location.state as any)?.initialMessage as string | undefined;
+  const navState = (location.state || {}) as ChatNavState;
+  const agent = presentationMode
+    ? "Создатель презентаций"
+    : navState.agent;
+  const placeholder =
+    navState.placeholder ??
+    (presentationMode || agent === "Создатель презентаций"
+      ? "Обсуди структуру презентации или задай вопрос по брендингу…"
+      : undefined);
+  const initialMessage = navState.initialMessage;
+  const isPresentationAgent =
+    presentationMode ||
+    navState.agentId === "Presentation-Agent" ||
+    agent === "Создатель презентаций";
   const [message, setMessage] = useState("");
   const [hasInitialized, setHasInitialized] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
@@ -37,7 +65,14 @@ export default function AIStudio3Chat() {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
-  const examplePrompts = ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
+  const examplePrompts = isPresentationAgent
+    ? [
+        "Как улучшить структуру этой презентации для инвесторов?",
+        "Что убрать или сократить для аудитории C-level?",
+        "Подскажи формулировки в tone of voice выбранного бренда",
+        "Как усилить блок про безопасность и compliance?",
+      ]
+    : ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
   
   const loadSession = useCallback((sessionId: string) => {
     const savedMessages = AgentChatService.getMessages(sessionId);
@@ -68,16 +103,24 @@ export default function AIStudio3Chat() {
     }
 
     // If there's a session in URL state, load it
-    const sessionIdFromState = (location.state as any)?.sessionId;
+    const sessionIdFromState = navState.sessionId;
     if (sessionIdFromState) {
       loadSession(sessionIdFromState);
     }
-  }, [agent, location.state, loadSession]);
+  }, [agent, navState.sessionId, loadSession]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  /** Сессия для создателя презентаций — чтобы история сохранялась до первого сообщения в ленте */
+  useEffect(() => {
+    if (!isPresentationAgent || !agent) return;
+    if (currentSessionId) return;
+    const session = AgentChatService.createSession(agent, "Презентация");
+    setCurrentSessionId(session.id);
+  }, [isPresentationAgent, agent, currentSessionId]);
 
   // Save messages to localStorage when they change (debounced)
   useEffect(() => {
@@ -123,6 +166,22 @@ export default function AIStudio3Chat() {
   const handleSessionSelect = (sessionId: string) => {
     loadSession(sessionId);
   };
+
+  const appendPresentationMessages = useCallback(
+    (items: { role: "user" | "assistant"; text: string }[]) => {
+      setMessages((prev) => [
+        ...prev,
+        ...items.map((item) => ({
+          ...item,
+          id:
+            typeof crypto !== "undefined" && crypto.randomUUID
+              ? crypto.randomUUID()
+              : Math.random().toString(36).slice(2),
+        })),
+      ]);
+    },
+    []
+  );
 
   const handleExportReport = useCallback(() => {
     if (messages.length === 0) return;
@@ -244,7 +303,7 @@ ${fullAnswer}
     try {
       const startedAt = performance.now();
       // Build detailed system prompt based on agent
-      const systemPrompt = agent 
+      let systemPrompt = agent 
         ? `Ты ${agent} - профессиональный эксперт AI ассистент высокого уровня. 
 
 ВАЖНО: Всегда давай РАЗВЁРНУТЫЕ, ДЕТАЛЬНЫЕ ответы минимум на 150-300 слов. Никогда не отвечай одним предложением.
@@ -266,6 +325,13 @@ ${fullAnswer}
 - Приводи конкретные примеры и рекомендации
 - Отвечай на русском языке профессионально и дружелюбно
 - Даже на простые вопросы давай полные, информативные ответы`;
+
+      if (isPresentationAgent) {
+        const instr = navState.instructions?.trim();
+        systemPrompt = `${instr ? `${instr}\n\n` : ""}${systemPrompt}
+
+Контекст Presentation Agent: пользователь формирует презентацию из документа в боковой панели (на широком экране справа; на узком экране — блок под подсказками). Готовые файлы PPTX и PDF он скачивает из панели после генерации. Твоя задача в чате — советовать по структуре слайдов, формулировкам, логике storytelling и соответствию корпоративному тону; не выдумывай конкретные цифры из документа, если их не было в переписке.`;
+      }
       
       // Convert messages to format expected by AI service
       const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
@@ -328,7 +394,7 @@ ${fullAnswer}
     }, 0);
   }
   return <div className="flex flex-col h-screen">
-      <PageHeader title="AI-Studio" />
+      <PageHeader title="AI-Studio" subtitle={isPresentationAgent ? "Создатель презентаций · мастер и экспорт в этом чате" : undefined} />
       <main className="flex-1 flex min-h-0">
         {/* Agent History Sidebar - слева */}
         {agent && (
@@ -343,10 +409,10 @@ ${fullAnswer}
           />
         )}
 
+        <div className="flex-1 flex flex-col min-h-0 min-w-0">
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col min-h-0">
           {/* Chat header with export */}
-          {messages.length > 0 && (
+          {messages.length > 0 && !isPresentationAgent && (
             <div className="flex items-center justify-end px-6 py-2 border-b border-border">
               <Button
                 variant="ghost"
@@ -362,10 +428,12 @@ ${fullAnswer}
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full p-6 pb-0">
               <div className="w-full max-w-3xl mx-auto">
-                {messages.length === 0 ? (
+                {messages.length === 0 && !isPresentationAgent ? (
                   <div className="flex flex-col items-center justify-center h-full text-center py-20">
                     <h2 className="text-2xl font-semibold mb-2">{agent ? `Чат с агентом: ${agent}` : 'Начать беседу'}</h2>
-                    <p className="text-muted-foreground max-w-md">Задавайте вопросы выбранному агенту из AI Studio</p>
+                    <p className="text-muted-foreground max-w-md">
+                      Задавайте вопросы выбранному агенту из AI Studio
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4 pb-24">
@@ -399,6 +467,13 @@ ${fullAnswer}
                         />
                       </div>
                     ))}
+                    {isPresentationAgent && (
+                      <PresentationAgentPanel
+                        key={currentSessionId ?? "presentation-draft"}
+                        inlineInChat
+                        appendChatMessages={appendPresentationMessages}
+                      />
+                    )}
                     <div ref={messagesEndRef} />
                   </div>
                 )}
