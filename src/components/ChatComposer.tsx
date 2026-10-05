@@ -1,7 +1,19 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Paperclip, Send, Square } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { FileUp, Mic2, Paperclip, Send, Square, Video } from "lucide-react";
+
+export interface AttachmentOption {
+  value: string;
+  label: string;
+  icon?: "file" | "audio" | "video";
+}
 
 interface ChatComposerProps {
   value: string;
@@ -11,6 +23,9 @@ interface ChatComposerProps {
   onChange: (value: string) => void;
   onSend: (value: string) => void;
   onAttachClick?: () => void;
+  attachLabel?: string;
+  attachmentOptions?: AttachmentOption[];
+  onAttachmentOptionSelect?: (value: string) => void;
   onStop?: () => void;
   disabled?: boolean;
   isLoading?: boolean;
@@ -27,6 +42,9 @@ export function ChatComposer({
   onChange,
   onSend,
   onAttachClick,
+  attachLabel,
+  attachmentOptions,
+  onAttachmentOptionSelect,
   onStop,
   disabled,
   isLoading,
@@ -118,6 +136,12 @@ export function ChatComposer({
     }
   }, [disabled]);
 
+  const getAttachmentIcon = (icon?: AttachmentOption["icon"]) => {
+    if (icon === "audio") return <Mic2 className="h-4 w-4" />;
+    if (icon === "video") return <Video className="h-4 w-4" />;
+    return <FileUp className="h-4 w-4" />;
+  };
+
   return (
     <div 
       className={`relative border border-border/50 rounded-2xl bg-muted/50 hover:bg-muted/70 transition-colors ${className || ''}`}
@@ -130,6 +154,7 @@ export function ChatComposer({
     >
       {/* Textarea with padding so icons don't overlap content */}
       <Textarea
+        data-tour="chat-input"
         ref={textareaRef}
         placeholder={dynamicPlaceholder}
         value={value}
@@ -151,19 +176,54 @@ export function ChatComposer({
       />
 
       {/* Attach (bottom-left) */}
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="absolute bottom-2 left-3 h-8 w-8 z-20"
-        onClick={(e) => {
-          e.stopPropagation();
-          onAttachClick?.();
-        }}
-        disabled={disabled}
-      >
-        <Paperclip className="h-4 w-4" />
-      </Button>
+      {attachmentOptions?.length ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="absolute bottom-2 left-3 h-8 gap-2 px-2.5 z-20"
+              disabled={disabled}
+              aria-label={attachLabel || "Добавить файл"}
+              data-tour="chat-attach"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Paperclip className="h-4 w-4" />
+              {attachLabel && <span>{attachLabel}</span>}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" className="w-52">
+            {attachmentOptions.map((option) => (
+              <DropdownMenuItem
+                key={option.value}
+                className="gap-2.5 py-2.5"
+                onSelect={() => onAttachmentOptionSelect?.(option.value)}
+              >
+                {getAttachmentIcon(option.icon)}
+                <span>{option.label}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <Button
+          type="button"
+          variant="ghost"
+          size={attachLabel ? "sm" : "icon"}
+          className={`absolute bottom-2 left-3 h-8 z-20 ${attachLabel ? "gap-2 px-2.5" : "w-8"}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAttachClick?.();
+          }}
+          disabled={disabled}
+          aria-label={attachLabel || "Добавить файл"}
+          data-tour="chat-attach"
+        >
+          <Paperclip className="h-4 w-4" />
+          {attachLabel && <span>{attachLabel}</span>}
+        </Button>
+      )}
 
       {/* Send / Stop (bottom-right) */}
       {isLoading && onStop ? (
@@ -185,6 +245,8 @@ export function ChatComposer({
           variant="default"
           size="icon"
           className="absolute bottom-2 right-2 h-8 w-8 z-20"
+          aria-label="Отправить сообщение"
+          data-tour="chat-send"
           onClick={(e) => {
             e.stopPropagation();
             handleClickSend();

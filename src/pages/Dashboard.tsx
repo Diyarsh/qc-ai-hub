@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileText, Languages, Code, BarChart3, Plus, X, File, Mic, FileCheck } from "lucide-react";
+import { Sparkles, FileText, Languages, Code, BarChart3, Plus, X, File, Mic, FileCheck, CircleHelp, MessageCircle, Paperclip, ListChecks } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChatComposer } from "@/components/ChatComposer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { sendChatMessage } from "@/shared/services/ai.service.ts";
 import { useToast } from "@/shared/components/Toast";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { formatChatDateLabel, getDayKey } from "@/lib/chat-time";
@@ -20,6 +19,8 @@ import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import aiHubSkLogo from "@/assets/logo-ai-hub-sk.svg";
 import skaiLogotype from "@/assets/SKAI Logotype.svg";
+import { createDashboardChat, loadDashboardChat, saveDashboardChat, type DashboardMessage } from "@/services/dashboard-chat";
+import { getAgentOnboarding } from "@/data/agent-onboarding";
 
 
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
@@ -90,15 +91,47 @@ const quickAgents: QuickAgent[] = [
 export default function Dashboard() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
   const examplePrompts = ["Создайте ИИ-агента для анализа документов и извлечения ключевой информации", "Разработайте чат-бота для обработки клиентских запросов с использованием NLP", "Настройте модель машинного обучения для прогнозирования трендов продаж", "Интегрируйте API для обработки естественного языка в существующую систему", "Создайте автоматизированную систему классификации и тегирования контента", "Разработайте рекомендательную систему на основе поведения пользователей"];
   const [currentPrompt, setCurrentPrompt] = useState(0);
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackDetails?: string; isRegenerated?: boolean; createdAt?: string }[]>([]);
+  const [initialChat] = useState(() => loadDashboardChat(new URLSearchParams(location.search).get("chat")) || createDashboardChat());
+  const [chatId, setChatId] = useState(initialChat.id);
+  const [input, setInput] = useState(initialChat.draft);
+  const [messages, setMessages] = useState<DashboardMessage[]>(initialChat.messages);
+  const [onboardingOpen, setOnboardingOpen] = useState(() => initialChat.messages.length === 0 && !localStorage.getItem("aihub.onboarding.general-chat"));
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
+  const demoTimerRef = useRef<number | null>(null);
+
+  const dismissOnboarding = useCallback(() => {
+    localStorage.setItem("aihub.onboarding.general-chat", "complete");
+    setOnboardingOpen(false);
+  }, []);
+
+  useEffect(() => {
+    const requestedId = new URLSearchParams(location.search).get("chat");
+    if (!requestedId) return;
+    const saved = loadDashboardChat(requestedId);
+    if (!saved || saved.id === chatId) return;
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+    setIsLoading(false);
+    setChatId(saved.id);
+    setMessages(saved.messages);
+    setInput(saved.draft);
+    setAttachedFiles([]);
+    setOnboardingOpen(false);
+  }, [location.search]);
+
+  useEffect(() => {
+    saveDashboardChat({ id: chatId, messages, draft: input });
+  }, [chatId, messages, input]);
+
+  useEffect(() => () => {
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+  }, []);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -113,35 +146,18 @@ export default function Dashboard() {
   }, [messages]);
 
   const handleNewChat = useCallback(() => {
-    // Save current chat to history if there are messages
-    if (messages.length > 0) {
-      const firstUserMessage = messages.find(m => m.role === 'user');
-      if (firstUserMessage) {
-        try {
-          const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-          ls.unshift({ text: firstUserMessage.text, time: '2 часа назад', type: 'chat', model: 'AI' });
-          localStorage.setItem('dashboard.history', JSON.stringify(ls.slice(0, 100)));
-          window.dispatchEvent(new CustomEvent('dashboard.history.updated'));
-        } catch {}
-      }
-    }
-    // Clear current chat
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+    const next = createDashboardChat();
+    saveDashboardChat(next);
+    setChatId(next.id);
     setMessages([]);
     setInput("");
     setAttachedFiles([]);
-  }, [messages]);
-
-  // Listen for new chat event from sidebar
-  useEffect(() => {
-    const handleNewChatEvent = () => {
-      handleNewChat();
-    };
-
-    window.addEventListener('dashboard.new-chat', handleNewChatEvent);
-    return () => {
-      window.removeEventListener('dashboard.new-chat', handleNewChatEvent);
-    };
-  }, [handleNewChat]);
+    setIsLoading(false);
+    setIsAttachModalOpen(false);
+    dismissOnboarding();
+    navigate("/dashboard", { replace: true });
+  }, [dismissOnboarding, navigate]);
 
   // Handle copy message text (callback for MessageBubble, no toast needed)
   const handleCopy = useCallback((messageId: string) => {
@@ -149,13 +165,8 @@ export default function Dashboard() {
     // This callback is kept for compatibility but doesn't need to do anything
   }, []);
 
-  const abortControllerRef = useRef<AbortController | null>(null);
-
   const handleStop = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      abortControllerRef.current = null;
-    }
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
     setIsLoading(false);
     // Replace loading message with stopped message
     setMessages(prev => prev.map(msg => 
@@ -163,92 +174,59 @@ export default function Dashboard() {
     ));
   }, []);
 
-  const handleSend = async (text: string) => {
+  const handleSend = (text: string) => {
     const prompt = text.trim();
     if ((!prompt && attachedFiles.length === 0) || isLoading) return;
-    
-    // Check if this is a new chat (no messages yet)
-    const isNewChat = messages.length === 0;
+    dismissOnboarding();
     const displayText = prompt || `Прикреплено ${attachedFiles.length} файл(ов)`;
-    
+    const now = new Date().toISOString();
+    const responseId = crypto.randomUUID();
+    setMessages(current => [...current,
+      { id: crypto.randomUUID(), role: "user", text: displayText, files: attachedFiles.map(file => ({ name: file.name, type: file.type })), createdAt: now },
+      { id: responseId, role: "assistant", text: "", isLoading: true, createdAt: now },
+    ]);
     setIsLoading(true);
-    
-    // Add user message immediately
-    const nowIso = new Date().toISOString();
-    const userMsg = { id: Math.random().toString(36).slice(2), role: 'user' as const, text: displayText, files: [...attachedFiles], createdAt: nowIso };
-    const loadingMsgId = Math.random().toString(36).slice(2);
-    const loadingMsg = { id: loadingMsgId, role: 'assistant' as const, text: '', isLoading: true, createdAt: nowIso };
-    
-    const filesToSend = [...attachedFiles];
-    setMessages(prev => [...prev, userMsg, loadingMsg]);
     setInput("");
     setAttachedFiles([]);
-    
-    // Save to history immediately when first message is sent in a new chat
-    if (isNewChat) {
-      try {
-        const ls = JSON.parse(localStorage.getItem('dashboard.history') || '[]');
-        ls.unshift({ text: displayText, time: '2 часа назад', type: 'chat', model: 'AI' });
-        localStorage.setItem('dashboard.history', JSON.stringify(ls.slice(0, 100)));
-        window.dispatchEvent(new CustomEvent('dashboard.history.updated'));
-      } catch {}
-    }
-    
-    try {
-      // Convert messages to format expected by AI service
-      const fileInfo = filesToSend.length > 0 
-        ? `\n\nПрикреплено файлов: ${filesToSend.length}\n${filesToSend.map(f => `- ${f.name}`).join('\n')}`
-        : '';
-      const fullContent = (prompt || displayText) + fileInfo;
-      const chatMessages: Array<{role: 'user' | 'assistant' | 'system'; content: string}> = [
-        ...messages.filter(m => !m.isLoading).map(m => ({
-          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
-          content: m.text + (m.files?.length ? `\n\nПрикреплено: ${m.files.map(f => f.name).join(', ')}` : ''),
-        })),
-        { role: 'user' as const, content: fullContent },
-      ];
-      
-      // Call AI service
-      console.log('Sending message to AI...', { chatMessages, model: import.meta.env.VITE_AI_MODEL });
-      const response = await sendChatMessage(chatMessages, {
-        model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 1000,
-        systemPrompt: 'Ты полезный AI ассистент для платформы QC AI-HUB Enterprise Platform. Отвечай на русском языке профессионально и дружелюбно.',
-      });
-      
-      console.log('AI response received:', response);
-      
-      // Replace loading message with actual response
-      setMessages(prev => prev.map(msg => 
-        msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: response.content || 'Пустой ответ от AI', createdAt: new Date().toISOString() }
-          : msg
-      ));
-      
-    } catch (error: any) {
-      console.error('Error sending message:', error);
-      console.error('Error details:', { message: error.message, stack: error.stack });
-      
-      // Replace loading message with error message
-      const errorMessage = error.message || 'Не удалось получить ответ от AI';
-      setMessages(prev => prev.map(msg => 
-        msg.id === loadingMsgId 
-          ? { id: loadingMsgId, role: 'assistant' as const, text: `Ошибка: ${errorMessage}`, createdAt: new Date().toISOString() }
-          : msg
-      ));
-      
-      showToast(errorMessage, 'error');
-    } finally {
+    // Local responses keep this product-design prototype independent of an AI service.
+    demoTimerRef.current = window.setTimeout(() => {
+      const response = prompt === getAgentOnboarding("AI-HUB-Agent")!.examples[0].prompt
+        ? getAgentOnboarding("AI-HUB-Agent")!.demo
+        : `## План работы\n\n**Ваша задача:** ${displayText}\n\n1. Уточнить исходные данные и ожидаемый результат.\n2. Подготовить первый вариант и выделить ключевые пункты.\n3. Проверить детали и скорректировать результат.\n\nМожно уточнить запрос: «Сократи ответ», «Оформи таблицей» или «Добавь следующий шаг».`;
+      setMessages(current => current.map(message => message.id === responseId
+        ? { ...message, text: response, isLoading: false, createdAt: new Date().toISOString() }
+        : message));
       setIsLoading(false);
-    }
+      demoTimerRef.current = null;
+    }, 700);
   };
 
   return <div className="flex flex-col h-full">
-      <PageHeader />
+      <PageHeader title="Чат" subtitle={messages.length ? messages.find(message => message.role === "user")?.text : "Новый диалог"} actions={
+        <>
+          <Button variant="ghost" size="sm" className="gap-1.5" onClick={() => setOnboardingOpen(true)}><CircleHelp className="h-4 w-4" /><span className="hidden sm:inline">Как пользоваться</span></Button>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={handleNewChat}><Plus className="h-4 w-4" />Новый чат</Button>
+        </>
+      } />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-0 relative">
+        {onboardingOpen && (
+          <section aria-label="Знакомство с чатом" className="relative z-20 mx-auto mt-5 w-[calc(100%-32px)] max-w-3xl rounded-2xl border border-primary/20 bg-card p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div><p className="text-xs font-medium text-primary">Ваш первый шаг</p><h2 className="mt-1 text-lg font-semibold">Начните с одной рабочей задачи</h2><p className="mt-1 text-sm text-muted-foreground">Помощник подготовит первый вариант — его можно уточнять в этом же диалоге.</p></div>
+              <button aria-label="Закрыть знакомство с чатом" onClick={dismissOnboarding} className="rounded-lg p-1 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {[
+                { icon: MessageCircle, title: "Опишите задачу", text: "Что нужно сделать и для кого." },
+                { icon: Paperclip, title: "Добавьте материалы", text: "Прикрепите файл, если он нужен." },
+                { icon: ListChecks, title: "Уточните результат", text: "Укажите формат, объём и тон." },
+              ].map(item => <div key={item.title} className="rounded-xl bg-muted/50 p-3"><item.icon className="mb-2 h-4 w-4 text-primary" /><p className="text-xs font-semibold">{item.title}</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{item.text}</p></div>)}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2"><Button size="sm" onClick={() => handleSend(getAgentOnboarding("AI-HUB-Agent")!.examples[0].prompt)}>Попробовать пример</Button><Button variant="ghost" size="sm" onClick={dismissOnboarding}>Начать самостоятельно</Button></div>
+          </section>
+        )}
         {/* Decorative background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl animate-breathe" />
@@ -266,6 +244,8 @@ export default function Dashboard() {
                     alt="SKAI"
                     className="mb-4 h-24"
                   />
+                  <h2 className="mb-2 text-2xl font-semibold">Чем помочь?</h2>
+                  <p className="mb-6 text-center text-sm text-muted-foreground">Начните новую задачу или выберите диалог в истории.</p>
                    
 
               {/* Central Input - по центру страницы */}
@@ -315,6 +295,7 @@ export default function Dashboard() {
                               navigate('/ai-studio-3-chat', { 
                               state: { 
                                 agent: agent.name, 
+                                agentId: agent.id,
                                 instructions: agent.instructions,
                                 placeholder: agent.placeholder 
                               } 
@@ -379,7 +360,7 @@ export default function Dashboard() {
           <>
                   <div className="flex items-center gap-3 mb-8 pt-4">
                     <img src={aiHubSkLogo} alt="AI-HUB" className="h-8 w-8" />
-                    <span className="text-lg text-muted-foreground">Сәлем, Роман!</span>
+                    <span className="text-sm text-muted-foreground">Диалог сохранён · можно продолжить с этого места</span>
                   </div>
 
                   {/* Messages Display */}

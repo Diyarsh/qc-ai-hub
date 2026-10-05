@@ -75,7 +75,7 @@ const translations = {
     'language.en': 'Ағылшынша',
     
     // Sidebar
-    'sidebar.chat': 'Жаңа чат',
+    'sidebar.chat': 'Чат',
     'sidebar.ai-studio': 'AI-Студия',
     'sidebar.projects': 'Менің жобаларым',
     'sidebar.history': 'Тарих',
@@ -265,7 +265,7 @@ const translations = {
     'language.en': 'Английский',
     
     // Sidebar
-    'sidebar.chat': 'Новый чат',
+    'sidebar.chat': 'Чат',
     'sidebar.ai-studio': 'AI-Студия',
     'sidebar.projects': 'Мои проекты',
     'sidebar.history': 'История',
@@ -456,7 +456,7 @@ const translations = {
     
     // Sidebar
     // Sidebar
-    'sidebar.chat': 'New Chat',
+    'sidebar.chat': 'Chat',
     'sidebar.ai-studio': 'AI Studio',
     'sidebar.projects': 'My Projects',
     'sidebar.history': 'History',

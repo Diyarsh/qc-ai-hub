@@ -3,7 +3,21 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Edit2, Trash2, Timer, Copy, Check, CheckCircle2, AlertCircle, XCircle, CheckCheck } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  CheckCheck,
+  CheckCircle2,
+  Copy,
+  Download,
+  Edit2,
+  FileText,
+  Music2,
+  Timer,
+  Trash2,
+  Video,
+  XCircle,
+} from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
@@ -189,14 +203,41 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       )}
       {/* File Previews */}
       {files?.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {files.map((file, i) => (
-            <div key={i} className="rounded border p-2 bg-muted text-xs">
-              <span className="font-medium">{file.name}</span>
-              {/* Add preview based on file type here if needed */}
-            </div>
-          ))}
-        </div>
+        role === "assistant" ? (
+          <div className="mt-4 space-y-2">
+            {files.map((file, i) => (
+              <button
+                key={`${file.name}-${i}`}
+                type="button"
+                className="group flex w-full items-center gap-3 rounded-xl border border-border/70 bg-background/70 px-3 py-2.5 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"
+                aria-label={`Скачать ${file.name}`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <FileText className="h-4 w-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium">{file.name}</span>
+                  <span className="block text-[11px] text-muted-foreground">Готово к скачиванию</span>
+                </span>
+                <Download className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {files.map((file, i) => {
+              const isAudio = file.type?.startsWith("audio/");
+              const isVideo = file.type?.startsWith("video/");
+              const Icon = isAudio ? Music2 : isVideo ? Video : FileText;
+              return (
+                <div key={`${file.name}-${i}`} className="flex items-center gap-2 rounded-lg border border-border/60 bg-background/50 px-2.5 py-2 text-xs">
+                  <Icon className="h-4 w-4 text-primary" />
+                  <span className="max-w-[260px] truncate font-medium">{file.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        )
       )}
 
       {/* Telegram-style time (and status for user) */}

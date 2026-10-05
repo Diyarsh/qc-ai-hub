@@ -13,7 +13,12 @@ import {
   RefreshCw,
   Trash2,
   Upload,
+  CircleHelp,
 } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { AgentOnboarding } from "@/components/agent/AgentOnboarding";
+import { AgentGuidedTour, type AgentTourStep } from "@/components/agent/AgentGuidedTour";
+import { getAgentOnboarding } from "@/data/agent-onboarding";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,6 +89,16 @@ function newId() {
   return crypto.randomUUID();
 }
 
+function downloadTranslation(task: TranslationTask) {
+  const blob = new Blob([task.segments.map(segment => segment.translation).join("\n\n")], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `translated_${task.fileName.replace(/\.\w+$/, "")}.txt`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function statusLabel(status: TranslationTask["status"]) {
   if (status === "processing") return { title: "В обработке", sub: "Перевод выполняется" };
   if (status === "approved") return { title: "Утверждено", sub: "Документ утверждён" };
@@ -127,6 +142,8 @@ function buildSegmentsFromText(text: string, _pair: LangPair): TranslationSegmen
 }
 
 export function TranslatorPlatform() {
+  const location = useLocation();
+  const onboarding = getAgentOnboarding("Translator")!;
   const { toast } = useToast();
   const [view, setView] = useState<TranslatorView>("tasks");
   const [tasks, setTasks] = useState<TranslationTask[]>([]);
@@ -136,6 +153,21 @@ export function TranslatorPlatform() {
   const [isUploading, setIsUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [introOpen, setIntroOpen] = useState(() => !localStorage.getItem("aihub.onboarding.Translator"));
+  const [tourStep, setTourStep] = useState<number | null>(null);
+  const [demoFileSelected, setDemoFileSelected] = useState(false);
+
+  const startTour = () => { setDemoFileSelected(false); setIntroOpen(false); setView("tasks"); setTourStep(0); };
+  const closeTour = () => {
+    if (tourStep === 3) localStorage.setItem("aihub.onboarding.Translator", "complete");
+    setTourStep(null);
+  };
+
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("tour") === "1") {
+      setDemoFileSelected(false); setIntroOpen(false); setView("tasks"); setTourStep(0);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const tasks = loadTasks();
@@ -165,6 +197,33 @@ export function TranslatorPlatform() {
     setView("editor");
   };
 
+  const showDemoTranslation = () => {
+    const rus = "Просим согласовать проведение рабочей встречи.";
+    const kaz = "Жұмыс кездесуін өткізуді келісуді сұраймыз.";
+    const eng = "Please approve holding a working meeting.";
+    const samples: Record<LangPair, [string, string]> = {
+      "RUS→KAZ": [rus, kaz], "KAZ→RUS": [kaz, rus],
+      "RUS→ENG": [rus, eng], "ENG→RUS": [eng, rus],
+    };
+    const [source, translation] = samples[pair];
+    const task: TranslationTask = {
+      id: `onboarding-${newId()}`, fileName: "Пример — служебная записка.docx", pair,
+      status: "completed", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+      segments: [{ id: newId(), index: 0, source, translation, match: "manual", confidence: 100, approved: false, kind: "Normal", origin: "local" }],
+    };
+    setTasks(current => [task, ...current]);
+    setIntroOpen(false);
+    openEditor(task.id);
+    if (tourStep !== null) setTourStep(3);
+  };
+
+  const tourSteps: AgentTourStep[] = [
+    { target: '[data-tour="translator-file"]', title: "Добавьте исходный документ", description: "Выберите DOCX, PDF или текстовый файл. Для знакомства используйте учебную служебную записку.", actionLabel: "Взять демо-документ", onAction: () => { setDemoFileSelected(true); setTourStep(1); } },
+    { target: '[data-tour="translator-language"]', title: "Выберите языки перевода", description: "Укажите исходный и целевой языки. В примере уже выбран перевод с русского на казахский; направление можно изменить.", actionLabel: "Продолжить", onAction: () => setTourStep(2) },
+    { target: '[data-tour="translator-send"]', title: "Запустите перевод", description: "Нажмите «Перевести» или кнопку ниже. Откроется учебный пример, в котором можно сравнить оригинал и перевод.", actionLabel: "Перевести пример", onAction: showDemoTranslation },
+    { target: '[data-tour="translator-result"]', title: "Сверьте оригинал и перевод", description: "Слева — оригинал, справа — редактируемый перевод. Проверьте формулировки и утвердите результат. Кнопка «Скачать перевод» находится над документом.", actionLabel: "Завершить", onAction: closeTour },
+  ];
+
   const updateActiveTask = (updater: (task: TranslationTask) => TranslationTask) => {
     if (!activeTaskId) return;
     persistTasks(tasks.map((t) => (t.id === activeTaskId ? updater(t) : t)));
@@ -172,6 +231,7 @@ export function TranslatorPlatform() {
 
   const handleFile = async (file: File | null) => {
     if (!file) return;
+    setDemoFileSelected(false);
     setIsUploading(true);
     try {
       const text = await readDocumentForTranslation(file);
@@ -193,6 +253,7 @@ export function TranslatorPlatform() {
 
       persistTasks([task, ...tasks]);
       openEditor(taskId);
+      if (tourStep !== null) setTourStep(3);
 
       toast({
         title: "Документ загружен",
@@ -337,6 +398,7 @@ export function TranslatorPlatform() {
         </div>
 
         <nav className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={startTour} className="h-8 gap-1.5"><CircleHelp className="h-3.5 w-3.5" />Как пользоваться</Button>
           <Button
             variant="outline"
             size="sm"
@@ -375,7 +437,13 @@ export function TranslatorPlatform() {
       </header>
 
       <div className="flex-1 min-h-0 overflow-auto p-5">
-        {view === "tasks" && (
+        {view === "tasks" && introOpen && (
+          <div className="mx-auto max-w-3xl">
+            <AgentOnboarding config={onboarding} onStart={startTour} onPreview={showDemoTranslation} onExample={prompt => { if (prompt.includes("английского")) setPair("ENG→RUS"); startTour(); }} />
+            <Button variant="ghost" className="mb-5 w-full text-muted-foreground" onClick={() => setIntroOpen(false)}>Перейти к переводу самостоятельно</Button>
+          </div>
+        )}
+        {view === "tasks" && !introOpen && (
           <TasksView
             tasks={tasks}
             pair={pair}
@@ -387,6 +455,8 @@ export function TranslatorPlatform() {
             onFile={handleFile}
             onOpen={openEditor}
             onDelete={deleteTask}
+            demoFileSelected={demoFileSelected}
+            onDemoTranslate={showDemoTranslation}
           />
         )}
         {view === "glossary" && (
@@ -416,6 +486,7 @@ export function TranslatorPlatform() {
           <div className="text-sm text-slate-500">Задача не найдена. Вернитесь к списку задач.</div>
         )}
       </div>
+      <AgentGuidedTour name={onboarding.name} step={tourStep} steps={tourSteps} onBack={() => { if (tourStep === 3) setView("tasks"); setTourStep(step => step === null ? null : Math.max(0, step - 1)); }} onClose={closeTour} />
     </div>
   );
 }
@@ -431,6 +502,8 @@ function TasksView({
   onFile,
   onOpen,
   onDelete,
+  demoFileSelected,
+  onDemoTranslate,
 }: {
   tasks: TranslationTask[];
   pair: LangPair;
@@ -438,10 +511,12 @@ function TasksView({
   isUploading: boolean;
   dragOver: boolean;
   setDragOver: (v: boolean) => void;
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
+  fileInputRef: React.RefObject<HTMLInputElement>;
   onFile: (file: File | null) => void;
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;
+  demoFileSelected: boolean;
+  onDemoTranslate: () => void;
 }) {
   return (
     <div className="max-w-6xl mx-auto space-y-5">
@@ -453,6 +528,7 @@ function TasksView({
           <div>
             <label className="text-xs font-medium text-slate-500 mb-1.5 block">Документ</label>
             <div
+              data-tour="translator-file"
               className={cn(
                 "rounded-xl border-2 border-dashed px-4 py-6 transition-colors cursor-pointer",
                 dragOver ? "bg-[#F7F1E8]" : "bg-slate-50/80"
@@ -479,7 +555,7 @@ function TasksView({
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-800">
-                    {isUploading ? "Читаем документ…" : "Перетащите файл или нажмите для выбора"}
+                    {isUploading ? "Читаем документ…" : demoFileSelected ? "Служебная записка.docx · пример" : "Перетащите файл или нажмите для выбора"}
                   </p>
                   <p className="text-xs text-slate-500">DOCX, PDF, TXT, Markdown</p>
                 </div>
@@ -494,7 +570,7 @@ function TasksView({
             </div>
           </div>
 
-          <div>
+          <div data-tour="translator-language">
             <label className="text-xs font-medium text-slate-500 mb-1.5 block">Перевод</label>
             <Select value={pair} onValueChange={(v) => setPair(v as LangPair)}>
               <SelectTrigger className="bg-white h-11">
@@ -511,10 +587,11 @@ function TasksView({
           </div>
 
           <Button
+            data-tour="translator-send"
             className="h-11 px-6 text-white"
             style={{ background: BRONZE.deep }}
             disabled={isUploading}
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => demoFileSelected ? onDemoTranslate() : fileInputRef.current?.click()}
           >
             <Play className="h-4 w-4 mr-2" />
             Перевести
@@ -579,16 +656,8 @@ function TasksView({
                             size="icon"
                             className="h-8 w-8"
                             title="Скачать перевод"
-                            onClick={() => {
-                              const blob = new Blob(
-                                [task.segments.map((s) => s.translation).join("\n\n")],
-                                { type: "text/plain;charset=utf-8" }
-                              );
-                              const a = document.createElement("a");
-                              a.href = URL.createObjectURL(blob);
-                              a.download = `translated_${task.fileName.replace(/\.\w+$/, "")}.txt`;
-                              a.click();
-                            }}
+                            aria-label="Скачать перевод"
+                            onClick={() => downloadTranslation(task)}
                           >
                             <Download className="h-3.5 w-3.5" />
                           </Button>
@@ -708,6 +777,10 @@ function EditorView({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="h-8" onClick={() => downloadTranslation(task)}>
+            <Download className="h-3.5 w-3.5 mr-1.5" />
+            Скачать перевод
+          </Button>
           <Button variant="outline" size="sm" className="h-8" onClick={onRefresh}>
             <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
             Обновить
@@ -758,7 +831,7 @@ function EditorView({
         ))}
       </div>
 
-      <section className="bg-white rounded-xl border shadow-sm overflow-hidden" style={{ borderColor: "#EDE6DC" }}>
+      <section data-tour="translator-result" className="bg-white rounded-xl border shadow-sm overflow-hidden" style={{ borderColor: "#EDE6DC" }}>
         <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "#EDE6DC", background: BRONZE.bg }}>
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: BRONZE.deep }}>
@@ -887,4 +960,3 @@ function EditorView({
     </div>
   );
 }
-

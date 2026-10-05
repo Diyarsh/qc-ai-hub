@@ -29,11 +29,12 @@ import {
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PageHeader } from "@/components/PageHeader";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { forwardRef, useEffect, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TranslatorPlatform } from "@/components/translator/TranslatorPlatform";
+import { agentOnboardingConfigs } from "@/data/agent-onboarding";
 
 type StudioSection = "agents" | "tools";
 type AgentCategory = "all" | "language" | "assistant" | "documents" | "code" | "industrial";
@@ -55,8 +56,9 @@ interface Agent {
   iconColor?: string;
 }
 
-const TengeIcon: LucideIcon = (props) => (
+const TengeIcon: LucideIcon = forwardRef((props, ref) => (
   <svg
+    ref={ref}
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
@@ -70,9 +72,9 @@ const TengeIcon: LucideIcon = (props) => (
     <path d="M7 9h10" />
     <path d="M12 9v10" />
   </svg>
-);
+));
 
-const agents: Agent[] = [
+const legacyAgents: Agent[] = [
   {
     id: "Presentation-Agent",
     name: "Создатель презентаций",
@@ -232,6 +234,24 @@ const agents: Agent[] = [
   },
 ];
 
+const agents: Agent[] = [
+  ...agentOnboardingConfigs.map(config => ({
+    id: config.id,
+    name: config.name,
+    description: config.description,
+    category: [config.category],
+    type: "agent" as const,
+    instructions: legacyAgents.find(agent => agent.id === config.id)?.instructions || config.description,
+    placeholder: config.examples[0].prompt,
+    tags: config.popular ? ["Часто используют"] : ["Помощник"],
+    isLocal: config.id !== "Legal-NPA-3",
+    icon: config.icon,
+    gradient: "from-primary/20 via-primary/10 to-transparent",
+    iconColor: "text-primary",
+  })),
+  ...legacyAgents.filter(agent => !agentOnboardingConfigs.some(config => config.id === agent.id)),
+];
+
 const categories: { key: AgentCategory; label: string; count: number; icon: LucideIcon }[] = [
   { key: "all", label: "Все", count: agents.length, icon: Grid3x3 },
   { key: "language", label: "Языковые модели", count: agents.filter(a => a.category.includes("language")).length, icon: Languages },
@@ -302,7 +322,7 @@ export default function AIStudio3() {
   }, [selectedType]);
 
   // Обработчик клика на карточку агента
-  const handleCardClick = (e: React.MouseEvent, agent: Agent) => {
+  const handleCardClick = (e: React.MouseEvent, agent: Agent, startTour = false) => {
     // Не открываем чат, если клик был на бейдж оценки или внутри диалога
     if ((e.target as HTMLElement).closest('[data-rating-badge]') || 
         (e.target as HTMLElement).closest('[role="dialog"]')) {
@@ -310,14 +330,14 @@ export default function AIStudio3() {
     }
     // Переводчик — платформа документов, не чат
     if (agent.id === "Translator") {
-      navigate("/agents/translator");
+      navigate(`/agents/translator${startTour ? "?tour=1" : ""}`);
       return;
     }
     if (agent.id === "Translator-2") {
       navigate("/agents/translator-2");
       return;
     }
-    navigate('/ai-studio-3-chat', {
+    navigate(`/ai-studio-3-chat?agent=${encodeURIComponent(agent.id)}${startTour ? "&tour=1" : ""}`, {
       state: {
         agent: agent.name,
         agentId: agent.id,
@@ -457,6 +477,10 @@ export default function AIStudio3() {
           </div>
 
           {/* Models Grid */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-medium">Найдите помощника для своей задачи</p>
+            <p className="text-xs text-muted-foreground">Начните со знакомства с агентом — подсказки проведут до первого результата</p>
+          </div>
           {filteredAgents.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground text-lg mb-2">Агенты не найдены</p>
@@ -491,6 +515,15 @@ export default function AIStudio3() {
                 return (
             <Card
                   key={agent.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Открыть агента ${agent.name}`}
+              onKeyDown={event => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  event.currentTarget.click();
+                }
+              }}
               className={cn(
                 "card-glow relative overflow-hidden transition-all duration-300 cursor-pointer group",
                 "bg-card/60 backdrop-blur-sm border-border/30",
@@ -566,6 +599,12 @@ export default function AIStudio3() {
                 <p className="relative z-10 min-h-0 flex-1 overflow-y-auto pr-1 text-xs leading-relaxed text-muted-foreground">
                   {agent.description}
                 </p>
+                {agentOnboardingConfigs.some(config => config.id === agent.id) && (
+                  <Button variant="ghost" size="sm" className="relative z-10 mt-2 justify-start px-0 text-xs text-primary" onClick={event => {
+                    event.stopPropagation();
+                    handleCardClick(event, agent, true);
+                  }}>Как пользоваться →</Button>
+                )}
               </div>
             </Card>
               )})}
@@ -579,4 +618,3 @@ export default function AIStudio3() {
     </div>
   );
 }
-

@@ -2,7 +2,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, ChevronLeft, ChevronRight, X, File, FileDown } from "lucide-react";
+import {
+  File,
+  FileDown,
+  Sparkles,
+  X,
+  CircleHelp,
+  MousePointer2,
+} from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChatComposer } from "@/components/ChatComposer";
@@ -21,6 +28,9 @@ import { FileDropOverlay } from "@/components/chat/FileDropOverlay";
 import { PresentationAgentPanel } from "@/components/presentation/PresentationAgentPanel";
 import { TranslatorPlatform } from "@/components/translator/TranslatorPlatform";
 import { TranslatorDocumentPlatform } from "@/components/translator/TranslatorDocumentPlatform";
+import { AgentOnboarding } from "@/components/agent/AgentOnboarding";
+import { AgentGuidedTour, type AgentTourStep } from "@/components/agent/AgentGuidedTour";
+import { getAgentOnboarding, getAgentDemoFiles, isMediaAgent } from "@/data/agent-onboarding";
 
 export interface AIStudio3ChatProps {
   /** Прямой вход по `/agents/presentation` без state из каталога */
@@ -36,6 +46,32 @@ type ChatNavState = {
   instructions?: string;
 };
 
+type AttachmentKind = "file" | "audio" | "video";
+
+type ChatAttachment = {
+  name: string;
+  size?: number;
+  type?: string;
+};
+
+type ChatViewMessage = {
+  id: string;
+  role: "user" | "assistant";
+  text: string;
+  files?: ChatAttachment[];
+  isLoading?: boolean;
+  durationMs?: number;
+  feedback?: "correct" | "partially-correct" | "incorrect";
+  feedbackReasons?: string[];
+  feedbackDetails?: string;
+  isRegenerated?: boolean;
+  createdAt?: string;
+};
+
+const TRANSCRIBER_AUDIO_TYPES = [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"];
+const TRANSCRIBER_VIDEO_TYPES = [".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"];
+const TRANSCRIBER_ALL_TYPES = [...TRANSCRIBER_AUDIO_TYPES, ...TRANSCRIBER_VIDEO_TYPES];
+
 export default function AIStudio3Chat({
   presentationMode = false,
 }: AIStudio3ChatProps = {}) {
@@ -50,9 +86,11 @@ export default function AIStudio3Chat({
     typeof sessionStorage !== "undefined"
       ? sessionStorage.getItem("aihub-last-agent")
       : null;
+  const query = new URLSearchParams(location.search);
+  const onboarding = presentationMode ? undefined : getAgentOnboarding(query.get("agent") || navState.agentId, navState.agent || storedAgent);
   const agent = presentationMode
     ? "Создатель презентаций"
-    : navState.agent || storedAgent || undefined;
+    : onboarding?.name || navState.agent || storedAgent || undefined;
 
   useEffect(() => {
     if (navState.agent) {
@@ -73,6 +111,10 @@ export default function AIStudio3Chat({
     typeof sessionStorage !== "undefined"
       ? sessionStorage.getItem("aihub-last-agent-id")
       : null;
+  const isTranscriber = isMediaAgent(onboarding) ||
+    navState.agentId === "Transcriber" ||
+    agent === "Транскрибатор" ||
+    (!onboarding && !navState.agent && storedAgentId === "Transcriber");
   const isPresentationAgent =
     presentationMode ||
     navState.agentId === "Presentation-Agent" ||
@@ -84,8 +126,8 @@ export default function AIStudio3Chat({
     agent === "Переводчик 2.0" ||
     agent === "Translation Master" ||
     agent === "Translator" ||
-    (!navState.agent && storedAgentId === "Translator") ||
-    (!navState.agent && storedAgentId === "Translator-2");
+    (!onboarding && !navState.agent && storedAgentId === "Translator") ||
+    (!onboarding && !navState.agent && storedAgentId === "Translator-2");
 
   // Переводчик — документный дашборд, не чат
   useEffect(() => {
@@ -99,13 +141,43 @@ export default function AIStudio3Chat({
   }, [isTranslatorAgent, navigate, presentationMode, navState.agentId, agent]);
   const [message, setMessage] = useState("");
   const [hasInitialized, setHasInitialized] = useState(false);
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [attachedFiles, setAttachedFiles] = useState<ChatAttachment[]>([]);
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false);
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string; files?: File[]; isLoading?: boolean; durationMs?: number; feedback?: 'correct' | 'partially-correct' | 'incorrect'; feedbackReasons?: string[]; feedbackDetails?: string; isRegenerated?: boolean; createdAt?: string }[]>([]);
+  const [attachmentKind, setAttachmentKind] = useState<AttachmentKind>("file");
+  const [messages, setMessages] = useState<ChatViewMessage[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [tourStep, setTourStep] = useState<number | null>(null);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const demoTimerRef = useRef<number | null>(null);
+
+  const closeTour = useCallback(() => {
+    if (onboarding && tourStep === 3) {
+      localStorage.setItem(`aihub.onboarding.${onboarding.id}`, "complete");
+      setOnboardingComplete(true);
+    }
+    setTourStep(null);
+  }, [onboarding, tourStep]);
+
+  const startTour = useCallback(() => {
+    if (onboarding) setTourStep(0);
+  }, [onboarding]);
+
+  useEffect(() => {
+    setOnboardingComplete(Boolean(onboarding && localStorage.getItem(`aihub.onboarding.${onboarding.id}`)));
+    setTourStep(query.get("tour") === "1" && onboarding ? 0 : null);
+    setMessage("");
+    setAttachedFiles([]);
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+    setIsLoading(false);
+    if (!navState.sessionId) { setMessages([]); setCurrentSessionId(null); }
+  }, [onboarding?.id, location.key]);
+
+  useEffect(() => () => {
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+  }, []);
   
   const examplePrompts = isPresentationAgent
     ? [
@@ -114,7 +186,7 @@ export default function AIStudio3Chat({
         "Подскажи формулировки в tone of voice выбранного бренда",
         "Как усилить блок про безопасность и compliance?",
       ]
-    : ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
+    : onboarding?.examples.map(example => example.prompt) || ["Сформируй краткую сводку по рынку за Q3 2025", "Подготовь анализ конкурентов в сфере e-commerce", "Предложи 3 риск-фактора для проекта AI", "Составь план внедрения чата-бота в службу поддержки"];
   
   const loadSession = useCallback((sessionId: string) => {
     const savedMessages = AgentChatService.getMessages(sessionId);
@@ -176,7 +248,7 @@ export default function AIStudio3Chat({
           id: m.id,
           role: m.role,
           text: m.text,
-          files: m.files?.map(f => ({ name: f.name, size: f.size })),
+          files: m.files?.map(f => ({ name: f.name, size: f.size || 0 })),
           createdAt: m.createdAt || new Date().toISOString(),
           durationMs: m.durationMs,
           feedback: m.feedback,
@@ -204,11 +276,58 @@ export default function AIStudio3Chat({
     const newSession = AgentChatService.createSession(agent);
     setCurrentSessionId(newSession.id);
     setMessages([]);
+    setMessage("");
+    setAttachedFiles([]);
+    setTourStep(null);
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+    setIsLoading(false);
   };
 
   const handleSessionSelect = (sessionId: string) => {
     loadSession(sessionId);
   };
+
+  const openAttachmentPicker = useCallback((kind: AttachmentKind = "file") => {
+    setAttachmentKind(kind);
+    setIsAttachModalOpen(true);
+  }, []);
+
+  const getTranscriberAcceptedTypes = useCallback(() => {
+    if (attachmentKind === "audio") return TRANSCRIBER_AUDIO_TYPES;
+    if (attachmentKind === "video") return TRANSCRIBER_VIDEO_TYPES;
+    return TRANSCRIBER_ALL_TYPES;
+  }, [attachmentKind]);
+
+  const showAgentDemo = useCallback(() => {
+    if (!onboarding) return;
+    const now = new Date().toISOString();
+
+    if (!currentSessionId && agent) {
+      const session = AgentChatService.createSession(agent, onboarding.examples[0].title);
+      setCurrentSessionId(session.id);
+    }
+
+    setMessages([
+      {
+        id: `demo-user-${Date.now()}`,
+        role: "user",
+        text: onboarding.examples[0].prompt,
+        files: onboarding.sourceFile ? [{ name: onboarding.sourceFile }] : [],
+        createdAt: now,
+      },
+      {
+        id: `demo-result-${Date.now()}`,
+        role: "assistant",
+        text: onboarding.demo,
+        files: getAgentDemoFiles(onboarding),
+        createdAt: new Date(Date.now() + 1000).toISOString(),
+      },
+    ]);
+    setMessage("");
+    setAttachedFiles([]);
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
+    setIsLoading(false);
+  }, [agent, currentSessionId, onboarding]);
 
   const appendPresentationMessages = useCallback(
     (items: { role: "user" | "assistant"; text: string }[]) => {
@@ -300,6 +419,7 @@ ${fullAnswer}
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleStop = useCallback(() => {
+    if (demoTimerRef.current !== null) window.clearTimeout(demoTimerRef.current);
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
@@ -347,6 +467,26 @@ ${fullAnswer}
     setMessages(prev => [...prev, userMsg, loadingMsg]);
     setMessage("");
     setAttachedFiles([]);
+
+    // Every configured onboarding scenario uses local sample data in this mockup.
+    if (onboarding) {
+      demoTimerRef.current = window.setTimeout(() => {
+        setMessages(prev => prev.map(msg =>
+          msg.id === loadingMsgId
+            ? {
+                id: loadingMsgId,
+                role: "assistant",
+                text: onboarding.demo,
+                files: getAgentDemoFiles(onboarding),
+                createdAt: new Date().toISOString(),
+              }
+            : msg
+        ));
+        setIsLoading(false);
+        setTourStep(step => step === 2 ? 3 : step);
+      }, 900);
+      return;
+    }
     
     try {
       const startedAt = performance.now();
@@ -453,6 +593,43 @@ ${fullAnswer}
     }, 0);
   }
 
+  const tourSteps: AgentTourStep[] = onboarding ? [
+    {
+      target: '[data-tour="chat-input"]',
+      title: "Начните с понятной задачи",
+      description: onboarding.inputHint,
+      actionLabel: message.trim() ? "Продолжить" : "Подставить пример",
+      onAction: () => { if (!message.trim()) setMessage(onboarding.examples[0].prompt); setTourStep(1); },
+    },
+    {
+      target: onboarding.sourceFile ? '[data-tour="chat-attach"]' : '[data-tour="chat-input"]',
+      title: onboarding.sourceFile ? "Добавьте исходный материал" : "Уточните ожидаемый результат",
+      description: onboarding.sourceFile
+        ? `Выберите свой файл через эту кнопку. Для знакомства можно взять пример «${onboarding.sourceFile}».`
+        : "Укажите контекст и формат: письмо, список шагов или таблица. Это поможет сделать ответ полезнее.",
+      actionLabel: onboarding.sourceFile ? "Взять демо-файл" : "Добавить контекст",
+      onAction: () => {
+        if (onboarding.sourceFile) setAttachedFiles([{ name: onboarding.sourceFile }]);
+        else setMessage(value => `${value}\nОформи результат кратко, выдели следующий шаг.`);
+        setTourStep(2);
+      },
+    },
+    {
+      target: '[data-tour="chat-send"]',
+      title: "Отправьте запрос агенту",
+      description: "Запрос готов. Нажмите кнопку отправки в чате или кнопку ниже, чтобы посмотреть учебный результат.",
+      actionLabel: isLoading ? "Подождите…" : "Отправить пример",
+      onAction: () => { void handleSend(); },
+    },
+    {
+      target: '[data-tour="agent-result"]',
+      title: "Первый результат готов",
+      description: onboarding.resultHint,
+      actionLabel: "Завершить",
+      onAction: closeTour,
+    },
+  ] : [];
+
   if (isTranslatorAgent) {
     const isV2 =
       navState.agentId === "Translator-2" || agent === "Переводчик 2.0";
@@ -470,7 +647,16 @@ ${fullAnswer}
   }
 
   return <div className="flex flex-col h-screen">
-      <PageHeader title="AI-Studio" subtitle={isPresentationAgent ? "Создатель презентаций · мастер и экспорт в этом чате" : undefined} />
+      <PageHeader
+        title="AI-Studio"
+        subtitle={
+          isPresentationAgent
+            ? "Создатель презентаций · мастер и экспорт в этом чате"
+            : onboarding
+              ? onboarding.name
+              : undefined
+        }
+      />
       <main className="flex-1 flex min-h-0">
         {/* Agent History Sidebar - слева */}
         {agent && (
@@ -486,6 +672,15 @@ ${fullAnswer}
         )}
 
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
+          {onboarding && (
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-6 py-3">
+              <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                <MousePointer2 className="h-3.5 w-3.5 text-primary" />
+                {onboardingComplete ? "Знакомство пройдено" : "Начните с короткого знакомства"}
+              </span>
+              <Button variant="ghost" size="sm" onClick={startTour} className="h-7 gap-1.5 text-xs"><CircleHelp className="h-3.5 w-3.5" />{onboardingComplete ? "Повторить знакомство" : "Как пользоваться"}</Button>
+            </div>
+          )}
         {/* Chat Area */}
           {/* Chat header with export */}
           {messages.length > 0 && !isPresentationAgent && (
@@ -505,12 +700,21 @@ ${fullAnswer}
             <ScrollArea className="h-full p-6 pb-0">
               <div className="w-full max-w-3xl mx-auto">
                 {messages.length === 0 && !isPresentationAgent ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                    <h2 className="text-2xl font-semibold mb-2">{agent ? `Чат с агентом: ${agent}` : 'Начать беседу'}</h2>
-                    <p className="text-muted-foreground max-w-md">
-                      Задавайте вопросы выбранному агенту из AI Studio
-                    </p>
-                  </div>
+                  onboarding && tourStep === null ? (
+                    <AgentOnboarding
+                      config={onboarding}
+                      onStart={startTour}
+                      onExample={prompt => { setMessage(prompt); document.querySelector<HTMLTextAreaElement>('[data-tour="chat-input"]')?.focus(); }}
+                      onPreview={showAgentDemo}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-center py-20">
+                      <h2 className="text-2xl font-semibold mb-2">{tourStep !== null ? "Попробуем первую задачу вместе" : agent ? `Чат с агентом: ${agent}` : 'Начать беседу'}</h2>
+                      <p className="text-muted-foreground max-w-md">
+                        {onboarding ? onboarding.inputHint : "Задавайте вопросы выбранному агенту из AI Studio"}
+                      </p>
+                    </div>
+                  )
                 ) : (
                   <div className="space-y-4 pb-24">
                     {messages.map((msg, index) => {
@@ -530,7 +734,8 @@ ${fullAnswer}
                               </span>
                             </div>
                           )}
-                          <div className={msg.role === 'user' ? 'flex justify-end' : ''}>
+                          <div data-tour={msg.role === "assistant" && !msg.isLoading && index === messages.length - 1 ? "agent-result" : undefined} className={msg.role === 'user' ? 'flex justify-end' : ''}>
+                            {onboarding && msg.role === "assistant" && !msg.isLoading && <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-primary"><Sparkles className="h-3 w-3" />Пример ответа · учебные данные</p>}
                             <MessageBubble
                               text={msg.text}
                               role={msg.role}
@@ -595,11 +800,22 @@ ${fullAnswer}
               )}
               <ChatComposer
                 value={message}
-                placeholder={placeholder}
+                placeholder={isTranscriber ? "Добавьте запись или напишите, какой результат нужен…" : onboarding ? "Опишите задачу или выберите пример выше…" : placeholder}
                 examples={examplePrompts}
                 onChange={setMessage}
                 onSend={() => handleSend()}
-                onAttachClick={() => setIsAttachModalOpen(true)}
+                onAttachClick={() => openAttachmentPicker("file")}
+                attachLabel={onboarding ? "Добавить файл" : undefined}
+                attachmentOptions={
+                  isTranscriber
+                    ? [
+                        { value: "file", label: "Загрузить файл", icon: "file" },
+                        { value: "audio", label: "Загрузить аудио", icon: "audio" },
+                        { value: "video", label: "Загрузить видео", icon: "video" },
+                      ]
+                    : undefined
+                }
+                onAttachmentOptionSelect={(value) => openAttachmentPicker(value as AttachmentKind)}
                 onStop={handleStop}
                 disabled={isLoading}
                 isLoading={isLoading}
@@ -615,6 +831,8 @@ ${fullAnswer}
 
       <FileDropOverlay
         onFilesDropped={(files) => setAttachedFiles(prev => [...prev, ...files])}
+        acceptedTypes={isTranscriber ? TRANSCRIBER_ALL_TYPES : onboarding?.formats}
+        maxSizeMB={isTranscriber ? 500 : 50}
         enabled={!isLoading}
       />
 
@@ -622,7 +840,15 @@ ${fullAnswer}
       <Modal
         isOpen={isAttachModalOpen}
         onClose={() => setIsAttachModalOpen(false)}
-        title="Прикрепить файлы"
+        title={
+          isTranscriber
+            ? attachmentKind === "audio"
+              ? "Загрузить аудио"
+              : attachmentKind === "video"
+                ? "Загрузить видео"
+                : "Добавить запись"
+            : "Прикрепить файлы"
+        }
         size="md"
       >
         <FileUpload
@@ -630,12 +856,17 @@ ${fullAnswer}
           onFilesSelected={(files) => {
             setAttachedFiles(prev => [...prev, ...files]);
             setIsAttachModalOpen(false);
+            if (tourStep === 1) setTourStep(2);
           }}
-          acceptedTypes={[".pdf", ".docx", ".doc", ".txt", ".md", ".csv", ".xlsx", ".xls", ".png", ".jpg", ".jpeg"]}
+          acceptedTypes={
+            isTranscriber
+              ? getTranscriberAcceptedTypes()
+              : onboarding?.formats || [".pdf", ".docx", ".doc", ".txt", ".md", ".csv", ".xlsx", ".xls", ".png", ".jpg", ".jpeg"]
+          }
           multiple={true}
-          maxSizeMB={50}
+          maxSizeMB={isTranscriber ? 500 : 50}
         />
       </Modal>
+      {onboarding && <AgentGuidedTour name={onboarding.name} step={isAttachModalOpen ? null : tourStep} steps={tourSteps} onBack={() => setTourStep(step => step === null ? null : Math.max(0, step - 1))} onClose={closeTour} />}
     </div>;
 }
-

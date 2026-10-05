@@ -9,9 +9,10 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuButton,
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
-import qcLogo from "@/assets/QC_Black_icon.svg";
-import qcLogoLight from "@/assets/QC_White_icon.svg";
+import qcLogoBlue from "@/assets/qc-favicon-blue.svg";
+import qcLogoWhite from "@/assets/qc-favicon-white.svg";
 import samrukKazynaLogo from "@/assets/samruk-kazyna.svg";
+import samrukKazynaLogoWhite from "@/assets/samruk-kazyna-white.png";
 import skLogo from "@/assets/sk-logo.svg";
 import { UserSettingsDialog } from "@/components/UserSettingsDialog";
 import { useAuth } from "@/main/webapp/app/shared/hooks/useAuth";
@@ -122,15 +123,13 @@ export function AppSidebar() {
     isDeveloperMode,
     toggleDeveloperMode
   } = useDeveloperMode();
-  const {
-    theme,
-    setTheme
-  } = useTheme();
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === "dark";
   const [openHistoryMenu, setOpenHistoryMenu] = useState(true);
   const [userSettingsOpen, setUserSettingsOpen] = useState(false);
   const { isAdmin, isSuperAdmin, logout } = useAuth();
   const navigate = useNavigate();
-  const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
+  const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string; chatId?: string }>>([]);
   const [translationHistory, setTranslationHistory] = useState<TranslatorDocumentHistoryItem[]>([]);
 
   // Load history data from localStorage and listen for changes
@@ -183,7 +182,7 @@ export function AppSidebar() {
 
   // Merge chats and translated documents into one sidebar history.
   const historyItems = useMemo(() => {
-    const merged = [...dynamicHistory.map(i => ({...i, time: '2 часа назад'})), ...staticHistory];
+    const merged = [...dynamicHistory, ...staticHistory.map(item => ({ ...item, chatId: undefined as string | undefined }))];
     const sorted = [...merged].sort((a, b) => {
       const parseTime = (time: string) => {
         // Russian time parsing
@@ -202,8 +201,8 @@ export function AppSidebar() {
         if (daysMatchEn) return parseInt(daysMatchEn[1]) * 24;
         return 0;
       };
-      // Sort from newest to oldest (desc)
-      return parseTime(b.time) - parseTime(a.time);
+      // Smaller elapsed time means a more recent conversation.
+      return parseTime(a.time) - parseTime(b.time);
     });
 
     // Group by time period
@@ -222,11 +221,11 @@ export function AppSidebar() {
     sorted.slice(0, Math.max(0, 8 - thisWeek.length)).forEach((item, idx) => {
       const historyItem = {
         title: item.text.length > 35 ? item.text.substring(0, 35) + '...' : item.text,
-        url: `/history-chat/${idx}`,
+        url: item.chatId ? `/dashboard?chat=${encodeURIComponent(item.chatId)}` : `/history-chat/${idx}`,
         kind: "chat" as const,
       };
       // Group by time period (Russian and English)
-      if (item.time.includes('час') || item.time.includes('день') || item.time.includes('недел') || 
+      if (item.time === 'только что' || item.time.includes('час') || item.time.includes('день') || item.time.includes('недел') ||
           item.time.includes('hours ago') || item.time.includes('week ago') || item.time.includes('day ago')) {
         thisWeek.push(historyItem);
       } else {
@@ -247,17 +246,16 @@ export function AppSidebar() {
         <div className={`relative ${collapsed ? "flex items-center justify-center" : "flex items-center justify-between gap-3"}`}>
           <div className={`${collapsed ? "flex items-center justify-center group/logo" : "flex items-center gap-2"} transition-all duration-200`}>
             {/* QC logo */}
-            <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
+            <div className={`${collapsed ? "w-8" : "w-10"} h-8 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${collapsed ? "relative group-hover/logo:opacity-0" : ""}`}>
               <img 
-                src={theme === "dark" ? qcLogoLight : qcLogo} 
+                src={isDarkMode ? qcLogoWhite : qcLogoBlue}
                 alt="QazCloud AI-HUB" 
-                className="h-full w-auto object-contain transition-all duration-200"
-                style={{ transform: 'rotate(-90deg)' }} 
+                className="h-auto w-full object-contain transition-all duration-200"
               />
             </div>
             {/* AI-HUB text */}
             {!collapsed && (
-              <div className="flex flex-col leading-tight animate-in fade-in slide-in-from-left duration-200">
+              <div className="flex flex-col leading-tight">
                 <span className="text-base font-semibold tracking-tight">AI-HUB</span>
                 <span className="text-[11px] text-muted-foreground">Enterprise Platform</span>
               </div>
@@ -299,20 +297,13 @@ export function AppSidebar() {
             }
             return true;
           }).map(item => {
-            // Special handling for "Новый чат" (New chat)
+            // Returning to Chat preserves the current conversation.
             if (item.url === "/dashboard" && item.title === "sidebar.chat") {
               return (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={collapsed ? t(item.title) : undefined}>
                     <NavLink 
                       to={item.url} 
-                      onClick={(e) => {
-                        // If already on dashboard, trigger new chat event
-                        if (currentPath === "/dashboard") {
-                          e.preventDefault();
-                          window.dispatchEvent(new CustomEvent('dashboard.new-chat'));
-                        }
-                      }}
                       className={({ isActive }) => `flex items-center gap-3 flex-1 rounded-lg px-3 py-2 transition-all duration-200 ${isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"} ${collapsed ? "justify-center" : ""}`}
                     >
                       <item.icon className="h-5 w-5 shrink-0" />
@@ -415,13 +406,15 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-2 mt-auto">
-        <div className={`flex items-center ${collapsed ? "justify-center" : "justify-start gap-2"} px-2 py-2`}>
+        <div className={`flex items-center ${collapsed ? "justify-center px-0" : "justify-start gap-2 px-2"} py-2`}>
           {/* Samruk Kazyna logo */}
-          <div className="h-12 flex items-center justify-center flex-shrink-0">
+          <div className={`${collapsed ? "relative h-[37px] w-8 overflow-hidden" : "h-12 flex items-center justify-center"} flex-shrink-0`}>
             <img 
-              src={collapsed ? skLogo : samrukKazynaLogo} 
+              src={isDarkMode ? samrukKazynaLogoWhite : collapsed ? skLogo : samrukKazynaLogo}
               alt="Samruk Kazyna" 
-              className="h-12 w-auto object-contain"
+              className={collapsed
+                ? isDarkMode ? "absolute left-0 top-0 h-[37px] w-auto max-w-none" : "h-full w-full object-contain"
+                : "h-12 w-auto object-contain"}
             />
           </div>
         </div>

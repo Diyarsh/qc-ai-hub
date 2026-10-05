@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 // Маппинг агентов на модели LLM
 const agentToModelMap: Record<string, string> = {
   "LLM-Ultra": "Qwen2.5 72B",
@@ -125,7 +126,7 @@ export default function History() {
     return 0;
   };
   
-  const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string }>>([]);
+  const [dynamicHistory, setDynamicHistory] = useState<Array<{ text: string; time: string; type: string; model: string; chatId?: string }>>([]);
   useEffect(() => {
     const loadHistory = () => {
     try {
@@ -156,7 +157,7 @@ export default function History() {
     };
   }, []);
 
-  const merged = useMemo(() => [...dynamicHistory.map(i => ({...i, time: '2 часа назад'})), ...staticHistory], [dynamicHistory]);
+  const merged = useMemo(() => [...dynamicHistory, ...staticHistory.map(item => ({ ...item, chatId: undefined as string | undefined }))], [dynamicHistory]);
   const sortedItems = [...merged].sort((a, b) => {
     const timeA = parseTime(a.time);
     const timeB = parseTime(b.time);
@@ -218,9 +219,9 @@ export default function History() {
                 <tbody>
                   {sortedItems.map((item, index) => <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-4" style={{ maxWidth: '400px', overflow: 'hidden' }}>
-                        <span className="text-sm truncate block">
+                        <Link to={item.chatId ? `/dashboard?chat=${encodeURIComponent(item.chatId)}` : `/history-chat/${index}`} className="text-sm truncate block hover:text-primary">
                           {item.text}
-                        </span>
+                        </Link>
                       </td>
                       <td className="py-3 px-4">
                         <span className="text-sm text-muted-foreground truncate block">
